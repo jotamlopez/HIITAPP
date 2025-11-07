@@ -1,0 +1,974 @@
+{
+  "exercises": {
+    "calentamientoDinamico": {
+      "name": "Calentamiento dinámico 5 min cardio",
+      "videoId": "8DyncYCOgsU"
+    },
+    "sentadillaGoblet": {
+      "name": "Sentadilla Goblet",
+      "videoId": "AgD7XRyH05o"
+    },
+    "pressPechoSuelo": {
+      "name": "Press de pecho con mancuernas (suelo)",
+      "videoId": "qEwKCR5JCog",
+      "start": 0,
+      "end": 60
+    },
+    "remoMancuernaUnBrazo": {
+      "name": "Remo con mancuerna a un brazo",
+      "videoId": "roCP6wCXPqo"
+    },
+    "hipThrustElevado": {
+      "name": "Hip thrust elevado con mancuerna",
+      "videoId": "8RcEpMQ93Y8"
+    },
+    "planchaFrontal": {
+      "name": "Plancha frontal",
+      "videoId": "u6ZelKyUM6g"
+    },
+    "deadBug": {
+      "name": "Dead bug - Core antiextensión",
+      "videoId": "4XLEnwUr1d8"
+    },
+    "curlBiceps": {
+      "name": "Curl de bíceps con mancuernas",
+      "videoId": "ajJWRrU5Fxo"
+    },
+    "estiramientosCompletos": {
+      "name": "Estiramientos postentreno completos",
+      "videoId": "DVrpAs5ZbSE"
+    },
+    "cuerdaBoxerStep": {
+      "name": "Cuerda saltar - Boxer step",
+      "videoId": "kDOGb9C5kp0"
+    },
+    "rodillasCruzadas": {
+      "name": "Rodillas cruzadas (high knees alternadas)",
+      "videoId": "W8Fgy71xzx8",
+      "start": 60,
+      "end": 105
+    },
+    "golpesFrontales": {
+      "name": "Golpes frontales lado a lado",
+      "videoId": "W8Fgy71xzx8",
+      "start": 120,
+      "end": 165
+    },
+    "rodillazos": {
+      "name": "Rodillazos (knee strikes)",
+      "videoId": "W8Fgy71xzx8",
+      "start": 180,
+      "end": 225
+    },
+    "burpeeModificado": {
+      "name": "Burpee sin salto (step back)",
+      "videoId": "W8Fgy71xzx8",
+      "start": 240,
+      "end": 285
+    },
+    "squatRodillasCruzadas": {
+      "name": "Squat + rodillas cruzadas",
+      "videoId": "W8Fgy71xzx8",
+      "start": 300,
+      "end": 345
+    },
+    "pushUpToqueHombro": {
+      "name": "Push-up + toque de hombro",
+      "videoId": "W8Fgy71xzx8",
+      "start": 360,
+      "end": 405
+    },
+    "squatsArribaAbajo": {
+      "name": "Squats arriba y abajo",
+      "videoId": "W8Fgy71xzx8",
+      "start": 420,
+      "end": 465
+    },
+    "planchaToqueRodilla": {
+      "name": "Plancha con toque de rodilla",
+      "videoId": "W8Fgy71xzx8",
+      "start": 480,
+      "end": 525
+    },
+    "squatLadoALado": {
+      "name": "Squat lado a lado",
+      "videoId": "W8Fgy71xzx8",
+      "start": 540,
+      "end": 585
+    },
+    "absGolpesVerticales": {
+      "name": "Abs golpes verticales (crunch + punch)",
+      "videoId": "W8Fgy71xzx8",
+      "start": 600,
+      "end": 645
+    },
+    "golpesFrontalesCruzados": {
+      "name": "Golpes frontales - Rodillas cruzadas",
+      "videoId": "W8Fgy71xzx8",
+      "start": 660,
+      "end": 705
+    },
+    "desplanteTrasero": {
+      "name": "Desplante trasero - Rodillazo",
+      "videoId": "W8Fgy71xzx8",
+      "start": 720,
+      "end": 765
+    },
+    "mountainClimber": {
+      "name": "Mountain climber (escalador)",
+      "videoId": "W8Fgy71xzx8",
+      "start": 780,
+      "end": 825
+    },
+    "elevacionCadera": {
+      "name": "Elevación de cadera (hip raise)",
+      "videoId": "W8Fgy71xzx8",
+      "start": 840,
+      "end": 885
+    },
+    "jumpingJacks": {
+      "name": "Jumping jacks (versión controlada)",
+      "videoId": "W8Fgy71xzx8",
+      "start": 900,
+      "end": 945
+    },
+    "marchaIndoor": {
+      "name": "Marcha indoor / Walking at home",
+      "videoId": "UkJhynyuU2c"
+    },
+    "marchaIndoorLigera": {
+      "name": "Marcha indoor ligera posprandial",
+      "videoId": "UkJhynyuU2c",
+      "start": 0,
+      "end": 600
+    },
+    "zancadasMancuernas": {
+      "name": "Zancadas con mancuernas",
+      "videoId": "AgD7XRyH05o",
+      "start": 0,
+      "end": 45
+    },
+    "pressHombroMancuernas": {
+      "name": "Press de hombro con mancuernas",
+      "videoId": "qEwKCR5JCog"
+    },
+    "remoInclinadoBilateral": {
+      "name": "Remo inclinado bilateral",
+      "videoId": "pYcpY20QaE8"
+    },
+    "puenteGluteos": {
+      "name": "Puente de glúteos con mancuerna",
+      "videoId": "8RcEpMQ93Y8",
+      "start": 0,
+      "end": 30
+    },
+    "planchaLateral": {
+      "name": "Plancha lateral",
+      "videoId": "u6ZelKyUM6g",
+      "start": 30,
+      "end": 90
+    },
+    "birdDog": {
+      "name": "Bird dog - Core antirrotación",
+      "videoId": "-LRjkbEy-qU"
+    },
+    "extensionTriceps": {
+      "name": "Extensión de tríceps con mancuerna",
+      "videoId": "fQ-KB40W3d8"
+    },
+    "marchaIndoorModerada": {
+      "name": "Marcha indoor moderada continua",
+      "videoId": "k_SoCdUlBvM"
+    },
+    "cuerdaTecnica": {
+      "name": "Cuerda técnica boxer skip",
+      "videoId": "UDhuaNieats"
+    },
+    "planchaShoulderTap": {
+      "name": "Plancha con shoulder taps",
+      "videoId": "8F-SW8XTbE8"
+    },
+    "stepUps": {
+      "name": "Step-ups en escalón",
+      "videoId": "T7PT5nVHE6s"
+    },
+    "marchaIndoorSuave": {
+      "name": "Marcha indoor muy suave",
+      "videoId": "UkJhynyuU2c",
+      "start": 0,
+      "end": 300
+    },
+    "sentadillaBulgara": {
+      "name": "Sentadilla búlgara (split squat)",
+      "videoId": "AgD7XRyH05o",
+      "start": 0,
+      "end": 45
+    },
+    "elevacionesLaterales": {
+      "name": "Elevaciones laterales con mancuernas",
+      "videoId": "qEwKCR5JCog",
+      "start": 30,
+      "end": 75
+    },
+    "movilidadCaderasHombros": {
+      "name": "Movilidad de caderas y hombros",
+      "videoId": "8DyncYCOgsU",
+      "start": 60,
+      "end": 180
+    }
+  },
+  "routines": [
+    {
+      "name": "Lunes noche - Fuerza A + Core/Brazos",
+      "exercises": [
+        {
+          "exerciseId": "calentamientoDinamico",
+          "work": 300,
+          "rest": 0
+        },
+        {
+          "exerciseId": "sentadillaGoblet",
+          "type": "sets",
+          "sets": 3,
+          "reps": 12,
+          "restBetweenSets": 75
+        },
+        {
+          "exerciseId": "pressPechoSuelo",
+          "type": "sets",
+          "sets": 3,
+          "reps": 11,
+          "restBetweenSets": 75
+        },
+        {
+          "exerciseId": "remoMancuernaUnBrazo",
+          "type": "sets",
+          "sets": 3,
+          "reps": 11,
+          "restBetweenSets": 75
+        },
+        {
+          "exerciseId": "hipThrustElevado",
+          "type": "sets",
+          "sets": 3,
+          "reps": 13,
+          "restBetweenSets": 75
+        },
+        {
+          "exerciseId": "planchaFrontal",
+          "work": 37,
+          "rest": 52,
+          "repeat": 2
+        },
+        {
+          "exerciseId": "deadBug",
+          "type": "sets",
+          "sets": 2,
+          "reps": 10,
+          "restBetweenSets": 45
+        },
+        {
+          "exerciseId": "curlBiceps",
+          "type": "sets",
+          "sets": 2,
+          "reps": 13,
+          "restBetweenSets": 60
+        },
+        {
+          "exerciseId": "estiramientosCompletos",
+          "work": 390,
+          "rest": 0
+        }
+      ]
+    },
+    {
+      "name": "Martes mañana - HIIT Opción 1: Cuerda pura",
+      "exercises": [
+        {
+          "exerciseId": "calentamientoDinamico",
+          "work": 300,
+          "rest": 0
+        },
+        {
+          "exerciseId": "cuerdaBoxerStep",
+          "work": 45,
+          "rest": 15,
+          "repeat": 12
+        },
+        {
+          "exerciseId": "estiramientosCompletos",
+          "work": 390,
+          "rest": 0
+        }
+      ]
+    },
+    {
+      "name": "Martes mañana - HIIT Opción 2: Adrián Fit completo",
+      "exercises": [
+        {
+          "exerciseId": "calentamientoDinamico",
+          "work": 300,
+          "rest": 0
+        },
+        {
+          "exerciseId": "rodillasCruzadas",
+          "work": 45,
+          "rest": 15
+        },
+        {
+          "exerciseId": "golpesFrontales",
+          "work": 45,
+          "rest": 15
+        },
+        {
+          "exerciseId": "rodillazos",
+          "work": 45,
+          "rest": 15
+        },
+        {
+          "exerciseId": "burpeeModificado",
+          "work": 45,
+          "rest": 15
+        },
+        {
+          "exerciseId": "squatRodillasCruzadas",
+          "work": 45,
+          "rest": 15
+        },
+        {
+          "exerciseId": "pushUpToqueHombro",
+          "work": 45,
+          "rest": 15
+        },
+        {
+          "exerciseId": "squatsArribaAbajo",
+          "work": 45,
+          "rest": 15
+        },
+        {
+          "exerciseId": "planchaToqueRodilla",
+          "work": 45,
+          "rest": 15
+        },
+        {
+          "exerciseId": "squatLadoALado",
+          "work": 45,
+          "rest": 15
+        },
+        {
+          "exerciseId": "absGolpesVerticales",
+          "work": 45,
+          "rest": 15
+        },
+        {
+          "exerciseId": "golpesFrontalesCruzados",
+          "work": 45,
+          "rest": 15
+        },
+        {
+          "exerciseId": "desplanteTrasero",
+          "work": 45,
+          "rest": 15
+        },
+        {
+          "exerciseId": "mountainClimber",
+          "work": 45,
+          "rest": 15
+        },
+        {
+          "exerciseId": "elevacionCadera",
+          "work": 45,
+          "rest": 15
+        },
+        {
+          "exerciseId": "jumpingJacks",
+          "work": 45,
+          "rest": 15
+        },
+        {
+          "exerciseId": "estiramientosCompletos",
+          "work": 390,
+          "rest": 0
+        }
+      ]
+    },
+    {
+      "name": "Martes mañana - HIIT Opción 3: Híbrido (cuerda + bodyweight)",
+      "exercises": [
+        {
+          "exerciseId": "calentamientoDinamico",
+          "work": 300,
+          "rest": 0
+        },
+        {
+          "exerciseId": "cuerdaBoxerStep",
+          "work": 45,
+          "rest": 15,
+          "repeat": 2
+        },
+        {
+          "exerciseId": "squatsArribaAbajo",
+          "work": 45,
+          "rest": 15
+        },
+        {
+          "exerciseId": "cuerdaBoxerStep",
+          "work": 45,
+          "rest": 15,
+          "repeat": 2
+        },
+        {
+          "exerciseId": "pushUpToqueHombro",
+          "work": 45,
+          "rest": 15
+        },
+        {
+          "exerciseId": "cuerdaBoxerStep",
+          "work": 45,
+          "rest": 15,
+          "repeat": 2
+        },
+        {
+          "exerciseId": "squatLadoALado",
+          "work": 45,
+          "rest": 15
+        },
+        {
+          "exerciseId": "cuerdaBoxerStep",
+          "work": 45,
+          "rest": 15,
+          "repeat": 2
+        },
+        {
+          "exerciseId": "mountainClimber",
+          "work": 45,
+          "rest": 15
+        },
+        {
+          "exerciseId": "cuerdaBoxerStep",
+          "work": 45,
+          "rest": 15,
+          "repeat": 2
+        },
+        {
+          "exerciseId": "estiramientosCompletos",
+          "work": 390,
+          "rest": 0
+        }
+      ]
+    },
+    {
+      "name": "Martes noche - Opción 1: Core + Movilidad",
+      "exercises": [
+        {
+          "exerciseId": "marchaIndoorLigera",
+          "work": 540,
+          "rest": 0
+        },
+        {
+          "exerciseId": "deadBug",
+          "type": "sets",
+          "sets": 3,
+          "reps": 10,
+          "restBetweenSets": 45
+        },
+        {
+          "exerciseId": "birdDog",
+          "type": "sets",
+          "sets": 3,
+          "reps": 8,
+          "restBetweenSets": 45
+        },
+        {
+          "exerciseId": "planchaFrontal",
+          "work": 45,
+          "rest": 45,
+          "repeat": 2
+        },
+        {
+          "exerciseId": "planchaLateral",
+          "work": 27,
+          "rest": 45,
+          "repeat": 2
+        },
+        {
+          "exerciseId": "movilidadCaderasHombros",
+          "work": 420,
+          "rest": 0
+        },
+        {
+          "exerciseId": "estiramientosCompletos",
+          "work": 300,
+          "rest": 0
+        }
+      ]
+    },
+    {
+      "name": "Martes noche - Opción 2: Fuerza auxiliar ligera",
+      "exercises": [
+        {
+          "exerciseId": "marchaIndoorLigera",
+          "work": 540,
+          "rest": 0
+        },
+        {
+          "exerciseId": "sentadillaBulgara",
+          "type": "sets",
+          "sets": 2,
+          "reps": 10,
+          "restBetweenSets": 60
+        },
+        {
+          "exerciseId": "remoMancuernaUnBrazo",
+          "type": "sets",
+          "sets": 2,
+          "reps": 15,
+          "restBetweenSets": 60
+        },
+        {
+          "exerciseId": "elevacionesLaterales",
+          "type": "sets",
+          "sets": 2,
+          "reps": 12,
+          "restBetweenSets": 60
+        },
+        {
+          "exerciseId": "deadBug",
+          "type": "sets",
+          "sets": 2,
+          "reps": 10,
+          "restBetweenSets": 45
+        },
+        {
+          "exerciseId": "planchaFrontal",
+          "work": 40,
+          "rest": 45,
+          "repeat": 2
+        },
+        {
+          "exerciseId": "estiramientosCompletos",
+          "work": 300,
+          "rest": 0
+        }
+      ]
+    },
+    {
+      "name": "Martes noche - Opción 3: LISS + Core ligero",
+      "exercises": [
+        {
+          "exerciseId": "marchaIndoor",
+          "work": 1650,
+          "rest": 0
+        },
+        {
+          "exerciseId": "deadBug",
+          "type": "sets",
+          "sets": 2,
+          "reps": 10,
+          "restBetweenSets": 45
+        },
+        {
+          "exerciseId": "planchaFrontal",
+          "work": 40,
+          "rest": 0,
+          "repeat": 2
+        },
+        {
+          "exerciseId": "estiramientosCompletos",
+          "work": 420,
+          "rest": 0
+        }
+      ]
+    },
+    {
+      "name": "Miércoles noche - Fuerza B + Core/Brazos",
+      "exercises": [
+        {
+          "exerciseId": "calentamientoDinamico",
+          "work": 390,
+          "rest": 0
+        },
+        {
+          "exerciseId": "zancadasMancuernas",
+          "type": "sets",
+          "sets": 3,
+          "reps": 11,
+          "restBetweenSets": 75
+        },
+        {
+          "exerciseId": "pressHombroMancuernas",
+          "type": "sets",
+          "sets": 3,
+          "reps": 11,
+          "restBetweenSets": 75
+        },
+        {
+          "exerciseId": "remoInclinadoBilateral",
+          "type": "sets",
+          "sets": 3,
+          "reps": 11,
+          "restBetweenSets": 75
+        },
+        {
+          "exerciseId": "puenteGluteos",
+          "type": "sets",
+          "sets": 3,
+          "reps": 13,
+          "restBetweenSets": 75
+        },
+        {
+          "exerciseId": "planchaLateral",
+          "work": 25,
+          "rest": 52,
+          "repeat": 2
+        },
+        {
+          "exerciseId": "birdDog",
+          "type": "sets",
+          "sets": 2,
+          "reps": 8,
+          "restBetweenSets": 45
+        },
+        {
+          "exerciseId": "extensionTriceps",
+          "type": "sets",
+          "sets": 2,
+          "reps": 13,
+          "restBetweenSets": 60
+        },
+        {
+          "exerciseId": "estiramientosCompletos",
+          "work": 390,
+          "rest": 0
+        }
+      ]
+    },
+    {
+      "name": "Jueves noche - Cardio moderado + Core dinámico",
+      "exercises": [
+        {
+          "exerciseId": "marchaIndoorModerada",
+          "work": 1050,
+          "rest": 0
+        },
+        {
+          "exerciseId": "cuerdaTecnica",
+          "work": 25,
+          "rest": 75,
+          "repeat": 8
+        },
+        {
+          "exerciseId": "planchaShoulderTap",
+          "work": 30,
+          "rest": 45,
+          "repeat": 2
+        },
+        {
+          "exerciseId": "estiramientosCompletos",
+          "work": 300,
+          "rest": 0
+        }
+      ]
+    },
+    {
+      "name": "Viernes mañana - HIIT Opción 1: Cuerda pura",
+      "exercises": [
+        {
+          "exerciseId": "calentamientoDinamico",
+          "work": 300,
+          "rest": 0
+        },
+        {
+          "exerciseId": "cuerdaBoxerStep",
+          "work": 45,
+          "rest": 15,
+          "repeat": 12
+        },
+        {
+          "exerciseId": "estiramientosCompletos",
+          "work": 390,
+          "rest": 0
+        }
+      ]
+    },
+    {
+      "name": "Viernes mañana - HIIT Opción 2: Adrián Fit completo",
+      "exercises": [
+        {
+          "exerciseId": "calentamientoDinamico",
+          "work": 300,
+          "rest": 0
+        },
+        {
+          "exerciseId": "rodillasCruzadas",
+          "work": 45,
+          "rest": 15
+        },
+        {
+          "exerciseId": "golpesFrontales",
+          "work": 45,
+          "rest": 15
+        },
+        {
+          "exerciseId": "rodillazos",
+          "work": 45,
+          "rest": 15
+        },
+        {
+          "exerciseId": "burpeeModificado",
+          "work": 45,
+          "rest": 15
+        },
+        {
+          "exerciseId": "squatRodillasCruzadas",
+          "work": 45,
+          "rest": 15
+        },
+        {
+          "exerciseId": "pushUpToqueHombro",
+          "work": 45,
+          "rest": 15
+        },
+        {
+          "exerciseId": "squatsArribaAbajo",
+          "work": 45,
+          "rest": 15
+        },
+        {
+          "exerciseId": "planchaToqueRodilla",
+          "work": 45,
+          "rest": 15
+        },
+        {
+          "exerciseId": "squatLadoALado",
+          "work": 45,
+          "rest": 15
+        },
+        {
+          "exerciseId": "absGolpesVerticales",
+          "work": 45,
+          "rest": 15
+        },
+        {
+          "exerciseId": "golpesFrontalesCruzados",
+          "work": 45,
+          "rest": 15
+        },
+        {
+          "exerciseId": "desplanteTrasero",
+          "work": 45,
+          "rest": 15
+        },
+        {
+          "exerciseId": "mountainClimber",
+          "work": 45,
+          "rest": 15
+        },
+        {
+          "exerciseId": "elevacionCadera",
+          "work": 45,
+          "rest": 15
+        },
+        {
+          "exerciseId": "jumpingJacks",
+          "work": 45,
+          "rest": 15
+        },
+        {
+          "exerciseId": "estiramientosCompletos",
+          "work": 390,
+          "rest": 0
+        }
+      ]
+    },
+    {
+      "name": "Viernes mañana - HIIT Opción 3: Híbrido (cuerda + bodyweight)",
+      "exercises": [
+        {
+          "exerciseId": "calentamientoDinamico",
+          "work": 300,
+          "rest": 0
+        },
+        {
+          "exerciseId": "cuerdaBoxerStep",
+          "work": 45,
+          "rest": 15,
+          "repeat": 2
+        },
+        {
+          "exerciseId": "squatsArribaAbajo",
+          "work": 45,
+          "rest": 15
+        },
+        {
+          "exerciseId": "cuerdaBoxerStep",
+          "work": 45,
+          "rest": 15,
+          "repeat": 2
+        },
+        {
+          "exerciseId": "pushUpToqueHombro",
+          "work": 45,
+          "rest": 15
+        },
+        {
+          "exerciseId": "cuerdaBoxerStep",
+          "work": 45,
+          "rest": 15,
+          "repeat": 2
+        },
+        {
+          "exerciseId": "squatLadoALado",
+          "work": 45,
+          "rest": 15
+        },
+        {
+          "exerciseId": "cuerdaBoxerStep",
+          "work": 45,
+          "rest": 15,
+          "repeat": 2
+        },
+        {
+          "exerciseId": "mountainClimber",
+          "work": 45,
+          "rest": 15
+        },
+        {
+          "exerciseId": "cuerdaBoxerStep",
+          "work": 45,
+          "rest": 15,
+          "repeat": 2
+        },
+        {
+          "exerciseId": "estiramientosCompletos",
+          "work": 390,
+          "rest": 0
+        }
+      ]
+    },
+    {
+      "name": "Viernes noche - Opción 1: Core + Movilidad",
+      "exercises": [
+        {
+          "exerciseId": "marchaIndoorLigera",
+          "work": 540,
+          "rest": 0
+        },
+        {
+          "exerciseId": "deadBug",
+          "type": "sets",
+          "sets": 3,
+          "reps": 10,
+          "restBetweenSets": 45
+        },
+        {
+          "exerciseId": "birdDog",
+          "type": "sets",
+          "sets": 3,
+          "reps": 8,
+          "restBetweenSets": 45
+        },
+        {
+          "exerciseId": "planchaFrontal",
+          "work": 45,
+          "rest": 45,
+          "repeat": 2
+        },
+        {
+          "exerciseId": "planchaLateral",
+          "work": 27,
+          "rest": 45,
+          "repeat": 2
+        },
+        {
+          "exerciseId": "movilidadCaderasHombros",
+          "work": 420,
+          "rest": 0
+        },
+        {
+          "exerciseId": "estiramientosCompletos",
+          "work": 300,
+          "rest": 0
+        }
+      ]
+    },
+    {
+      "name": "Viernes noche - Opción 2: Fuerza auxiliar ligera",
+      "exercises": [
+        {
+          "exerciseId": "marchaIndoorLigera",
+          "work": 540,
+          "rest": 0
+        },
+        {
+          "exerciseId": "sentadillaBulgara",
+          "type": "sets",
+          "sets": 2,
+          "reps": 10,
+          "restBetweenSets": 60
+        },
+        {
+          "exerciseId": "remoMancuernaUnBrazo",
+          "type": "sets",
+          "sets": 2,
+          "reps": 15,
+          "restBetweenSets": 60
+        },
+        {
+          "exerciseId": "elevacionesLaterales",
+          "type": "sets",
+          "sets": 2,
+          "reps": 12,
+          "restBetweenSets": 60
+        },
+        {
+          "exerciseId": "deadBug",
+          "type": "sets",
+          "sets": 2,
+          "reps": 10,
+          "restBetweenSets": 45
+        },
+        {
+          "exerciseId": "planchaFrontal",
+          "work": 40,
+          "rest": 45,
+          "repeat": 2
+        },
+        {
+          "exerciseId": "estiramientosCompletos",
+          "work": 300,
+          "rest": 0
+        }
+      ]
+    },
+    {
+      "name": "Viernes noche - Opción 3: LISS + Core ligero",
+      "exercises": [
+        {
+          "exerciseId": "marchaIndoor",
+          "work": 1650,
+          "rest": 0
+        },
+        {
+          "exerciseId": "deadBug",
+          "type": "sets",
+          "sets": 2,
+          "reps": 10,
+          "restBetweenSets": 45
+        },
+        {
+          "exerciseId": "planchaFrontal",
+          "work": 40,
+          "rest": 0,
+          "repeat": 2
+        },
+        {
+          "exerciseId": "estiramientosCompletos",
+          "work": 420,
+          "rest": 0
+        }
+      ]
+    }
+  ]
+}
+

@@ -1,0 +1,614 @@
+{
+  "exercises": {
+    "calentamientoDinamico": {
+      "name": "Calentamiento dinámico 5 min cardio",
+      "videoId": "8DyncYCOgsU"
+    },
+    "sentadillaGoblet": {
+      "name": "Sentadilla Goblet",
+      "videoId": "AgD7XRyH05o"
+    },
+    "pressPechoSuelo": {
+      "name": "Press de pecho con mancuernas (suelo)",
+      "videoId": "y9XAsTx3XxQ",
+      "end": 60
+    },
+    "remoMancuernaUnBrazo": {
+      "name": "Remo con mancuerna a un brazo",
+      "videoId": "roCP6wCXPqo"
+    },
+    "hipThrustElevado": {
+      "name": "Hip thrust elevado con mancuerna",
+      "videoId": "8RcEpMQ93Y8"
+    },
+    "planchaFrontal": {
+      "name": "Plancha frontal",
+      "videoId": "u6ZelKyUM6g"
+    },
+    "deadBug": {
+      "name": "Dead bug - Core antiextensión",
+      "videoId": "KDcYkjfzLv8"
+    },
+    "curlBiceps": {
+      "name": "Curl de bíceps con mancuernas",
+      "videoId": "ajJWRrU5Fxo"
+    },
+    "estiramientosCompletos": {
+      "name": "Estiramientos postentreno completos",
+      "videoId": "DVrpAs5ZbSE"
+    },
+    "cuerdaBoxerStep": {
+      "name": "Cuerda saltar - Boxer step",
+      "videoId": "kDOGb9C5kp0"
+    },
+    "rodillasCruzadas": {
+      "name": "Rodillas cruzadas (high knees alternadas)",
+      "videoId": "W8Fgy71xzx8",
+      "start": 60,
+      "end": 105
+    },
+    "golpesFrontales": {
+      "name": "Golpes frontales lado a lado",
+      "videoId": "W8Fgy71xzx8",
+      "start": 120,
+      "end": 165
+    },
+    "rodillazos": {
+      "name": "Rodillazos (knee strikes)",
+      "videoId": "W8Fgy71xzx8",
+      "start": 180,
+      "end": 225
+    },
+    "burpeeModificado": {
+      "name": "Burpee sin salto (step back)",
+      "videoId": "W8Fgy71xzx8",
+      "start": 240,
+      "end": 285
+    },
+    "squatRodillasCruzadas": {
+      "name": "Squat + rodillas cruzadas",
+      "videoId": "W8Fgy71xzx8",
+      "start": 300,
+      "end": 345
+    },
+    "pushUpToqueHombro": {
+      "name": "Push-up + toque de hombro",
+      "videoId": "W8Fgy71xzx8",
+      "start": 360,
+      "end": 405
+    },
+    "squatsArribaAbajo": {
+      "name": "Squats arriba y abajo",
+      "videoId": "W8Fgy71xzx8",
+      "start": 420,
+      "end": 465
+    },
+    "planchaToqueRodilla": {
+      "name": "Plancha con toque de rodilla",
+      "videoId": "W8Fgy71xzx8",
+      "start": 480,
+      "end": 525
+    },
+    "squatLadoALado": {
+      "name": "Squat lado a lado",
+      "videoId": "W8Fgy71xzx8",
+      "start": 540,
+      "end": 585
+    },
+    "absGolpesVerticales": {
+      "name": "Abs golpes verticales (crunch + punch)",
+      "videoId": "W8Fgy71xzx8",
+      "start": 600,
+      "end": 645
+    },
+    "golpesFrontalesCruzados": {
+      "name": "Golpes frontales - Rodillas cruzadas",
+      "videoId": "W8Fgy71xzx8",
+      "start": 660,
+      "end": 705
+    },
+    "desplanteTrasero": {
+      "name": "Desplante trasero - Rodillazo",
+      "videoId": "W8Fgy71xzx8",
+      "start": 720,
+      "end": 765
+    },
+    "mountainClimber": {
+      "name": "Mountain climber (escalador)",
+      "videoId": "W8Fgy71xzx8",
+      "start": 954,
+      "end": 1001
+    },
+    "elevacionCadera": {
+      "name": "Elevación de cadera (hip raise)",
+      "videoId": "W8Fgy71xzx8",
+      "start": 840,
+      "end": 885
+    },
+    "jumpingJacks": {
+      "name": "Jumping jacks (versión controlada)",
+      "videoId": "W8Fgy71xzx8",
+      "start": 1070,
+      "end": 1121
+    },
+    "marchaIndoor": {
+      "name": "Marcha indoor / Walking at home",
+      "videoId": "UkJhynyuU2c"
+    },
+    "marchaIndoorLigera": {
+      "name": "Marcha indoor ligera posprandial",
+      "videoId": "UkJhynyuU2c",
+      "start": 0,
+      "end": 600
+    },
+    "zancadasMancuernas": {
+      "name": "Zancadas con mancuernas",
+      "videoId": "6SfmtrsF8wQ",
+      "start": 30
+    },
+    "pressHombroMancuernas": {
+      "name": "Press de hombro con mancuernas",
+      "videoId": "mbIhJZ2Sbcc"
+    },
+    "remoInclinadoBilateral": {
+      "name": "Remo inclinado bilateral",
+      "videoId": "mYTwBXykfyc"
+    },
+    "puenteGluteos": {
+      "name": "Puente de glúteos con mancuerna",
+      "videoId": "7X5zdMn2tW0",
+      "start": 50
+    },
+    "planchaLateral": {
+      "name": "Plancha lateral",
+      "videoId": "bRivOELQVOs"
+    },
+    "birdDog": {
+      "name": "Bird dog - Core antirrotación",
+      "videoId": "-LRjkbEy-qU"
+    },
+    "extensionTriceps": {
+      "name": "Extensión de tríceps con mancuerna",
+      "videoId": "dxLlYmNOr-E"
+    },
+    "marchaIndoorModerada": {
+      "name": "Marcha indoor moderada continua",
+      "videoId": "k_SoCdUlBvM"
+    },
+    "cuerdaTecnica": {
+      "name": "Cuerda técnica boxer skip",
+      "videoId": "UDhuaNieats"
+    },
+    "planchaShoulderTap": {
+      "name": "Plancha con shoulder taps",
+      "videoId": "8F-SW8XTbE8"
+    },
+    "stepUps": {
+      "name": "Step-ups en escalón",
+      "videoId": "T7PT5nVHE6s"
+    },
+    "marchaIndoorSuave": {
+      "name": "Marcha indoor muy suave",
+      "videoId": "UkJhynyuU2c",
+      "start": 0,
+      "end": 300
+    },
+    "sentadillaBulgara": {
+      "name": "Sentadilla búlgara (split squat)",
+      "videoId": "AgD7XRyH05o",
+      "start": 0,
+      "end": 45
+    },
+    "elevacionesLaterales": {
+      "name": "Elevaciones laterales con mancuernas",
+      "videoId": "ItBASjwB_Wo",
+      "start": 30,
+      "end": 75
+    },
+    "movilidadCaderasHombros": {
+      "name": "Flexibilidad y Movilidad",
+      "videoId": "fhVu5hLadPs"
+    },
+    "rdlMancuernas": {
+      "name": "Peso Muerto Rumano (RDL) con Mancuernas",
+      "videoId": "x7W2BOKWWKs"
+    },
+    "curlBicepsAlterno": {
+      "name": "Curl de Bíceps Alterno",
+      "videoId": "ajJWRrU5Fxo"
+    },
+    "zancadaInversa": {
+      "name": "Zancada Inversa (Reverse Lunge)",
+      "videoId": "wF96HPOuf7E"
+    },
+    "stepUpMancuernas": {
+      "name": "Step-Up con Mancuernas",
+      "videoId": "T7PT5nVHE6s"
+    },
+    "squatJump": {
+      "name": "Sentadillas con Salto (Squat Jumps)",
+      "videoId": "W8Fgy71xzx8",
+      "start": 355,
+      "end": 420
+    },
+    "burpeeSinFlexion": {
+      "name": "Burpees (sin flexión)",
+      "videoId": "W8Fgy71xzx8",
+      "start": 295,
+      "end": 340
+    },
+    "birdDogPlancha": {
+      "name": "Bird-Dog en plancha",
+      "videoId": "W8Fgy71xzx8",
+      "start": 534,
+      "end": 641
+    },
+    "sentadillaIsometricaPared": {
+      "name": "Sentadilla Isométrica en la Pared",
+      "videoId": "HCtp3mBgdJY",
+      "start": 5
+    },
+    "movilidadArticular": {
+      "name": "Movilidad Articular",
+      "videoId": "sAf67xFS-qE",
+      "start": 10,
+      "end": 357
+    },
+    "caminataLigeraCaminadora": {
+      "name": "Caminata Ligera en Caminadora",
+      "videoId": "UkJhynyuU2c",
+      "start": 0,
+      "end": 300
+    },
+    "caminataRapidaCaminadora": {
+      "name": "Caminata Rápida en Caminadora",
+      "videoId": "UkJhynyuU2c"
+    },
+    "troteLigeroCaminadora": {
+      "name": "Trote Ligero en Caminadora",
+      "videoId": "k_SoCdUlBvM"
+    },
+    "caminataInclinacionCaminadora": {
+      "name": "Caminata con Inclinación en Caminadora",
+      "videoId": "UkJhynyuU2c"
+    }
+  },
+  "routines": [
+    {
+      "name": "Lunes 8-9 PM - EC Empuje + Isométricos",
+      "exercises": [
+        {
+          "exerciseId": "movilidadArticular",
+          "type": "time",
+          "work": 300,
+          "rest": 0,
+          "repeat": 1
+        },
+        {
+          "exerciseId": "sentadillaGoblet",
+          "type": "sets",
+          "sets": 4,
+          "reps": 12,
+          "restBetweenSets": 90
+        },
+        {
+          "exerciseId": "pressPechoSuelo",
+          "type": "sets",
+          "sets": 4,
+          "reps": 12,
+          "restBetweenSets": 90
+        },
+        {
+          "exerciseId": "pressHombroMancuernas",
+          "type": "sets",
+          "sets": 4,
+          "reps": 12,
+          "restBetweenSets": 90
+        },
+        {
+          "exerciseId": "extensionTriceps",
+          "type": "sets",
+          "sets": 3,
+          "reps": 12,
+          "restBetweenSets": 60
+        },
+        {
+          "exerciseId": "caminataRapidaCaminadora",
+          "type": "time",
+          "work": 900,
+          "rest": 0,
+          "repeat": 1
+        },
+        {
+          "exerciseId": "sentadillaIsometricaPared",
+          "type": "time",
+          "work": 50,
+          "rest": 60,
+          "repeat": 4
+        },
+        {
+          "exerciseId": "estiramientosCompletos",
+          "type": "time",
+          "work": 300,
+          "rest": 0,
+          "repeat": 1
+        }
+      ]
+    },
+    {
+      "name": "Martes 6-7 AM - HIIT + Core Avanzado",
+      "exercises": [
+        {
+          "exerciseId": "calentamientoDinamico",
+          "type": "time",
+          "work": 300,
+          "rest": 10,
+          "repeat": 1
+        },
+        {
+          "exerciseId": "movilidadArticular",
+          "type": "time",
+          "work": 300,
+          "rest": 0,
+          "repeat": 1
+        },
+        {
+          "exerciseId": "jumpingJacks",
+          "type": "time",
+          "work": 30,
+          "rest": 15,
+          "repeat": 4
+        },
+        {
+          "exerciseId": "squatJump",
+          "type": "time",
+          "work": 30,
+          "rest": 15,
+          "repeat": 4
+        },
+        {
+          "exerciseId": "mountainClimber",
+          "type": "time",
+          "work": 30,
+          "rest": 15,
+          "repeat": 4
+        },
+        {
+          "exerciseId": "burpeeSinFlexion",
+          "type": "time",
+          "work": 30,
+          "rest": 15,
+          "repeat": 4
+        },
+        {
+          "exerciseId": "birdDogPlancha",
+          "type": "time",
+          "work": 30,
+          "rest": 15,
+          "repeat": 3
+        },
+        {
+          "exerciseId": "deadBug",
+          "type": "time",
+          "work": 45,
+          "rest": 30,
+          "repeat": 3
+        },
+        {
+          "exerciseId": "mountainClimber",
+          "type": "time",
+          "work": 30,
+          "rest": 60,
+          "repeat": 3
+        },
+        {
+          "exerciseId": "estiramientosCompletos",
+          "type": "time",
+          "work": 360,
+          "rest": 0,
+          "repeat": 1
+        }
+      ]
+    },
+    {
+      "name": "Martes 8-9 PM - Recuperación Activa + Movilidad",
+      "exercises": [
+        {
+          "exerciseId": "caminataLigeraCaminadora",
+          "type": "time",
+          "work": 900,
+          "rest": 0,
+          "repeat": 1
+        },
+        {
+          "exerciseId": "movilidadCaderasHombros",
+          "type": "time",
+          "work": 1326,
+          "rest": 0,
+          "repeat": 1
+        }
+      ]
+    },
+    {
+      "name": "Miércoles 8-9 PM - EC Tracción + Isométricos",
+      "exercises": [
+        {
+          "exerciseId": "calentamientoDinamico",
+          "type": "time",
+          "work": 322,
+          "rest": 10,
+          "repeat": 1
+        },
+        {
+          "exerciseId": "rdlMancuernas",
+          "type": "sets",
+          "sets": 4,
+          "reps": 12,
+          "restBetweenSets": 90
+        },
+        {
+          "exerciseId": "remoMancuernaUnBrazo",
+          "type": "sets",
+          "sets": 4,
+          "reps": 12,
+          "restBetweenSets": 90
+        },
+        {
+          "exerciseId": "curlBicepsAlterno",
+          "type": "sets",
+          "sets": 3,
+          "reps": 12,
+          "restBetweenSets": 60
+        },
+        {
+          "exerciseId": "sentadillaIsometricaPared",
+          "type": "time",
+          "work": 50,
+          "rest": 60,
+          "repeat": 4
+        },
+        {
+          "exerciseId": "estiramientosCompletos",
+          "type": "time",
+          "work": 350,
+          "rest": 0,
+          "repeat": 1
+        }
+      ]
+    },
+    {
+      "name": "Jueves 8-9 PM - Recuperación Activa + Movilidad",
+      "exercises": [
+        {
+          "exerciseId": "caminataLigeraCaminadora",
+          "type": "time",
+          "work": 900,
+          "rest": 0,
+          "repeat": 1
+        },
+        {
+          "exerciseId": "movilidadCaderasHombros",
+          "type": "time",
+          "work": 622,
+          "rest": 0,
+          "repeat": 1
+        }
+      ]
+    },
+    {
+      "name": "Viernes 6-7 AM - HIIT + Core Avanzado",
+      "exercises": [
+        {
+          "exerciseId": "calentamientoDinamico",
+          "type": "time",
+          "work": 360,
+          "rest": 10,
+          "repeat": 1
+        },
+        {
+          "exerciseId": "jumpingJacks",
+          "type": "time",
+          "work": 30,
+          "rest": 15,
+          "repeat": 4
+        },
+        {
+          "exerciseId": "squatJump",
+          "type": "time",
+          "work": 30,
+          "rest": 15,
+          "repeat": 4
+        },
+        {
+          "exerciseId": "mountainClimber",
+          "type": "time",
+          "work": 30,
+          "rest": 15,
+          "repeat": 4
+        },
+        {
+          "exerciseId": "burpeeSinFlexion",
+          "type": "time",
+          "work": 30,
+          "rest": 15,
+          "repeat": 4
+        },
+        {
+          "exerciseId": "birdDogPlancha",
+          "type": "time",
+          "work": 30,
+          "rest": 15,
+          "repeat": 3
+        },
+        {
+          "exerciseId": "deadBug",
+          "type": "time",
+          "work": 45,
+          "rest": 30,
+          "repeat": 3
+        },
+        {
+          "exerciseId": "mountainClimber",
+          "type": "time",
+          "work": 30,
+          "rest": 60,
+          "repeat": 3
+        },
+        {
+          "exerciseId": "estiramientosCompletos",
+          "type": "time",
+          "work": 360,
+          "rest": 0,
+          "repeat": 1
+        }
+      ]
+    },
+    {
+      "name": "Viernes 8-9 PM - EC Piernas + Isométricos",
+      "exercises": [
+        {
+          "exerciseId": "calentamientoDinamico",
+          "type": "time",
+          "work": 360,
+          "rest": 10,
+          "repeat": 1
+        },
+        {
+          "exerciseId": "zancadaInversa",
+          "type": "sets",
+          "sets": 4,
+          "reps": 12,
+          "restBetweenSets": 90
+        },
+        {
+          "exerciseId": "zancadasMancuernas",
+          "type": "sets",
+          "sets": 3,
+          "reps": 12,
+          "restBetweenSets": 90
+        },
+        {
+          "exerciseId": "puenteGluteos",
+          "type": "sets",
+          "sets": 4,
+          "reps": 15,
+          "restBetweenSets": 90
+        },
+        {
+          "exerciseId": "sentadillaIsometricaPared",
+          "type": "time",
+          "work": 50,
+          "rest": 60,
+          "repeat": 4
+        },
+        {
+          "exerciseId": "estiramientosCompletos",
+          "type": "time",
+          "work": 300,
+          "rest": 0,
+          "repeat": 1
+        }
+      ]
+    }
+  ]
+}
