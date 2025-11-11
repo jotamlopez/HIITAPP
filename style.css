@@ -264,6 +264,57 @@ body {
     height: 100%;
 }
 
+/* Modo pantalla completa */
+.video-container:fullscreen {
+    padding-bottom: 0;
+    height: 100vh;
+    border-radius: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.video-container:fullscreen iframe {
+    width: 100%;
+    height: 100%;
+}
+
+/* Safari */
+.video-container:-webkit-full-screen {
+    padding-bottom: 0;
+    height: 100vh;
+    border-radius: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.video-container:-webkit-full-screen iframe {
+    width: 100%;
+    height: 100%;
+}
+
+/* Botón maximizar - hover effect mejorado */
+#maximizeVideoBtn {
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 0.7;
+}
+
+#maximizeVideoBtn:hover {
+    background: rgba(0, 0, 0, 0.8);
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+.video-container:fullscreen #maximizeVideoBtn,
+.video-container:-webkit-full-screen #maximizeVideoBtn {
+    position: fixed;
+    top: 2rem;
+    right: 2rem;
+}
+
 @supports (aspect-ratio: 16 / 9) {
     .video-container { 
         padding-bottom: 0;
