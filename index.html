@@ -7,24 +7,24 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="hamburger-menu.css">
+
 </head>
 <body class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
 
     <!-- Hamburger Menu Button (Fixed Top-Left) -->
-    <button id="hamburgerMenuBtn" class="fixed top-6 left-6 z-50 w-12 h-12 bg-slate-800/90 backdrop-blur-sm hover:bg-slate-700 rounded-xl shadow-lg flex items-center justify-center transition-all duration-300 border border-slate-700/50">
+    <button id="hamburgerMenuBtn" aria-label="Abrir menú" class="fixed top-6 left-6 z-50 w-12 h-12 bg-slate-800/90 backdrop-blur-sm hover:bg-slate-700 rounded-xl shadow-lg flex items-center justify-center transition-all duration-300 border border-slate-700/50">
         <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
             <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
         </svg>
     </button>
 
     <!-- Sidebar Menu (Hidden by default) -->
-    <div id="sidebarMenu" class="fixed top-0 left-0 h-full w-80 bg-slate-900/95 backdrop-blur-md shadow-2xl z-40 transform -translate-x-full transition-transform duration-300 border-r border-slate-700/50">
+    <div id="sidebarMenu" class="fixed top-0 left-0 h-full w-80 bg-slate-900/95 backdrop-blur-md shadow-2xl z-40 transform -translate-x-full transition-transform duration-300 border-r border-slate-700/50" role="navigation" aria-label="Main navigation">
         <div class="p-6 flex flex-col h-full overflow-y-auto">
             <!-- Sidebar Header -->
             <div class="flex items-center justify-between mb-8">
                 <h1 class="text-2xl font-black text-white tracking-tight">HIIT <span class="text-indigo-400">Trainer</span></h1>
-                <button id="closeSidebarBtn" class="w-8 h-8 hover:bg-slate-800 rounded-lg flex items-center justify-center transition-colors">
+                <button id="closeSidebarBtn" class="w-8 h-8 hover:bg-slate-800 rounded-lg flex items-center justify-center transition-colors" aria-label="Cerrar menú">
                     <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                     </svg>

@@ -496,20 +496,6 @@
     }
 }
 
-/* Hide old layout elements */
-.compact-layout,
-.compact-metric,
-.compact-info-card,
-.compact-sidebar,
-.expanded-layout-grid,
-.expanded-layout-column,
-.column-info,
-.column-video,
-.expanded-timer-shell,
-.exercise-info-panel,
-.expanded-stats-panel {
-    display: none !important;
-}
 
 /* ===== UTILITY ANIMATIONS ===== */
 @keyframes slideInLeft {
