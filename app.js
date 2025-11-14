@@ -4,7 +4,7 @@ window.addEventListener('load', () => {
     let exercises = {}, routines = [];
     let player, playerReady = false, pendingPlayerAction = null;
 
-    const timerDisplay = document.getElementById('timerDisplay'), trainingPanel = document.getElementById('trainingPanel'), timerPhase = document.getElementById('timerPhase'), expandedTimerPhase = document.getElementById('expandedTimerPhase'), currentExerciseTitle = document.getElementById('currentExerciseTitle'), startButton = document.getElementById('startButton'), pauseButton = document.getElementById('pauseButton'), resetExerciseButton = document.getElementById('resetExerciseButton'), resetRoutineButton = document.getElementById('resetRoutineButton'), routineSelect = document.getElementById('routineSelect'), routineModal = document.getElementById('routineModal'), exerciseModal = document.getElementById('exerciseModal'), editRoutineSelect = document.getElementById('editRoutineSelect'), routineNameInput = document.getElementById('routineNameInput'), exerciseSelect = document.getElementById('exerciseSelect'), routineExercisesList = document.getElementById('routineExercisesList'), deleteRoutineBtn = document.getElementById('deleteRoutineBtn'), exerciseLibraryList = document.getElementById('exerciseLibraryList'), exerciseIdInput = document.getElementById('exerciseIdInput'), exerciseNameInput = document.getElementById('exerciseNameInput'), exerciseVideoIdInput = document.getElementById('exerciseVideoIdInput'), videoStartInput = document.getElementById('videoStartInput'), videoEndInput = document.getElementById('videoEndInput'), audioToggle = document.getElementById('audioToggle'), importBtn = document.getElementById('importBtn'), exportBtn = document.getElementById('exportBtn'), importFile = document.getElementById('importFile'), importModal = document.getElementById('importModal'), mergeBtn = document.getElementById('mergeBtn'), replaceBtn = document.getElementById('replaceBtn'), toggleSidebarButton = document.getElementById('toggleSidebarButton'), maximizeVideoButton = document.getElementById('maximizeVideoButton'), floatingSidebarButton = document.getElementById('floatingSidebarButton'), appLayout = document.getElementById('appLayout'), videoContainer = document.getElementById('videoContainer'), controlButtonsContainer = document.querySelector('.control-buttons'), exerciseInfoPanel = document.getElementById('exerciseInfoPanel'), exerciseInfoCurrentName = document.getElementById('exerciseInfoCurrentName'), exerciseInfoCurrentPhase = document.getElementById('exerciseInfoCurrentPhase'), exerciseInfoNextName = document.getElementById('exerciseInfoNextName'), exerciseInfoNextStatus = document.getElementById('exerciseInfoNextStatus'), expandedLayoutGrid = document.getElementById('expandedLayoutGrid'), expandedStatsPanel = document.getElementById('expandedStatsPanel'), expandedStatsProgress = document.getElementById('expandedStatsProgress'), expandedStatsProgressBar = document.getElementById('expandedStatsProgressBar'), expandedStatsRemaining = document.getElementById('expandedStatsRemaining'), expandedStatsDetails = document.getElementById('expandedStatsDetails');
+    const timerDisplay = document.getElementById('timerDisplay'), trainingPanel = document.getElementById('trainingPanel'), timerPhase = document.getElementById('timerPhase'), expandedTimerPhase = document.getElementById('expandedTimerPhase'), currentExerciseTitle = document.getElementById('currentExerciseTitle'), startButton = document.getElementById('startButton'), pauseButton = document.getElementById('pauseButton'), resetExerciseButton = document.getElementById('resetExerciseButton'), resetRoutineButton = document.getElementById('resetRoutineButton'), routineSelect = document.getElementById('routineSelect'), routineModal = document.getElementById('routineModal'), exerciseModal = document.getElementById('exerciseModal'), editRoutineSelect = document.getElementById('editRoutineSelect'), routineNameInput = document.getElementById('routineNameInput'), exerciseSelect = document.getElementById('exerciseSelect'), routineExercisesList = document.getElementById('routineExercisesList'), deleteRoutineBtn = document.getElementById('deleteRoutineBtn'), exerciseLibraryList = document.getElementById('exerciseLibraryList'), exerciseIdInput = document.getElementById('exerciseIdInput'), exerciseNameInput = document.getElementById('exerciseNameInput'), exerciseVideoIdInput = document.getElementById('exerciseVideoIdInput'), videoStartInput = document.getElementById('videoStartInput'), videoEndInput = document.getElementById('videoEndInput'), audioToggle = document.getElementById('audioToggle'), importBtn = document.getElementById('importBtn'), exportBtn = document.getElementById('exportBtn'), importFile = document.getElementById('importFile'), importModal = document.getElementById('importModal'), mergeBtn = document.getElementById('mergeBtn'), replaceBtn = document.getElementById('replaceBtn'), maximizeVideoButton = document.getElementById('maximizeVideoBtn'), appLayout = document.getElementById('appLayout'), videoContainer = document.getElementById('videoContainer'), controlButtonsContainer = document.querySelector('.bottom-controls'), exerciseInfoCurrentName = document.getElementById('exerciseInfoCurrentName'), exerciseInfoCurrentPhase = document.getElementById('exerciseInfoCurrentPhase'), exerciseInfoNextName = document.getElementById('exerciseInfoNextName'), exerciseInfoNextStatus = document.getElementById('exerciseInfoNextStatus'), expandedStatsProgress = document.getElementById('expandedStatsProgress'), expandedStatsProgressBar = document.getElementById('expandedStatsProgressBar'), expandedStatsRemaining = document.getElementById('expandedStatsRemaining'), expandedStatsDetails = document.getElementById('expandedStatsDetails');
     let currentRoutine = null, currentExerciseIndex = 0, currentSetIndex = 1, currentRepeatIndex = 1, currentCircuitRound = 1, currentCircuitExerciseIndex = 0, isInCircuit = false, timeLeft, timer, timerState = 'stopped', state = 'work', tempExercises = [], tempCircuitExercises = [], countdownSynth, finishSynth, isVideoMuted = true, importedData = null, audioContext = null, countdownGainNode = null, finishGainNode = null, isSidebarHidden = false, isFallbackFullscreen = false, previousSidebarHidden = false, layoutRaf = null;
 
     async function initializeAppData() {
@@ -227,18 +227,22 @@ window.addEventListener('load', () => {
         if (expandedTimerPhase) expandedTimerPhase.textContent = text;
     }
 
+    function setStartButtonActive(active) {
+        if (!startButton) return;
+        if (active) {
+            startButton.classList.add('active-timer');
+            startButton.style.opacity = '0.6';
+            startButton.style.pointerEvents = 'none';
+        } else {
+            startButton.classList.remove('active-timer');
+            startButton.style.opacity = '1';
+            startButton.style.pointerEvents = 'auto';
+            startButton.disabled = false; // Mantener para consistencia
+        }
+    }
+
     function updateSidebarToggleUI() {
-        if (toggleSidebarButton) {
-            const labelSpan = toggleSidebarButton.querySelector('span');
-            toggleSidebarButton.setAttribute('aria-label', isSidebarHidden ? 'Mostrar panel de control' : 'Ocultar panel de control');
-            if (labelSpan) labelSpan.textContent = isSidebarHidden ? 'Mostrar panel' : 'Ocultar panel';
-        }
-        if (floatingSidebarButton) {
-            floatingSidebarButton.setAttribute('aria-hidden', String(!isSidebarHidden));
-            floatingSidebarButton.tabIndex = isSidebarHidden ? 0 : -1;
-            floatingSidebarButton.style.pointerEvents = isSidebarHidden ? 'auto' : 'none';
-            floatingSidebarButton.style.opacity = isSidebarHidden ? '1' : '0';
-        }
+        // Function kept for compatibility but no longer needed with new layout
     }
 
     function setSidebarHidden(hidden) {
@@ -297,12 +301,7 @@ window.addEventListener('load', () => {
         const controlsHeight = controlButtonsContainer ? controlButtonsContainer.getBoundingClientRect().height : 0;
 
         let layoutGap = 0;
-        if (expandedLayoutGrid && expandedLayoutGrid.offsetParent) {
-            const styles = getComputedStyle(expandedLayoutGrid);
-            const gapValue = styles.rowGap || styles.gap || '0';
-            const parsedGap = parseFloat(gapValue);
-            layoutGap = Number.isFinite(parsedGap) ? parsedGap : 0;
-        }
+        // Layout gap calculation simplified for new 3-column layout
 
     const paddingBuffer = (isFullscreenActive() ? 110 : 190) + layoutGap;
         const availableHeight = Math.max(260, viewportHeight - timerHeight - controlsHeight - paddingBuffer);
@@ -379,32 +378,32 @@ window.addEventListener('load', () => {
     }
 
     function updateExpandedStats() {
-        if (!expandedStatsPanel || !expandedStatsProgress || !expandedStatsRemaining || !expandedStatsDetails) {
+        if (!expandedStatsProgress || !expandedStatsRemaining || !expandedStatsDetails) {
             scheduleExpandedLayoutRecalc();
             return;
         }
 
         if (!currentRoutine || !Array.isArray(currentRoutine.exercises) || currentRoutine.exercises.length === 0) {
-            expandedStatsProgress.textContent = '0 / 0 ejercicios';
+            expandedStatsProgress.textContent = '0/0';
             expandedStatsRemaining.textContent = '00:00';
-            expandedStatsDetails.textContent = 'Inicia la rutina para ver el progreso';
-            if (expandedStatsProgressBar) expandedStatsProgressBar.style.width = '0%';
+            expandedStatsDetails.textContent = 'Inicia la rutina';
+            if (expandedStatsProgressBar) expandedStatsProgressBar.style.height = '0%';
             scheduleExpandedLayoutRecalc();
             return;
         }
 
         const totalExercises = currentRoutine.exercises.length;
         const currentPosition = Math.min(currentExerciseIndex + 1, totalExercises);
-        expandedStatsProgress.textContent = `${currentPosition} / ${totalExercises} ejercicios`;
+        expandedStatsProgress.textContent = `${currentPosition}/${totalExercises}`;
 
         const completed = Math.min(totalExercises, state === 'rest' ? currentExerciseIndex + 1 : currentExerciseIndex);
         const progressPercent = totalExercises > 0 ? Math.min(100, Math.max(0, (completed / totalExercises) * 100)) : 0;
-        if (expandedStatsProgressBar) expandedStatsProgressBar.style.width = `${progressPercent}%`;
+        if (expandedStatsProgressBar) expandedStatsProgressBar.style.height = `${progressPercent}%`;
 
         const remainingSeconds = calculateRemainingSeconds();
         expandedStatsRemaining.textContent = formatDuration(remainingSeconds);
         if (remainingSeconds <= 0) {
-            expandedStatsDetails.textContent = '¡Rutina completada! Excelente trabajo.';
+            expandedStatsDetails.textContent = '¡Completada!';
             scheduleExpandedLayoutRecalc();
             return;
         }
@@ -539,13 +538,13 @@ window.addEventListener('load', () => {
     }
 
     function updateExerciseInfo() {
-        if (!exerciseInfoPanel || !exerciseInfoCurrentName || !exerciseInfoCurrentPhase || !exerciseInfoNextName || !exerciseInfoNextStatus) return;
+        if (!exerciseInfoCurrentName || !exerciseInfoCurrentPhase || !exerciseInfoNextName || !exerciseInfoNextStatus) return;
 
         if (!currentRoutine || !Array.isArray(currentRoutine.exercises) || currentRoutine.exercises.length === 0) {
             exerciseInfoCurrentName.textContent = 'Selecciona una rutina';
             exerciseInfoCurrentPhase.textContent = 'Prepárate';
             exerciseInfoNextName.textContent = '—';
-            exerciseInfoNextStatus.textContent = 'Añade ejercicios para comenzar';
+            exerciseInfoNextStatus.textContent = 'Añade ejercicios';
             updateExpandedStats();
             // Also refresh left panel details
             renderLeftPanelDetails();
@@ -1225,7 +1224,10 @@ window.addEventListener('load', () => {
             if (effectiveEx && effectiveEx.type === 'sets' && state === 'work') {
                 // Reproducir video, actualizar estados de botones; no iniciar intervalo
                 timerState = 'running';
-                if (startButton) startButton.disabled = true;
+                if (startButton) {
+                    startButton.classList.add('active-timer');
+                    startButton.style.opacity = '0.6';
+                }
                 if (pauseButton) pauseButton.disabled = false;
                 try {
                     setupAudio();
@@ -1247,7 +1249,10 @@ window.addEventListener('load', () => {
                 }
                 if (effectiveEx && effectiveEx.type === 'sets' && state === 'work') {
                     timerState = 'running';
-                    if (startButton) startButton.disabled = true;
+                    if (startButton) {
+                        startButton.classList.add('active-timer');
+                        startButton.style.opacity = '0.6';
+                    }
                     if (pauseButton) pauseButton.disabled = false;
                     playCurrentVideo();
                     updateExerciseInfo();
@@ -1258,7 +1263,7 @@ window.addEventListener('load', () => {
             // resume from pause
             timerState = 'running';
             // update button states
-            if (startButton) startButton.disabled = true;
+            setStartButtonActive(true);
             if (pauseButton) pauseButton.disabled = false;
             setupAudio();
             await primeAudioEngines();
@@ -1284,7 +1289,7 @@ window.addEventListener('load', () => {
             if (effectiveEx && effectiveEx.type === 'sets' && state === 'work') {
                 clearInterval(timer); timer = null;
                 timerState = 'running';
-                if (startButton) startButton.disabled = true;
+                setStartButtonActive(true);
                 if (pauseButton) pauseButton.disabled = false;
                 playCurrentVideo();
                 updateExerciseInfo();
@@ -1296,7 +1301,7 @@ window.addEventListener('load', () => {
             timerState = 'running';
             // ensure work state for first tick of time-based exercises
             if (state !== 'rest') state = 'work';
-            if (startButton) startButton.disabled = true;
+            setStartButtonActive(true);
             if (pauseButton) pauseButton.disabled = false;
             updatePhaseUI();
 
@@ -1319,7 +1324,7 @@ window.addEventListener('load', () => {
         clearInterval(timer);
         pauseCurrentVideo();
         // update button states: allow resuming with Start, disable Pause while paused
-        if (startButton) startButton.disabled = false;
+        setStartButtonActive(false);
         if (pauseButton) pauseButton.disabled = true;
         updateExerciseInfo();
         renderLeftPanelDetails();
@@ -1546,8 +1551,9 @@ window.addEventListener('load', () => {
                 const circuit = currentRoutine.exercises[currentExerciseIndex];
                 const circuitEx = circuit.exercises[currentCircuitExerciseIndex];
 
-                // 1. Descanso entre vueltas (se coloca primero)
-                if (currentCircuitExerciseIndex === 0 && currentCircuitRound > 1 && circuitEx === circuit.exercises[0]) {
+                // 1. Descanso entre vueltas (verificar por el título actual, no por índices)
+                const isRestBetweenRounds = currentExerciseTitle.textContent.includes('Descanso entre vueltas');
+                if (isRestBetweenRounds) {
                     const firstEx = circuit.exercises[0];
                     state = 'work';
                     currentRepeatIndex = 1;
@@ -1818,32 +1824,38 @@ window.addEventListener('load', () => {
     if (completeSetButton) completeSetButton.addEventListener('click', () => completeSet());
     resetRoutineButton.addEventListener('click', () => { if (!currentRoutine) return; const routineName = routineSelect.value; if (!routineName) return; routineSelect.value = ''; routineSelect.value = routineName; const event = new Event('change'); routineSelect.dispatchEvent(event); });
     
-    if (toggleSidebarButton) {
-        toggleSidebarButton.addEventListener('click', () => {
-            if (isFallbackFullscreen || document.fullscreenElement === trainingPanel) return;
-            setSidebarHidden(!isSidebarHidden);
-        });
-    }
+    // Removed obsolete sidebar toggle buttons (new hamburger menu handles this)
 
     if (maximizeVideoButton) {
-        maximizeVideoButton.addEventListener('click', toggleTrainingFullscreen);
-    }
-
-    if (floatingSidebarButton) {
-        floatingSidebarButton.addEventListener('click', async () => {
-            if (isFallbackFullscreen) {
-                applyFallbackFullscreen(false);
-                return;
-            }
-            if (document.fullscreenElement === trainingPanel) {
+        maximizeVideoButton.addEventListener('click', async () => {
+            const centerColumn = document.querySelector('.center-column');
+            if (!centerColumn) return;
+            
+            if (!document.fullscreenElement) {
                 try {
-                    await document.exitFullscreen();
+                    if (centerColumn.requestFullscreen) {
+                        await centerColumn.requestFullscreen();
+                    } else if (centerColumn.webkitRequestFullscreen) { /* Safari */
+                        centerColumn.webkitRequestFullscreen();
+                    } else if (centerColumn.msRequestFullscreen) { /* IE11 */
+                        centerColumn.msRequestFullscreen();
+                    }
                 } catch (error) {
-                    console.warn('No se pudo salir de pantalla completa:', error);
+                    console.warn('Error al entrar en pantalla completa:', error);
                 }
-                return;
+            } else {
+                try {
+                    if (document.exitFullscreen) {
+                        await document.exitFullscreen();
+                    } else if (document.webkitExitFullscreen) { /* Safari */
+                        document.webkitExitFullscreen();
+                    } else if (document.msExitFullscreen) { /* IE11 */
+                        document.msExitFullscreen();
+                    }
+                } catch (error) {
+                    console.warn('Error al salir de pantalla completa:', error);
+                }
             }
-            setSidebarHidden(false);
         });
     }
 
@@ -2785,30 +2797,7 @@ window.addEventListener('load', () => {
         });
     }
     
-    // Maximizar video
-    const maximizeVideoBtn = document.getElementById('maximizeVideoBtn');
-    const expandIcon = document.getElementById('expandIcon');
-    const compressIcon = document.getElementById('compressIcon');
-    
-    maximizeVideoBtn.addEventListener('click', () => {
-        if (!document.fullscreenElement) {
-            if (videoContainer.requestFullscreen) {
-                videoContainer.requestFullscreen();
-            } else if (videoContainer.webkitRequestFullscreen) { /* Safari */
-                videoContainer.webkitRequestFullscreen();
-            } else if (videoContainer.msRequestFullscreen) { /* IE11 */
-                videoContainer.msRequestFullscreen();
-            }
-        } else {
-            if (document.exitFullscreen) {
-                document.exitFullscreen();
-            } else if (document.webkitExitFullscreen) { /* Safari */
-                document.webkitExitFullscreen();
-            } else if (document.msExitFullscreen) { /* IE11 */
-                document.msExitFullscreen();
-            }
-        }
-    });
+    // Event listeners ya configurados arriba para maximizar video
     
     // Cambiar icono cuando entra/sale de pantalla completa
     document.addEventListener('fullscreenchange', updateFullscreenIcon);
@@ -2816,6 +2805,12 @@ window.addEventListener('load', () => {
     document.addEventListener('msfullscreenchange', updateFullscreenIcon);
     
     function updateFullscreenIcon() {
+        const expandIcon = document.getElementById('expandIcon');
+        const compressIcon = document.getElementById('compressIcon');
+        const maximizeVideoBtn = document.getElementById('maximizeVideoBtn');
+        
+        if (!expandIcon || !compressIcon || !maximizeVideoBtn) return;
+        
         if (document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement) {
             expandIcon.style.display = 'none';
             compressIcon.style.display = 'block';
@@ -2831,6 +2826,44 @@ window.addEventListener('load', () => {
     updateSidebarToggleUI();
     updateMaximizeButton(false);
     updateExpandedLayoutState();
+    
+    // Hamburger Menu Handler
+    const hamburgerMenuBtn = document.getElementById('hamburgerMenuBtn');
+    const sidebarMenu = document.getElementById('sidebarMenu');
+    const closeSidebarBtn = document.getElementById('closeSidebarBtn');
+    
+    function toggleSidebarMenu() {
+        sidebarMenu.classList.toggle('-translate-x-full');
+    }
+    
+    if (hamburgerMenuBtn) {
+        hamburgerMenuBtn.addEventListener('click', toggleSidebarMenu);
+    }
+    
+    if (closeSidebarBtn) {
+        closeSidebarBtn.addEventListener('click', toggleSidebarMenu);
+    }
+    
+    // Close sidebar when clicking outside
+    document.addEventListener('click', (e) => {
+        if (sidebarMenu && !sidebarMenu.classList.contains('-translate-x-full')) {
+            if (!sidebarMenu.contains(e.target) && !hamburgerMenuBtn.contains(e.target)) {
+                toggleSidebarMenu();
+            }
+        }
+    });
+    
+    // Close sidebar after clicking a menu item
+    const sidebarButtons = sidebarMenu?.querySelectorAll('button:not(#closeSidebarBtn)');
+    sidebarButtons?.forEach(btn => {
+        btn.addEventListener('click', () => {
+            if (!sidebarMenu.classList.contains('-translate-x-full')) {
+                toggleSidebarMenu();
+            }
+        });
+    });
+    
     initializeAppData();
 });
+
 

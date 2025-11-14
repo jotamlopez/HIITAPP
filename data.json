@@ -207,7 +207,7 @@
     },
     "movilidadCaderasHombros": {
       "name": "Flexibilidad y Movilidad",
-      "videoId": "iko6bFR_e28"
+      "videoId": "5aAkskctYGY"
     },
     "rdlMancuernas": {
       "name": "Peso Muerto Rumano (RDL) con Mancuernas",
@@ -271,6 +271,11 @@
     "caminataInclinacionCaminadora": {
       "name": "Caminata con Inclinación en Caminadora",
       "videoId": "UkJhynyuU2c"
+    },
+    "puenteIsometrico": {
+      "name": "Puente Isométrico (Glúteos)",
+      "videoId": "7X5zdMn2tW0",
+      "start": 50
     }
   },
   "routines": [
@@ -285,25 +290,46 @@
           "repeat": 1
         },
         {
-          "exerciseId": "sentadillaGoblet",
-          "type": "sets",
-          "sets": 4,
-          "reps": 12,
-          "restBetweenSets": 75
+          "type": "circuit",
+          "rounds": 4,
+          "restBetweenRounds": 90,
+          "exercises": [
+            {
+              "exerciseId": "pressPechoSuelo",
+              "type": "sets",
+              "sets": 1,
+              "reps": 12,
+              "restBetweenSets": 60
+            },
+            {
+              "exerciseId": "remoMancuernaUnBrazo",
+              "type": "sets",
+              "sets": 1,
+              "reps": 12,
+              "restBetweenSets": 60
+            }
+          ]
         },
         {
-          "exerciseId": "pressPechoSuelo",
-          "type": "sets",
-          "sets": 4,
-          "reps": 12,
-          "restBetweenSets": 75
-        },
-        {
-          "exerciseId": "pressHombroMancuernas",
-          "type": "sets",
-          "sets": 4,
-          "reps": 12,
-          "restBetweenSets": 75
+          "type": "circuit",
+          "rounds": 4,
+          "restBetweenRounds": 90,
+          "exercises": [
+            {
+              "exerciseId": "pressHombroMancuernas",
+              "type": "sets",
+              "sets": 1,
+              "reps": 12,
+              "restBetweenSets": 60
+            },
+            {
+              "exerciseId": "curlBicepsAlterno",
+              "type": "sets",
+              "sets": 1,
+              "reps": 12,
+              "restBetweenSets": 60
+            }
+          ]
         },
         {
           "exerciseId": "extensionTriceps",
@@ -320,11 +346,25 @@
           "repeat": 1
         },
         {
-          "exerciseId": "sentadillaIsometricaPared",
-          "type": "time",
-          "work": 50,
-          "rest": 60,
-          "repeat": 4
+          "type": "circuit",
+          "rounds": 3,
+          "restBetweenRounds": 60,
+          "exercises": [
+            {
+              "exerciseId": "sentadillaIsometricaPared",
+              "type": "time",
+              "work": 50,
+              "rest": 10,
+              "repeat": 1
+            },
+            {
+              "exerciseId": "planchaFrontal",
+              "type": "time",
+              "work": 40,
+              "rest": 0,
+              "repeat": 1
+            }
+          ]
         },
         {
           "exerciseId": "estiramientosCompletos",
@@ -336,15 +376,8 @@
       ]
     },
     {
-      "name": "Martes 6-7 AM - HIIT + Core Avanzado",
+      "name": "Martes 6-7 AM - HIIT Ligero + Core",
       "exercises": [
-        {
-          "exerciseId": "calentamientoDinamico",
-          "type": "time",
-          "work": 300,
-          "rest": 10,
-          "repeat": 1
-        },
         {
           "exerciseId": "movilidadArticular",
           "type": "time",
@@ -353,77 +386,58 @@
           "repeat": 1
         },
         {
-          "exerciseId": "jumpingJacks",
-          "type": "time",
-          "work": 30,
-          "rest": 30,
-          "repeat": 4
+          "type": "circuit",
+          "rounds": 3,
+          "restBetweenRounds": 45,
+          "exercises": [
+            {
+              "exerciseId": "jumpingJacks",
+              "type": "time",
+              "work": 30,
+              "rest": 15,
+              "repeat": 1
+            },
+            {
+              "exerciseId": "squatJump",
+              "type": "time",
+              "work": 30,
+              "rest": 15,
+              "repeat": 1
+            },
+            {
+              "exerciseId": "mountainClimber",
+              "type": "time",
+              "work": 30,
+              "rest": 15,
+              "repeat": 1
+            }
+          ]
         },
         {
-          "exerciseId": "squatJump",
-          "type": "time",
-          "work": 30,
-          "rest": 30,
-          "repeat": 4
-        },
-        {
-          "exerciseId": "mountainClimber",
-          "type": "time",
-          "work": 30,
-          "rest": 30,
-          "repeat": 4
-        },
-        {
-          "exerciseId": "burpeeSinFlexion",
-          "type": "time",
-          "work": 30,
-          "rest": 30,
-          "repeat": 4
-        },
-        {
-          "exerciseId": "birdDogPlancha",
-          "type": "time",
-          "work": 30,
-          "rest": 30,
-          "repeat": 3
-        },
-        {
-          "exerciseId": "deadBug",
-          "type": "time",
-          "work": 45,
-          "rest": 30,
-          "repeat": 3
-        },
-        {
-          "exerciseId": "mountainClimber",
-          "type": "time",
-          "work": 30,
-          "rest": 60,
-          "repeat": 3
+          "type": "circuit",
+          "rounds": 2,
+          "restBetweenRounds": 45,
+          "exercises": [
+            {
+              "exerciseId": "birdDogPlancha",
+              "type": "time",
+              "work": 107,
+              "rest": 15,
+              "repeat": 1
+            },
+            {
+              "exerciseId": "deadBug",
+              "type": "time",
+              "work": 40,
+              "rest": 15,
+              "repeat": 1
+            }
+          ]
         },
         {
           "exerciseId": "estiramientosCompletos",
           "type": "time",
           "work": 360,
-          "rest": 0,
-          "repeat": 1
-        }
-      ]
-    },
-    {
-      "name": "Martes 8-9 PM - Recuperación Activa + Movilidad",
-      "exercises": [
-        {
-          "exerciseId": "caminataLigeraCaminadora",
-          "type": "time",
-          "work": 900,
-          "rest": 0,
-          "repeat": 1
-        },
-        {
-          "exerciseId": "movilidadCaderasHombros",
-          "type": "time",
-          "work": 1326,
           "rest": 0,
           "repeat": 1
         }
@@ -440,32 +454,46 @@
           "repeat": 1
         },
         {
-          "exerciseId": "rdlMancuernas",
-          "type": "sets",
-          "sets": 4,
-          "reps": 12,
-          "restBetweenSets": 75
+          "type": "circuit",
+          "rounds": 4,
+          "restBetweenRounds": 90,
+          "exercises": [
+            {
+              "exerciseId": "rdlMancuernas",
+              "type": "sets",
+              "sets": 1,
+              "reps": 12,
+              "restBetweenSets": 60
+            },
+            {
+              "exerciseId": "remoMancuernaUnBrazo",
+              "type": "sets",
+              "sets": 1,
+              "reps": 12,
+              "restBetweenSets": 60
+            }
+          ]
         },
         {
-          "exerciseId": "remoMancuernaUnBrazo",
-          "type": "sets",
-          "sets": 4,
-          "reps": 12,
-          "restBetweenSets": 75
-        },
-        {
-          "exerciseId": "curlBicepsAlterno",
-          "type": "sets",
-          "sets": 3,
-          "reps": 12,
-          "restBetweenSets": 60
-        },
-        {
-          "exerciseId": "sentadillaIsometricaPared",
-          "type": "time",
-          "work": 50,
-          "rest": 60,
-          "repeat": 4
+          "type": "circuit",
+          "rounds": 3,
+          "restBetweenRounds": 90,
+          "exercises": [
+            {
+              "exerciseId": "curlBicepsAlterno",
+              "type": "sets",
+              "sets": 1,
+              "reps": 12,
+              "restBetweenSets": 60
+            },
+            {
+              "exerciseId": "extensionTriceps",
+              "type": "sets",
+              "sets": 1,
+              "reps": 12,
+              "restBetweenSets": 60
+            }
+          ]
         },
         {
           "exerciseId": "caminataInclinacionCaminadora",
@@ -473,6 +501,27 @@
           "work": 900,
           "rest": 0,
           "repeat": 1
+        },
+        {
+          "type": "circuit",
+          "rounds": 3,
+          "restBetweenRounds": 60,
+          "exercises": [
+            {
+              "exerciseId": "sentadillaIsometricaPared",
+              "type": "time",
+              "work": 50,
+              "rest": 10,
+              "repeat": 1
+            },
+            {
+              "exerciseId": "planchaLateral",
+              "type": "time",
+              "work": 30,
+              "rest": 10,
+              "repeat": 2
+            }
+          ]
         },
         {
           "exerciseId": "estiramientosCompletos",
@@ -484,82 +533,77 @@
       ]
     },
     {
-      "name": "Jueves 8-9 PM - Recuperación Activa + Movilidad",
+      "name": "Jueves 8-9 PM - HIIT Full Body + Core",
       "exercises": [
         {
-          "exerciseId": "caminataLigeraCaminadora",
+          "exerciseId": "movilidadArticular",
           "type": "time",
-          "work": 900,
+          "work": 300,
           "rest": 0,
           "repeat": 1
         },
         {
-          "exerciseId": "movilidadCaderasHombros",
-          "type": "time",
-          "work": 1320,
-          "rest": 0,
-          "repeat": 1
-        }
-      ]
-    },
-    {
-      "name": "Viernes 6-7 AM - HIIT + Core Avanzado",
-      "exercises": [
-        {
-          "exerciseId": "calentamientoDinamico",
-          "type": "time",
-          "work": 360,
-          "rest": 10,
-          "repeat": 1
+          "type": "circuit",
+          "rounds": 4,
+          "restBetweenRounds": 45,
+          "exercises": [
+            {
+              "exerciseId": "jumpingJacks",
+              "type": "time",
+              "work": 30,
+              "rest": 15,
+              "repeat": 1
+            },
+            {
+              "exerciseId": "squatJump",
+              "type": "time",
+              "work": 30,
+              "rest": 15,
+              "repeat": 1
+            },
+            {
+              "exerciseId": "mountainClimber",
+              "type": "time",
+              "work": 30,
+              "rest": 15,
+              "repeat": 1
+            },
+            {
+              "exerciseId": "burpeeSinFlexion",
+              "type": "time",
+              "work": 30,
+              "rest": 15,
+              "repeat": 1
+            }
+          ]
         },
         {
-          "exerciseId": "jumpingJacks",
-          "type": "time",
-          "work": 30,
-          "rest": 30,
-          "repeat": 4
-        },
-        {
-          "exerciseId": "squatJump",
-          "type": "time",
-          "work": 30,
-          "rest": 30,
-          "repeat": 4
-        },
-        {
-          "exerciseId": "mountainClimber",
-          "type": "time",
-          "work": 30,
-          "rest": 30,
-          "repeat": 4
-        },
-        {
-          "exerciseId": "burpeeSinFlexion",
-          "type": "time",
-          "work": 30,
-          "rest": 30,
-          "repeat": 4
-        },
-        {
-          "exerciseId": "birdDogPlancha",
-          "type": "time",
-          "work": 30,
-          "rest": 30,
-          "repeat": 3
-        },
-        {
-          "exerciseId": "deadBug",
-          "type": "time",
-          "work": 45,
-          "rest": 30,
-          "repeat": 3
-        },
-        {
-          "exerciseId": "mountainClimber",
-          "type": "time",
-          "work": 30,
-          "rest": 60,
-          "repeat": 3
+          "type": "circuit",
+          "rounds": 3,
+          "restBetweenRounds": 45,
+          "exercises": [
+            {
+              "exerciseId": "birdDogPlancha",
+              "type": "time",
+              "work": 107,
+              "rest": 15,
+              "repeat": 1
+            },
+            {
+              "exerciseId": "deadBug",
+              "type": "time",
+              "work": 45,
+              "rest": 15,
+              "repeat": 1
+            },
+            {
+              "exerciseId": "planchaFrontal",
+              "type": "time",
+              "work": 30,
+              "rest": 15,
+              "repeat": 1
+            }
+          ]
         },
         {
           "exerciseId": "estiramientosCompletos",
@@ -571,42 +615,103 @@
       ]
     },
     {
-      "name": "Viernes 8-9 PM - EC Piernas + Isométricos",
+      "name": "Viernes 6-7 AM - Recuperación Activa",
       "exercises": [
         {
-          "exerciseId": "calentamientoDinamico",
+          "exerciseId": "caminataLigeraCaminadora",
           "type": "time",
-          "work": 360,
-          "rest": 10,
+          "work": 900,
+          "rest": 0,
           "repeat": 1
         },
         {
-          "exerciseId": "zancadaInversa",
-          "type": "sets",
-          "sets": 4,
-          "reps": 12,
-          "restBetweenSets": 75
-        },
-        {
-          "exerciseId": "zancadasMancuernas",
-          "type": "sets",
-          "sets": 3,
-          "reps": 12,
-          "restBetweenSets": 75
-        },
-        {
-          "exerciseId": "puenteGluteos",
-          "type": "sets",
-          "sets": 4,
-          "reps": 15,
-          "restBetweenSets": 75
-        },
-        {
-          "exerciseId": "sentadillaIsometricaPared",
+          "exerciseId": "movilidadCaderasHombros",
           "type": "time",
-          "work": 50,
-          "rest": 60,
-          "repeat": 4
+          "work": 900,
+          "rest": 0,
+          "repeat": 1
+        }
+      ]
+    },
+    {
+      "name": "Viernes 8-9 PM - EC Piernas + Isométricos",
+      "exercises": [
+        {
+          "exerciseId": "movilidadArticular",
+          "type": "time",
+          "work": 300,
+          "rest": 0,
+          "repeat": 1
+        },
+        {
+          "type": "circuit",
+          "rounds": 4,
+          "restBetweenRounds": 90,
+          "exercises": [
+            {
+              "exerciseId": "zancadaInversa",
+              "type": "sets",
+              "sets": 1,
+              "reps": 12,
+              "restBetweenSets": 60
+            },
+            {
+              "exerciseId": "rdlMancuernas",
+              "type": "sets",
+              "sets": 1,
+              "reps": 12,
+              "restBetweenSets": 60
+            }
+          ]
+        },
+        {
+          "type": "circuit",
+          "rounds": 3,
+          "restBetweenRounds": 90,
+          "exercises": [
+            {
+              "exerciseId": "stepUpMancuernas",
+              "type": "sets",
+              "sets": 1,
+              "reps": 12,
+              "restBetweenSets": 60
+            },
+            {
+              "exerciseId": "puenteGluteos",
+              "type": "sets",
+              "sets": 1,
+              "reps": 15,
+              "restBetweenSets": 60
+            }
+          ]
+        },
+        {
+          "exerciseId": "troteLigeroCaminadora",
+          "type": "time",
+          "work": 900,
+          "rest": 0,
+          "repeat": 1
+        },
+        {
+          "type": "circuit",
+          "rounds": 3,
+          "restBetweenRounds": 60,
+          "exercises": [
+            {
+              "exerciseId": "sentadillaIsometricaPared",
+              "type": "time",
+              "work": 50,
+              "rest": 10,
+              "repeat": 1
+            },
+            {
+              "exerciseId": "puenteIsometrico",
+              "type": "time",
+              "work": 40,
+              "rest": 0,
+              "repeat": 1
+            }
+          ]
         },
         {
           "exerciseId": "estiramientosCompletos",
