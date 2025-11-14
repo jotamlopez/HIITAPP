@@ -1,76 +1,15 @@
 /* ===== HAMBURGER MENU & SIDEBAR ===== */
 #hamburgerMenuBtn {
-    backdrop-filter: blur(12px);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-#hamburgerMenuBtn:hover {
-    transform: scale(1.05);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-}
-
-#hamburgerMenuBtn:active {
-    transform: scale(0.95);
+    cursor: pointer;
 }
 
 #sidebarMenu {
-    backdrop-filter: blur(20px);
-    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.5);
-}
-
-#sidebarMenu.translate-x-0 {
+    transition: transform 0.3s ease-in-out;
     transform: translateX(0);
 }
 
-/* Overlay when sidebar is open */
-#sidebarMenu:not(.-translate-x-full)::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    right: -100vw;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: -1;
-    animation: fadeIn 0.3s ease;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-/* Modern scrollbar for sidebar */
-#sidebarMenu::-webkit-scrollbar {
-    width: 6px;
-}
-
-#sidebarMenu::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-#sidebarMenu::-webkit-scrollbar-thumb {
-    background: rgba(99, 102, 241, 0.5);
-    border-radius: 3px;
-}
-
-#sidebarMenu::-webkit-scrollbar-thumb:hover {
-    background: rgba(99, 102, 241, 0.7);
-}
-
-/* ===== RESPONSIVE DESIGN ===== */
-@media (max-width: 768px) {
-    #hamburgerMenuBtn {
-        top: 1rem;
-        left: 1rem;
-        width: 48px;
-        height: 48px;
-    }
-    
-    #sidebarMenu {
-        width: 85vw;
-        max-width: 320px;
-    }
+#sidebarMenu.sidebar-hidden {
+    transform: translateX(-100%);
 }
 
 /* ===== MODERN GLASSMORPHISM EFFECTS ===== */

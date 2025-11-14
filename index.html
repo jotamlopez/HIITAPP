@@ -6,7 +6,202 @@
     <title>Constructor de Rutinas HIIT</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=2">
+    <link rel="stylesheet" href="hamburger-menu.css?v=2">
+    <style>
+        /* Critical CSS inline to ensure layout works */
+        .full-width-layout {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+            max-width: 100%;
+            padding: 0;
+            border-radius: 0;
+            border: none;
+        }
+        .top-bar {
+            background: rgba(15, 23, 42, 0.95);
+            border-bottom: 1px solid rgba(99, 102, 241, 0.3);
+            padding: 0.5rem 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .three-column-layout {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 280px 1fr 280px;
+            gap: 0;
+            overflow: hidden;
+            min-height: 0;
+        }
+        .side-column {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(10px);
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            overflow-y: auto;
+        }
+        .center-column {
+            display: flex;
+            flex-direction: column;
+            background: #000000;
+            position: relative;
+        }
+        .bottom-controls {
+            background: rgba(15, 23, 42, 0.95);
+            border-top: 1px solid rgba(99, 102, 241, 0.3);
+            padding: 0.75rem 1rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .info-card-vertical {
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 0.75rem;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        .info-card-header {
+            background: rgba(99, 102, 241, 0.2);
+            padding: 0.5rem 0.75rem;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: #a5b4fc;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            text-align: center;
+        }
+        .info-card-body {
+            padding: 0.75rem;
+        }
+        .info-card-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #ffffff;
+            margin: 0 0 0.25rem 0;
+            line-height: 1.3;
+        }
+        .info-card-phase {
+            font-size: 0.8rem;
+            color: #a5b4fc;
+            margin: 0;
+        }
+        .info-card-details {
+            padding: 0.5rem 0.75rem;
+            font-size: 0.7rem;
+            color: #cbd5e1;
+            border-top: 1px solid rgba(99, 102, 241, 0.2);
+        }
+        .info-card-details > div {
+            padding: 0.25rem 0;
+        }
+        .left-sidebar {
+            border-right: 1px solid rgba(99, 102, 241, 0.2);
+        }
+        .right-sidebar {
+            border-left: 1px solid rgba(99, 102, 241, 0.2);
+        }
+        .progress-bar-vertical {
+            width: 100%;
+            height: 120px;
+            background: rgba(30, 41, 59, 0.8);
+            border-radius: 0.5rem;
+            overflow: hidden;
+            position: relative;
+            margin: 0.75rem 0;
+        }
+        .progress-bar-fill {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 0%;
+            background: linear-gradient(to top, #6366f1, #8b5cf6);
+            transition: height 0.5s ease;
+        }
+        .progress-details {
+            display: block;
+            font-size: 0.7rem;
+            color: #94a3b8;
+            text-align: center;
+            margin-top: 0.5rem;
+        }
+        .timer-compact {
+            display: flex;
+            align-items: baseline;
+            gap: 1rem;
+        }
+        .timer-compact-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #ffffff;
+            line-height: 1;
+            font-variant-numeric: tabular-nums;
+        }
+        .timer-compact-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #a5b4fc;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin: 0;
+        }
+        .top-bar-content {
+            width: 100%;
+            max-width: 1920px;
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+            gap: 2rem;
+        }
+        .timer-compact {
+            grid-column: 2;
+            justify-self: center;
+        }
+        .metrics-compact-group {
+            grid-column: 3;
+            justify-self: end;
+        }
+        .metrics-compact-group {
+            display: flex;
+            gap: 1.5rem;
+        }
+        .metric-compact {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        .metric-compact span {
+            font-size: 0.65rem;
+            color: #94a3b8;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .metric-compact strong {
+            font-size: 1.125rem;
+            color: #ffffff;
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+        }
+        .video-wrapper-full {
+            flex: 1;
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+        .video-wrapper-full #player {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
 
 </head>
 <body class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
@@ -19,7 +214,7 @@
     </button>
 
     <!-- Sidebar Menu (Hidden by default) -->
-    <div id="sidebarMenu" class="fixed top-0 left-0 h-full w-80 bg-slate-900/95 backdrop-blur-md shadow-2xl z-40 transform -translate-x-full transition-transform duration-300 border-r border-slate-700/50" role="navigation" aria-label="Main navigation">
+    <div id="sidebarMenu" class="fixed top-0 left-0 h-full w-80 bg-slate-900/95 backdrop-blur-md shadow-2xl z-40 border-r border-slate-700/50 sidebar-hidden" role="navigation" aria-label="Main navigation">
         <div class="p-6 flex flex-col h-full overflow-y-auto">
             <!-- Sidebar Header -->
             <div class="flex items-center justify-between mb-8">
@@ -186,16 +381,24 @@
             <div class="bottom-controls">
                 <button id="startButton" class="btn-control btn-primary" aria-label="Iniciar" disabled>
                     <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M4.75 3.5a.75.75 0 00-.75.75v11.5a.75.75 0 001.125.65l10-5.75a.75.75 0 000-1.3l-10-5.75A.75.75 0 004.75 3.5z"></path></svg>
+                    </button>
+                    <button id="prevBlockButton" class="btn-control btn-secondary" aria-label="Bloque Anterior" title="Saltar al ejercicio/circuito anterior">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M18.5 5l-6 7 6 7M11.5 5l-6 7 6 7"/></svg>
+                    </button>
                 </button>
                 <button id="prevExerciseButton" class="btn-control btn-secondary" aria-label="Anterior">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
                 </button>
                 <button id="pauseButton" class="btn-control btn-secondary" aria-label="Pausar">
                     <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M5.75 4.5a.75.75 0 00-.75.75v10a.75.75 0 001.5 0V5.25A.75.75 0 005.75 4.5zm7 0a.75.75 0 00-.75.75v10a.75.75 0 001.5 0V5.25a.75.75 0 00-.75-.75z"></path></svg>
                 </button>
-                <button id="completeSetButton" class="btn-control btn-primary btn-set-complete" style="display:none;">Completar serie</button>
+                    <!-- Keep fixed position to avoid layout shifts -->
+                    <button id="completeSetButton" class="btn-control btn-primary btn-set-complete" style="visibility:hidden;">Completar serie</button>
                 <button id="nextExerciseButton" class="btn-control btn-secondary" aria-label="Siguiente">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+                </button>
+                <button id="nextBlockButton" class="btn-control btn-secondary" aria-label="Bloque Siguiente" title="Saltar al siguiente ejercicio/circuito">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5.5 5l6 7-6 7M12.5 5l6 7-6 7"/></svg>
                 </button>
                 <button id="resetExerciseButton" class="btn-control btn-secondary" aria-label="Reiniciar">
                     <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M15.312 11.424a5.5 5.5 0 01-9.2 2.652l.263.394a.5.5 0 00.832-.554l-.263-.394a4.5 4.5 0 017.593-2.148 1 1 0 10.975-1.748zM4.688 8.576a5.5 5.5 0 019.2-2.652l-.263-.394a.5.5 0 10-.832.554l.263.394a4.5 4.5 0 00-7.593 2.148 1 1 0 10-.975 1.748z" clip-rule="evenodd"></path></svg>

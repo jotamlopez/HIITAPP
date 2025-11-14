@@ -32,24 +32,27 @@ window.addEventListener('load', () => {
     }
 
     async function loadDataFromFile() {
-        try {
-            const response = await fetch('data.json');
-            if (!response.ok) {
-                console.error("Could not load data.json. Make sure the file exists and the server is running.");
-                alertMessage("No se pudo cargar el archivo de datos (data.json).", "warning");
-                return null;
+        // Try multiple sources in order: data.json -> backup file -> null
+        const sources = ['data.json', 'hiit_trainer_backup (13).json'];
+        for (const src of sources) {
+            try {
+                const response = await fetch(src);
+                if (!response.ok) {
+                    continue;
+                }
+                const data = await response.json();
+                if (!isValidDataShape(data)) {
+                    console.warn(`Formato no válido en ${src}`);
+                    continue;
+                }
+                return normalizeDataPayload(data);
+            } catch (e) {
+                // Continue to next source
+                continue;
             }
-            const data = await response.json();
-            if (!isValidDataShape(data)) {
-                alertMessage("El formato de data.json no es válido.", "error");
-                return null;
-            }
-            return normalizeDataPayload(data);
-        } catch (e) {
-            console.error("Error fetching or parsing data.json:", e);
-            alertMessage("Error al leer data.json. Revisa el formato del archivo.", "error");
-            return null;
         }
+        console.warn('No fue posible cargar data desde archivos locales. Usa Importar o crea ejercicios/rutinas.');
+        return null;
     }
 
     function loadDataFromLocalStorage() {
@@ -124,7 +127,7 @@ window.addEventListener('load', () => {
         return true;
     }
 
-    function persistDataLocally() {
+    function goToNextCircuitExercise(options = { skipSets: false }) {
         try {
             const snapshot = JSON.stringify({ exercises, routines });
             localStorage.setItem(LOCAL_STORAGE_KEY, snapshot);
@@ -377,6 +380,116 @@ window.addEventListener('load', () => {
         return remaining;
     }
 
+    // Calculate total repetitions in the routine (including circuits)
+    function calculateTotalReps() {
+        if (!currentRoutine || !Array.isArray(currentRoutine.exercises) || currentRoutine.exercises.length === 0) {
+            return 0;
+        }
+
+        let totalReps = 0;
+        
+        for (const ex of currentRoutine.exercises) {
+            if (ex.type === 'circuit' && Array.isArray(ex.exercises)) {
+                const rounds = ex.rounds || 1;
+                for (const circuitEx of ex.exercises) {
+                    if (circuitEx.type === 'sets') {
+                        // Each set × reps × circuit rounds
+                        totalReps += (circuitEx.sets || 1) * (circuitEx.reps || 1) * rounds;
+                    } else {
+                        // Time-based: each repeat × circuit rounds
+                        totalReps += (circuitEx.repeat || 1) * rounds;
+                    }
+                }
+            } else if (ex.type === 'sets') {
+                totalReps += (ex.sets || 1) * (ex.reps || 1);
+            } else {
+                // Time-based exercise: count repeats
+                totalReps += (ex.repeat || 1);
+            }
+        }
+        
+        return totalReps;
+    }
+
+    // Calculate completed repetitions
+    function calculateCompletedReps() {
+        if (!currentRoutine || !Array.isArray(currentRoutine.exercises) || currentRoutine.exercises.length === 0) {
+            return 0;
+        }
+
+        let completedReps = 0;
+
+        // Count all exercises before current
+        for (let i = 0; i < currentExerciseIndex; i++) {
+            const ex = currentRoutine.exercises[i];
+            if (ex.type === 'circuit' && Array.isArray(ex.exercises)) {
+                const rounds = ex.rounds || 1;
+                for (const circuitEx of ex.exercises) {
+                    if (circuitEx.type === 'sets') {
+                        completedReps += (circuitEx.sets || 1) * (circuitEx.reps || 1) * rounds;
+                    } else {
+                        completedReps += (circuitEx.repeat || 1) * rounds;
+                    }
+                }
+            } else if (ex.type === 'sets') {
+                completedReps += (ex.sets || 1) * (ex.reps || 1);
+            } else {
+                completedReps += (ex.repeat || 1);
+            }
+        }
+
+        // Count progress in current exercise
+        if (currentExerciseIndex < currentRoutine.exercises.length) {
+            const currentEx = currentRoutine.exercises[currentExerciseIndex];
+            
+            if (isInCircuit && currentEx.type === 'circuit' && Array.isArray(currentEx.exercises)) {
+                // Count completed circuit rounds
+                const completedRounds = currentCircuitRound - 1;
+                for (const circuitEx of currentEx.exercises) {
+                    if (circuitEx.type === 'sets') {
+                        completedReps += (circuitEx.sets || 1) * (circuitEx.reps || 1) * completedRounds;
+                    } else {
+                        completedReps += (circuitEx.repeat || 1) * completedRounds;
+                    }
+                }
+
+                // Count exercises in current round before current circuit exercise
+                for (let j = 0; j < currentCircuitExerciseIndex; j++) {
+                    const circuitEx = currentEx.exercises[j];
+                    if (circuitEx.type === 'sets') {
+                        completedReps += (circuitEx.sets || 1) * (circuitEx.reps || 1);
+                    } else {
+                        completedReps += (circuitEx.repeat || 1);
+                    }
+                }
+
+                // Count progress in current circuit exercise
+                if (currentCircuitExerciseIndex < currentEx.exercises.length) {
+                    const currentCircuitEx = currentEx.exercises[currentCircuitExerciseIndex];
+                    if (currentCircuitEx.type === 'sets') {
+                        const completedSets = currentSetIndex - 1;
+                        const completedRepeats = state === 'rest' ? currentRepeatIndex : currentRepeatIndex - 1;
+                        completedReps += completedSets * (currentCircuitEx.reps || 1) + completedRepeats;
+                    } else {
+                        // Time-based: count completed repeats
+                        const completedRepeats = state === 'rest' ? currentRepeatIndex : currentRepeatIndex - 1;
+                        completedReps += completedRepeats;
+                    }
+                }
+            } else if (currentEx.type === 'sets') {
+                const completedSets = currentSetIndex - 1;
+                const completedRepeats = state === 'rest' ? currentRepeatIndex : currentRepeatIndex - 1;
+                completedReps += completedSets * (currentEx.reps || 1) + completedRepeats;
+            } else {
+                // Time-based: count completed repeats
+                const completedRepeats = state === 'rest' ? currentRepeatIndex : currentRepeatIndex - 1;
+                completedReps += completedRepeats;
+            }
+        }
+
+        return completedReps;
+    }
+
     function updateExpandedStats() {
         if (!expandedStatsProgress || !expandedStatsRemaining || !expandedStatsDetails) {
             scheduleExpandedLayoutRecalc();
@@ -392,12 +505,11 @@ window.addEventListener('load', () => {
             return;
         }
 
-        const totalExercises = currentRoutine.exercises.length;
-        const currentPosition = Math.min(currentExerciseIndex + 1, totalExercises);
-        expandedStatsProgress.textContent = `${currentPosition}/${totalExercises}`;
+        const totalReps = calculateTotalReps();
+        const completedReps = calculateCompletedReps();
+        expandedStatsProgress.textContent = `${completedReps}/${totalReps} reps`;
 
-        const completed = Math.min(totalExercises, state === 'rest' ? currentExerciseIndex + 1 : currentExerciseIndex);
-        const progressPercent = totalExercises > 0 ? Math.min(100, Math.max(0, (completed / totalExercises) * 100)) : 0;
+        const progressPercent = totalReps > 0 ? Math.min(100, Math.max(0, (completedReps / totalReps) * 100)) : 0;
         if (expandedStatsProgressBar) expandedStatsProgressBar.style.height = `${progressPercent}%`;
 
         const remainingSeconds = calculateRemainingSeconds();
@@ -413,9 +525,9 @@ window.addEventListener('load', () => {
         else if (timerState === 'running') statusParts.push(state === 'rest' ? 'Descanso activo' : 'Trabajo activo');
         else statusParts.push('Listo para comenzar');
 
-        const remainingExercises = Math.max(totalExercises - currentPosition, 0);
-        if (remainingExercises > 0) statusParts.push(`${remainingExercises} ejercicio(s) después de este`);
-        else statusParts.push(state === 'rest' ? 'Inicia el último ejercicio al terminar' : 'Último tramo de la rutina');
+        const remainingReps = totalReps - completedReps;
+        if (remainingReps > 0) statusParts.push(`${remainingReps} repetición(es) restantes`);
+        else statusParts.push('¡Última repetición!');
 
         expandedStatsDetails.textContent = statusParts.join(' · ');
         scheduleExpandedLayoutRecalc();
@@ -701,13 +813,46 @@ window.addEventListener('load', () => {
         if (Number.isNaN(effectiveIndex) || effectiveIndex < 0) effectiveIndex = 0;
         if (effectiveIndex >= routineExercises.length) effectiveIndex = routineExercises.length - 1;
 
-        const currentExercise = routineExercises[effectiveIndex];
-        const nextExercise = routineExercises[effectiveIndex + 1] || null;
+        let currentExercise = routineExercises[effectiveIndex];
+        let nextExercise = null;
 
-        if (currentExercise) {
-            exerciseInfoCurrentName.textContent = currentExercise.name || 'Ejercicio actual';
+        // Determine current and next exercise considering circuits
+        if (isInCircuit && currentExercise && currentExercise.type === 'circuit') {
+            const circuitExercises = currentExercise.exercises || [];
+            const currentCircuitEx = circuitExercises[currentCircuitExerciseIndex];
+            
+            // Current exercise is the one inside the circuit
+            if (currentCircuitEx) {
+                // Show circuit context in name
+                const circuitName = `🔁 ${currentExercise.name || 'Circuito'} (${currentCircuitRound}/${currentExercise.rounds})`;
+                exerciseInfoCurrentName.textContent = `${circuitName}: ${currentCircuitEx.name}`;
+                
+                // Determine next exercise
+                if (currentCircuitExerciseIndex + 1 < circuitExercises.length) {
+                    // Next exercise is within the same circuit
+                    nextExercise = circuitExercises[currentCircuitExerciseIndex + 1];
+                } else if (currentCircuitRound < currentExercise.rounds) {
+                    // Next exercise is the first one of the next round
+                    nextExercise = circuitExercises[0];
+                } else {
+                    // Circuit is ending, next is the following exercise in routine
+                    nextExercise = routineExercises[effectiveIndex + 1] || null;
+                }
+                
+                // Use current circuit exercise for phase text
+                currentExercise = currentCircuitEx;
+            } else {
+                exerciseInfoCurrentName.textContent = currentExercise.name || 'Ejercicio actual';
+                nextExercise = routineExercises[effectiveIndex + 1] || null;
+            }
         } else {
-            exerciseInfoCurrentName.textContent = 'Rutina finalizada';
+            // Regular exercise or circuit not started yet
+            if (currentExercise) {
+                exerciseInfoCurrentName.textContent = currentExercise.name || 'Ejercicio actual';
+            } else {
+                exerciseInfoCurrentName.textContent = 'Rutina finalizada';
+            }
+            nextExercise = routineExercises[effectiveIndex + 1] || null;
         }
 
         let phaseText = 'Listo para comenzar';
@@ -730,7 +875,14 @@ window.addEventListener('load', () => {
         exerciseInfoCurrentPhase.textContent = phaseText;
 
         if (nextExercise) {
-            exerciseInfoNextName.textContent = nextExercise.name || 'Siguiente ejercicio';
+            const nextName = nextExercise.name || 'Siguiente ejercicio';
+            // Add context if next exercise is a circuit
+            if (nextExercise.type === 'circuit') {
+                exerciseInfoNextName.textContent = `🔁 ${nextName}`;
+            } else {
+                exerciseInfoNextName.textContent = nextName;
+            }
+            
             let statusText = 'A continuación';
             if (timerState === 'running' && state === 'rest') statusText = 'Comienza al terminar el descanso';
             if (timerState === 'paused') statusText = 'Pendiente cuando reanudes';
@@ -741,6 +893,9 @@ window.addEventListener('load', () => {
             const finaleText = currentExercise ? (state === 'rest' ? 'Finaliza tras este descanso' : 'Último ejercicio de la rutina') : 'Carga otra rutina para continuar';
             exerciseInfoNextStatus.textContent = finaleText;
         }
+        
+        // Update detailed panel info
+        renderLeftPanelDetails();
         updateExpandedStats();
     }
 
@@ -914,6 +1069,7 @@ window.addEventListener('load', () => {
             loadVideo(firstCircuitExercise, playOnLoad);
             updatePhaseUI();
             updateCompleteSetButtonVisibility();
+            updateExerciseInfo();
             renderLeftPanelDetails();
             return;
         }
@@ -941,6 +1097,7 @@ window.addEventListener('load', () => {
         loadVideo(ex, playOnLoad);
         updatePhaseUI();
         updateCompleteSetButtonVisibility();
+        updateExerciseInfo();
         renderLeftPanelDetails();
     }
 
@@ -1076,6 +1233,57 @@ window.addEventListener('load', () => {
     }
 
     function goToPreviousCircuitExercise() {
+
+            // Navigation by blocks (skip entire circuits)
+            function goToNextBlock(playImmediately = true) {
+                if (!currentRoutine || !Array.isArray(currentRoutine.exercises) || currentRoutine.exercises.length === 0) return;
+        
+                clearInterval(timer);
+                timerState = 'stopped';
+        
+                // If in circuit, exit it completely
+                if (isInCircuit) {
+                    isInCircuit = false;
+                    currentCircuitRound = 1;
+                    currentCircuitExerciseIndex = 0;
+                }
+        
+                // Move to next exercise in routine
+                if (currentExerciseIndex < currentRoutine.exercises.length - 1) {
+                    currentExerciseIndex++;
+                    loadExercise(playImmediately);
+            
+                    const nextEx = currentRoutine.exercises[currentExerciseIndex];
+                    if (playImmediately && nextEx && nextEx.type !== 'sets') {
+                        startTimer();
+                    }
+                }
+            }
+
+            function goToPreviousBlock(playImmediately = true) {
+                if (!currentRoutine || !Array.isArray(currentRoutine.exercises) || currentRoutine.exercises.length === 0) return;
+        
+                clearInterval(timer);
+                timerState = 'stopped';
+        
+                // If in circuit, exit it completely
+                if (isInCircuit) {
+                    isInCircuit = false;
+                    currentCircuitRound = 1;
+                    currentCircuitExerciseIndex = 0;
+                }
+        
+                // Move to previous exercise in routine
+                if (currentExerciseIndex > 0) {
+                    currentExerciseIndex--;
+                    loadExercise(playImmediately);
+            
+                    const prevEx = currentRoutine.exercises[currentExerciseIndex];
+                    if (playImmediately && prevEx && prevEx.type !== 'sets') {
+                        startTimer();
+                    }
+                }
+            }
         if (!isInCircuit || !currentRoutine) return;
         const circuit = currentRoutine.exercises[currentExerciseIndex];
         if (!circuit || circuit.type !== 'circuit') return;
@@ -1719,7 +1927,7 @@ window.addEventListener('load', () => {
     function updateCompleteSetButtonVisibility() {
         if (!completeSetButton || !currentRoutine) return;
         const topEx = currentRoutine.exercises && currentRoutine.exercises[currentExerciseIndex];
-        if (!topEx) { completeSetButton.style.display = 'none'; return; }
+        if (!topEx) { completeSetButton.style.visibility = 'hidden'; return; }
 
         // Determine the effective current exercise (handles circuits)
         let effectiveEx = topEx;
@@ -1730,9 +1938,9 @@ window.addEventListener('load', () => {
 
         // Show button only when current effective exercise is 'sets' and in work phase
         if (effectiveEx && effectiveEx.type === 'sets' && state === 'work') {
-            completeSetButton.style.display = '';
+            completeSetButton.style.visibility = 'visible';
         } else {
-            completeSetButton.style.display = 'none';
+            completeSetButton.style.visibility = 'hidden';
         }
     }
 
@@ -1741,7 +1949,7 @@ window.addEventListener('load', () => {
         
         // Navigate within circuit if active
         if (isInCircuit) {
-            goToPreviousCircuitExercise();
+            goToPreviousCircuitExercise({ skipSets: true });
         } else {
             // Check if we should navigate to previous exercise in routine
             if (currentExerciseIndex > 0) {
@@ -1782,11 +1990,8 @@ window.addEventListener('load', () => {
                     updatePhaseUI();
                     updateCompleteSetButtonVisibility();
                     renderLeftPanelDetails();
-                    
                     // Auto-start timer for time-based exercises
-                    if (lastEx.type !== 'sets') {
-                        startTimer();
-                    }
+                    if (lastEx.type !== 'sets') startTimer();
                     return;
                 }
             }
@@ -1801,29 +2006,32 @@ window.addEventListener('load', () => {
         
         // Handle circuit navigation
         if (isInCircuit) {
-            const circuit = currentRoutine.exercises[currentExerciseIndex];
-            const circuitEx = circuit.exercises[currentCircuitExerciseIndex];
-            if (circuitEx && circuitEx.type === 'sets' && state === 'work') {
-                completeSet();
-                return;
-            }
-            goToNextCircuitExercise();
+            // Skip series when navigating by arrows
+            goToNextCircuitExercise({ skipSets: true });
             return;
         }
         
         // Regular exercise navigation
-        const ex = currentRoutine.exercises[currentExerciseIndex];
-        if (ex && ex.type === 'sets' && state === 'work') {
-            // User confirms completion of a set
-            completeSet();
-            return;
-        }
-        // default behavior
+        // Skip series on arrow navigation: just move to the next exercise
         goToNextExercise(true);
     });
     if (completeSetButton) completeSetButton.addEventListener('click', () => completeSet());
     resetRoutineButton.addEventListener('click', () => { if (!currentRoutine) return; const routineName = routineSelect.value; if (!routineName) return; routineSelect.value = ''; routineSelect.value = routineName; const event = new Event('change'); routineSelect.dispatchEvent(event); });
-    
+
+    // Block navigation buttons
+    const prevBlockButton = document.getElementById('prevBlockButton');
+    const nextBlockButton = document.getElementById('nextBlockButton');
+
+    if (prevBlockButton) prevBlockButton.addEventListener('click', () => {
+        if (!currentRoutine) return;
+        goToPreviousBlock(true);
+    });
+
+    if (nextBlockButton) nextBlockButton.addEventListener('click', () => {
+        if (!currentRoutine) return;
+        goToNextBlock(true);
+    });
+
     // Removed obsolete sidebar toggle buttons (new hamburger menu handles this)
 
     if (maximizeVideoButton) {
@@ -2827,40 +3035,33 @@ window.addEventListener('load', () => {
     updateMaximizeButton(false);
     updateExpandedLayoutState();
     
-    // Hamburger Menu Handler
-    const hamburgerMenuBtn = document.getElementById('hamburgerMenuBtn');
-    const sidebarMenu = document.getElementById('sidebarMenu');
+    // Hamburger Menu
+    const hamburgerBtn = document.getElementById('hamburgerMenuBtn');
+    const sidebar = document.getElementById('sidebarMenu');
     const closeSidebarBtn = document.getElementById('closeSidebarBtn');
     
-    function toggleSidebarMenu() {
-        sidebarMenu.classList.toggle('-translate-x-full');
+    if (hamburgerBtn && sidebar) {
+        hamburgerBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            sidebar.classList.toggle('sidebar-hidden');
+            console.log('Hamburger clicked, sidebar hidden:', sidebar.classList.contains('sidebar-hidden'));
+        });
     }
     
-    if (hamburgerMenuBtn) {
-        hamburgerMenuBtn.addEventListener('click', toggleSidebarMenu);
-    }
-    
-    if (closeSidebarBtn) {
-        closeSidebarBtn.addEventListener('click', toggleSidebarMenu);
+    if (closeSidebarBtn && sidebar) {
+        closeSidebarBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            sidebar.classList.add('sidebar-hidden');
+        });
     }
     
     // Close sidebar when clicking outside
-    document.addEventListener('click', (e) => {
-        if (sidebarMenu && !sidebarMenu.classList.contains('-translate-x-full')) {
-            if (!sidebarMenu.contains(e.target) && !hamburgerMenuBtn.contains(e.target)) {
-                toggleSidebarMenu();
+    document.addEventListener('click', function(e) {
+        if (sidebar && !sidebar.classList.contains('sidebar-hidden')) {
+            if (!sidebar.contains(e.target) && !hamburgerBtn.contains(e.target)) {
+                sidebar.classList.add('sidebar-hidden');
             }
         }
-    });
-    
-    // Close sidebar after clicking a menu item
-    const sidebarButtons = sidebarMenu?.querySelectorAll('button:not(#closeSidebarBtn)');
-    sidebarButtons?.forEach(btn => {
-        btn.addEventListener('click', () => {
-            if (!sidebarMenu.classList.contains('-translate-x-full')) {
-                toggleSidebarMenu();
-            }
-        });
     });
     
     initializeAppData();
