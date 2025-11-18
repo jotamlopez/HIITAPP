@@ -1162,6 +1162,57 @@ window.addEventListener('load', () => {
         }
     }
 
+    function goToNextBlock(playImmediately = true) {
+        if (!currentRoutine || !Array.isArray(currentRoutine.exercises) || currentRoutine.exercises.length === 0) return;
+
+        clearInterval(timer);
+        timerState = 'stopped';
+
+        let targetIndex = currentExerciseIndex;
+        if (isInCircuit) {
+            if (currentExerciseIndex >= currentRoutine.exercises.length - 1) return;
+            targetIndex = currentExerciseIndex + 1;
+        } else {
+            if (currentExerciseIndex >= currentRoutine.exercises.length - 1) return;
+            targetIndex = currentExerciseIndex + 1;
+        }
+
+        isInCircuit = false;
+        currentCircuitRound = 1;
+        currentCircuitExerciseIndex = 0;
+        currentExerciseIndex = targetIndex;
+
+        loadExercise(playImmediately);
+        const nextEx = currentRoutine.exercises[currentExerciseIndex];
+        if (playImmediately && nextEx && nextEx.type !== 'sets') {
+            startTimer();
+        }
+        renderLeftPanelDetails();
+    }
+
+    function goToPreviousBlock(playImmediately = true) {
+        if (!currentRoutine || !Array.isArray(currentRoutine.exercises) || currentRoutine.exercises.length === 0) return;
+
+        clearInterval(timer);
+        timerState = 'stopped';
+
+        let targetIndex = currentExerciseIndex;
+        if (currentExerciseIndex <= 0) return;
+        targetIndex = currentExerciseIndex - 1;
+
+        isInCircuit = false;
+        currentCircuitRound = 1;
+        currentCircuitExerciseIndex = 0;
+        currentExerciseIndex = targetIndex;
+
+        loadExercise(playImmediately);
+        const prevEx = currentRoutine.exercises[currentExerciseIndex];
+        if (playImmediately && prevEx && prevEx.type !== 'sets') {
+            startTimer();
+        }
+        renderLeftPanelDetails();
+    }
+
     // Circuit navigation helpers
     function goToNextCircuitExercise() {
         if (!isInCircuit || !currentRoutine) return;
@@ -1233,57 +1284,6 @@ window.addEventListener('load', () => {
     }
 
     function goToPreviousCircuitExercise() {
-
-            // Navigation by blocks (skip entire circuits)
-            function goToNextBlock(playImmediately = true) {
-                if (!currentRoutine || !Array.isArray(currentRoutine.exercises) || currentRoutine.exercises.length === 0) return;
-        
-                clearInterval(timer);
-                timerState = 'stopped';
-        
-                // If in circuit, exit it completely
-                if (isInCircuit) {
-                    isInCircuit = false;
-                    currentCircuitRound = 1;
-                    currentCircuitExerciseIndex = 0;
-                }
-        
-                // Move to next exercise in routine
-                if (currentExerciseIndex < currentRoutine.exercises.length - 1) {
-                    currentExerciseIndex++;
-                    loadExercise(playImmediately);
-            
-                    const nextEx = currentRoutine.exercises[currentExerciseIndex];
-                    if (playImmediately && nextEx && nextEx.type !== 'sets') {
-                        startTimer();
-                    }
-                }
-            }
-
-            function goToPreviousBlock(playImmediately = true) {
-                if (!currentRoutine || !Array.isArray(currentRoutine.exercises) || currentRoutine.exercises.length === 0) return;
-        
-                clearInterval(timer);
-                timerState = 'stopped';
-        
-                // If in circuit, exit it completely
-                if (isInCircuit) {
-                    isInCircuit = false;
-                    currentCircuitRound = 1;
-                    currentCircuitExerciseIndex = 0;
-                }
-        
-                // Move to previous exercise in routine
-                if (currentExerciseIndex > 0) {
-                    currentExerciseIndex--;
-                    loadExercise(playImmediately);
-            
-                    const prevEx = currentRoutine.exercises[currentExerciseIndex];
-                    if (playImmediately && prevEx && prevEx.type !== 'sets') {
-                        startTimer();
-                    }
-                }
-            }
         if (!isInCircuit || !currentRoutine) return;
         const circuit = currentRoutine.exercises[currentExerciseIndex];
         if (!circuit || circuit.type !== 'circuit') return;
@@ -1670,8 +1670,15 @@ window.addEventListener('load', () => {
                             timeLeft = circuit.restBetweenRounds;
                             stopCurrentVideo();
                             currentExerciseTitle.textContent = `🔁 Descanso entre vueltas (${currentCircuitRound - 1}/${circuit.rounds} completada)`;
+                            isGlobalPaused = false;
+                            timerState = 'running';
+                            setStartButtonActive(true);
+                            if (pauseButton) pauseButton.disabled = false;
+                            clearInterval(timer);
+                            timer = setInterval(timerLoop, 1000);
                             updatePhaseUI();
                             updateTimerDisplay();
+                            try { renderLeftPanelDetails(); } catch (e) {}
                             return;
                         } else {
                             // No rest between rounds - start next round immediately
@@ -1832,7 +1839,13 @@ window.addEventListener('load', () => {
                     currentCircuitExerciseIndex = 0; currentCircuitRound++;
                     if (currentCircuitRound <= circuit.rounds) {
                         if (circuit.restBetweenRounds > 0) {
-                            state = 'rest'; timeLeft = circuit.restBetweenRounds; stopCurrentVideo(); currentExerciseTitle.textContent = `🔁 Descanso entre vueltas (${currentCircuitRound - 1}/${circuit.rounds} completada)`; updatePhaseUI(); updateTimerDisplay(); return;
+                            state = 'rest'; timeLeft = circuit.restBetweenRounds; stopCurrentVideo(); currentExerciseTitle.textContent = `🔁 Descanso entre vueltas (${currentCircuitRound - 1}/${circuit.rounds} completada)`;
+                            isGlobalPaused = false;
+                            timerState = 'running';
+                            setStartButtonActive(true);
+                            if (pauseButton) pauseButton.disabled = false;
+                            clearInterval(timer); timer = setInterval(timerLoop, 1000);
+                            updatePhaseUI(); updateTimerDisplay(); try { renderLeftPanelDetails(); } catch (e) {} return;
                         } else {
                             const firstEx = circuit.exercises[0]; state = 'work'; currentRepeatIndex = 1;
                             if (firstEx.type === 'sets') { currentSetIndex = 1; timeLeft = 0; setTimerDisplayManual(); if (startButton) startButton.disabled = false; if (pauseButton) pauseButton.disabled = false; } else { timeLeft = sanitizeDuration(firstEx.work); }
@@ -1860,7 +1873,15 @@ window.addEventListener('load', () => {
                     // Fin de vuelta tras ejercicio time
                     currentCircuitExerciseIndex = 0; currentCircuitRound++;
                     if (currentCircuitRound <= circuit.rounds) {
-                        if (circuit.restBetweenRounds > 0) { state = 'rest'; timeLeft = circuit.restBetweenRounds; stopCurrentVideo(); currentExerciseTitle.textContent = `🔁 Descanso entre vueltas (${currentCircuitRound - 1}/${circuit.rounds} completada)`; updatePhaseUI(); updateTimerDisplay(); return; }
+                        if (circuit.restBetweenRounds > 0) {
+                            state = 'rest'; timeLeft = circuit.restBetweenRounds; stopCurrentVideo(); currentExerciseTitle.textContent = `🔁 Descanso entre vueltas (${currentCircuitRound - 1}/${circuit.rounds} completada)`;
+                            isGlobalPaused = false;
+                            timerState = 'running';
+                            setStartButtonActive(true);
+                            if (pauseButton) pauseButton.disabled = false;
+                            clearInterval(timer); timer = setInterval(timerLoop, 1000);
+                            updatePhaseUI(); updateTimerDisplay(); try { renderLeftPanelDetails(); } catch (e) {} return;
+                        }
                         else { const firstEx = circuit.exercises[0]; state = 'work'; currentRepeatIndex = 1; if (firstEx.type === 'sets') { currentSetIndex = 1; timeLeft = 0; setTimerDisplayManual(); if (startButton) startButton.disabled = false; if (pauseButton) pauseButton.disabled = false; } else { timeLeft = sanitizeDuration(firstEx.work); } currentExerciseTitle.textContent = `🔁 CIRCUITO ${currentCircuitRound}/${circuit.rounds} - ${firstEx.name}`; updateTimerDisplay(); loadVideo(firstEx, true); updatePhaseUI(); updateCompleteSetButtonVisibility(); try { renderLeftPanelDetails(); } catch (e) {} return; }
                         if (firstEx.type === 'sets') { clearInterval(timer); timer = null; timerState = 'stopped'; }
                     }
@@ -2916,7 +2937,10 @@ window.addEventListener('load', () => {
                     timeLeft = circuit.restBetweenRounds;
                     stopCurrentVideo();
                     currentExerciseTitle.textContent = `🔁 Descanso entre vueltas (${currentCircuitRound - 1}/${circuit.rounds} completada)`;
+                    isGlobalPaused = false;
                     timerState = 'running';
+                    setStartButtonActive(true);
+                    if (pauseButton) pauseButton.disabled = false;
                     setupAudio();
                     primeAudioEngines().then(() => {
                         clearInterval(timer);
@@ -3005,7 +3029,10 @@ window.addEventListener('load', () => {
         // Start a timed rest between sets
         state = 'rest';
         timeLeft = Math.max(0, sanitizeDuration(seconds, 0));
+        isGlobalPaused = false;
         timerState = 'running';
+        setStartButtonActive(true);
+        if (pauseButton) pauseButton.disabled = false;
         setupAudio();
         primeAudioEngines().then(() => {
             playCurrentVideo();
