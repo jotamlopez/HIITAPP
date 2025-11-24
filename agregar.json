@@ -1,0 +1,203 @@
+{
+  "exercises": {
+    "calentamientoDinamico": { "name": "Calentamiento dinámico", "videoId": "8DyncYCOgsU" },
+    "sentadillaGoblet": { "name": "Sentadilla Goblet", "videoId": "AgD7XRyH05o" },
+    "sentadillaSumo": { "name": "Sentadilla Sumo", "videoId": "AgD7XRyH05o" },
+    "remomancuernaUnBrazo": { "name": "Remo con mancuerna", "videoId": "roCP6wCXPqo" },
+    "pressPechoSuelo": { "name": "Press de pecho suelo", "videoId": "y9XAsTx3XxQ" },
+    "curlBiceps": { "name": "Curl bíceps", "videoId": "ajJWRrU5Fxo" },
+    "puenteGluteos": { "name": "Puente glúteos", "videoId": "7X5zdMn2tW0" },
+    "planchaFrontal": { "name": "Plancha frontal", "videoId": "RmknClCdiCU" },
+    "planchaLateral": { "name": "Plancha lateral", "videoId": "Iwa3as2Dm9E" },
+    "mountainClimber": { "name": "Mountain climber", "videoId": "W8Fgy71xzx8" },
+    "pressMilitar": { "name": "Press militar", "videoId": "mbIhJZ2Sbcc" },
+    "deadBug": { "name": "Dead bug", "videoId": "KDcYkjfzLv8" },
+    "planchaAntiRotacion": { "name": "Plancha antirotación", "videoId": "AKdAwZE4nIA" },
+    "rotacionTroncoBanda": { "name": "Rotación tronco banda", "videoId": "nUBd1xcP1R8" },
+    "hollowman": { "name": "Hollow body hold", "videoId": "t_ah_-iJJ7s" },
+    "zancadaInversa": { "name": "Zancada inversa", "videoId": "LDERgD7Jqho" },
+    "elevacionTalones": { "name": "Elevación de talones", "videoId": "ITXWD8tQATM" },
+    "estiramientosCompletos": { "name": "Estiramientos completos", "videoId": "DVrpAs5ZbSE" },
+    "cuerdaBoxerStep": { "name": "Cuerda saltar", "videoId": "kDOGb9C5kp0" },
+    "jumpingJacks": { "name": "Jumping jacks", "videoId": "W8Fgy71xzx8" }
+  },
+  "routines": [
+    {
+      "name": "Lunes Noche",
+      "exercises": [
+        { "type": "time", "exerciseId": "calentamientoDinamico", "work": 360, "rest": 0, "repeat": 1 },
+        {
+          "type": "circuit",
+          "rounds": 3, "restBetweenRounds": 60, "restBetweenExercises": 20,
+          "exercises": [
+            { "type": "time", "exerciseId": "sentadillaGoblet", "work": 40, "rest": 20, "repeat": 1 },
+            { "type": "time", "exerciseId": "remomancuernaUnBrazo", "work": 40, "rest": 20, "repeat": 1 },
+            { "type": "time", "exerciseId": "planchaFrontal", "work": 30, "rest": 20, "repeat": 1 },
+            { "type": "time", "exerciseId": "cuerdaBoxerStep", "work": 40, "rest": 20, "repeat": 1 }
+          ]
+        },
+        {
+          "type": "circuit",
+          "rounds": 3, "restBetweenRounds": 60, "restBetweenExercises": 20,
+          "exercises": [
+            { "type": "time", "exerciseId": "pressPechoSuelo", "work": 40, "rest": 20, "repeat": 1 },
+            { "type": "time", "exerciseId": "curlBiceps", "work": 40, "rest": 20, "repeat": 1 },
+            { "type": "time", "exerciseId": "rotacionTroncoBanda", "work": 40, "rest": 20, "repeat": 1 }
+          ]
+        },
+        { "type": "time", "exerciseId": "estiramientosCompletos", "work": 600, "rest": 0, "repeat": 1 }
+      ]
+    },
+    {
+      "name": "Martes Mañana",
+      "exercises": [
+        { "type": "time", "exerciseId": "calentamientoDinamico", "work": 360, "rest": 0, "repeat": 1 },
+        {
+          "type": "circuit",
+          "rounds": 3, "restBetweenRounds": 60, "restBetweenExercises": 20,
+          "exercises": [
+            { "type": "time", "exerciseId": "jumpingJacks", "work": 40, "rest": 20, "repeat": 1 },
+            { "type": "time", "exerciseId": "deadBug", "work": 40, "rest": 20, "repeat": 1 },
+            { "type": "time", "exerciseId": "mountainClimber", "work": 40, "rest": 20, "repeat": 1 },
+            { "type": "time", "exerciseId": "planchaLateral", "work": 30, "rest": 20, "repeat": 1 }
+          ]
+        },
+        { "type": "time", "exerciseId": "estiramientosCompletos", "work": 600, "rest": 0, "repeat": 1 }
+      ]
+    },
+    {
+      "name": "Martes Noche",
+      "exercises": [
+        { "type": "time", "exerciseId": "calentamientoDinamico", "work": 360, "rest": 0, "repeat": 1 },
+        {
+          "type": "circuit",
+          "rounds": 3, "restBetweenRounds": 60, "restBetweenExercises": 20,
+          "exercises": [
+            { "type": "time", "exerciseId": "sentadillaSumo", "work": 40, "rest": 20, "repeat": 1 },
+            { "type": "time", "exerciseId": "zancadaInversa", "work": 40, "rest": 20, "repeat": 1 },
+            { "type": "time", "exerciseId": "puenteGluteos", "work": 40, "rest": 20, "repeat": 1 }
+          ]
+        },
+        {
+          "type": "circuit",
+          "rounds": 2, "restBetweenRounds": 60, "restBetweenExercises": 20,
+          "exercises": [
+            { "type": "time", "exerciseId": "elevacionTalones", "work": 40, "rest": 20, "repeat": 1 },
+            { "type": "time", "exerciseId": "hollowman", "work": 40, "rest": 20, "repeat": 1 }
+          ]
+        },
+        { "type": "time", "exerciseId": "estiramientosCompletos", "work": 600, "rest": 0, "repeat": 1 }
+      ]
+    },
+    {
+      "name": "Miércoles Noche",
+      "exercises": [
+        { "type": "time", "exerciseId": "calentamientoDinamico", "work": 360, "rest": 0, "repeat": 1 },
+        {
+          "type": "circuit",
+          "rounds": 3, "restBetweenRounds": 60, "restBetweenExercises": 20,
+          "exercises": [
+            { "type": "time", "exerciseId": "pressMilitar", "work": 40, "rest": 20, "repeat": 1 },
+            { "type": "time", "exerciseId": "planchaAntiRotacion", "work": 40, "rest": 20, "repeat": 1 },
+            { "type": "time", "exerciseId": "mountainClimber", "work": 40, "rest": 20, "repeat": 1 },
+            { "type": "time", "exerciseId": "hollowman", "work": 40, "rest": 20, "repeat": 1 }
+          ]
+        },
+        { "type": "time", "exerciseId": "estiramientosCompletos", "work": 600, "rest": 0, "repeat": 1 }
+      ]
+    },
+    {
+      "name": "Jueves Noche",
+      "exercises": [
+        { "type": "time", "exerciseId": "calentamientoDinamico", "work": 360, "rest": 0, "repeat": 1 },
+        {
+          "type": "circuit",
+          "rounds": 3, "restBetweenRounds": 60, "restBetweenExercises": 20,
+          "exercises": [
+            { "type": "time", "exerciseId": "pressPechoSuelo", "work": 40, "rest": 20, "repeat": 1 },
+            { "type": "time", "exerciseId": "remomancuernaUnBrazo", "work": 40, "rest": 20, "repeat": 1 },
+            { "type": "time", "exerciseId": "planchaLateral", "work": 30, "rest": 20, "repeat": 1 }
+          ]
+        },
+        {
+          "type": "circuit",
+          "rounds": 2, "restBetweenRounds": 60, "restBetweenExercises": 20,
+          "exercises": [
+            { "type": "time", "exerciseId": "rotacionTroncoBanda", "work": 40, "rest": 20, "repeat": 1 },
+            { "type": "time", "exerciseId": "curlBiceps", "work": 40, "rest": 20, "repeat": 1 }
+          ]
+        },
+        { "type": "time", "exerciseId": "estiramientosCompletos", "work": 600, "rest": 0, "repeat": 1 }
+      ]
+    },
+    {
+      "name": "Viernes Mañana",
+      "exercises": [
+        { "type": "time", "exerciseId": "calentamientoDinamico", "work": 300, "rest": 0, "repeat": 1 },
+        {
+          "type": "circuit",
+          "rounds": 2, "restBetweenRounds": 60, "restBetweenExercises": 20,
+          "exercises": [
+            { "type": "time", "exerciseId": "jumpingJacks", "work": 40, "rest": 20, "repeat": 1 },
+            { "type": "time", "exerciseId": "estiramientosCompletos", "work": 240, "rest": 0, "repeat": 1 }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Viernes Noche",
+      "exercises": [
+        { "type": "time", "exerciseId": "calentamientoDinamico", "work": 360, "rest": 0, "repeat": 1 },
+        {
+          "type": "circuit",
+          "rounds": 2, "restBetweenRounds": 60, "restBetweenExercises": 20,
+          "exercises": [
+            { "type": "time", "exerciseId": "sentadillaGoblet", "work": 40, "rest": 20, "repeat": 1 },
+            { "type": "time", "exerciseId": "puenteGluteos", "work": 40, "rest": 20, "repeat": 1 },
+            { "type": "time", "exerciseId": "elevacionTalones", "work": 40, "rest": 20, "repeat": 1 }
+          ]
+        },
+        {
+          "type": "circuit",
+          "rounds": 2, "restBetweenRounds": 60, "restBetweenExercises": 20,
+          "exercises": [
+            { "type": "time", "exerciseId": "hollowman", "work": 40, "rest": 20, "repeat": 1 },
+            { "type": "time", "exerciseId": "planchaFrontal", "work": 30, "rest": 20, "repeat": 1 }
+          ]
+        },
+        { "type": "time", "exerciseId": "estiramientosCompletos", "work": 600, "rest": 0, "repeat": 1 }
+      ]
+    },
+    {
+      "name": "Sábado Mañana",
+      "exercises": [
+        { "type": "time", "exerciseId": "calentamientoDinamico", "work": 360, "rest": 0, "repeat": 1 },
+        {
+          "type": "circuit",
+          "rounds": 3, "restBetweenRounds": 60, "restBetweenExercises": 20,
+          "exercises": [
+            { "type": "time", "exerciseId": "sentadillaGoblet", "work": 40, "rest": 20, "repeat": 1 },
+            { "type": "time", "exerciseId": "pressMilitar", "work": 40, "rest": 20, "repeat": 1 },
+            { "type": "time", "exerciseId": "mountainClimber", "work": 40, "rest": 20, "repeat": 1 }
+          ]
+        },
+        {
+          "type": "circuit",
+          "rounds": 3, "restBetweenRounds": 60, "restBetweenExercises": 20,
+          "exercises": [
+            { "type": "time", "exerciseId": "puenteGluteos", "work": 40, "rest": 20, "repeat": 1 },
+            { "type": "time", "exerciseId": "planchaAntiRotacion", "work": 40, "rest": 20, "repeat": 1 },
+            { "type": "time", "exerciseId": "cuerdaBoxerStep", "work": 40, "rest": 20, "repeat": 1 }
+          ]
+        },
+        { "type": "time", "exerciseId": "estiramientosCompletos", "work": 600, "rest": 0, "repeat": 1 }
+      ]
+    },
+    {
+      "name": "Domingo",
+      "exercises": [
+        { "type": "time", "exerciseId": "estiramientosCompletos", "work": 600, "rest": 0, "repeat": 1 }
+      ]
+    }
+  ]
+}

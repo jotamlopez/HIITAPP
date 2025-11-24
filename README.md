@@ -46,6 +46,113 @@ npx serve .
 - `app.js`: lógica completa del temporizador, reproducción, modales e importación/exportación.
 - `data.json`: biblioteca base de ejercicios y rutinas (se copia a `localStorage` en la primera carga).
 
+## Construcción y edición de `data.json`
+
+El archivo `data.json` define la biblioteca de ejercicios y las rutinas disponibles. Al cargar la aplicación por primera vez, su contenido se copia a `localStorage`; después, los cambios que hagas dentro de la interfaz se guardan solo localmente hasta que exportes.
+
+### Forma general
+
+```jsonc
+{
+   "exercises": {
+      "sentadilla_basica": {
+         "name": "Sentadilla Básica",
+         "videoId": "XXXXXXXXXXX",
+         "start": 0,            // (opcional) segundo inicial dentro del video
+         "end": 60               // (opcional) segundo final dentro del video
+      },
+      "plancha": {
+         "name": "Plancha",
+         "videoId": "YYYYYYYYYYY"
+      }
+   },
+   "routines": [
+      {
+         "name": "Rutina Inferior",
+         "exercises": [
+            { "type": "time", "exerciseId": "sentadilla_basica", "work": 30, "rest": 15, "repeat": 3 },
+            { "type": "sets", "exerciseId": "plancha", "sets": 4, "restBetweenSets": 30 },
+            {
+               "type": "circuit",
+               "rounds": 3,
+               "restBetweenRounds": 60,
+               "restBetweenExercises": 15,
+               "exercises": [
+                  { "type": "time", "exerciseId": "sentadilla_basica", "work": 25, "rest": 10, "repeat": 2 },
+                  { "type": "sets", "exerciseId": "plancha", "sets": 3, "restBetweenSets": 20 }
+               ]
+            }
+         ]
+      }
+   ]
+}
+```
+
+### Sección `exercises`
+- Clave: identificador único (sin espacios, usa guiones bajos).
+- Campos mínimos: `name`, `videoId`.
+- Campos opcionales: `start`, `end` (recortan el segmento reproducido).
+- Recomendación: mantenlo pequeño y reutilizable; varios ejercicios en rutinas pueden apuntar al mismo `exerciseId` con diferentes tiempos.
+
+### Tipos de bloques en `routines[].exercises`
+
+1. `time` (ejercicio por tiempo)
+    - Campos: `type`, `exerciseId`, `work` (segundos), `rest` (segundos), `repeat` (número de ciclos trabajo+descanso).
+    - Ejemplo: `{ "type": "time", "exerciseId": "sentadilla_basica", "work": 40, "rest": 20, "repeat": 4 }`.
+2. `sets` (ejercicio por series manuales)
+    - Campos: `type`, `exerciseId`, `sets` (número total de series), `restBetweenSets` (segundos de descanso entre series).
+    - El temporizador sólo controla descansos; la fase de trabajo es manual (botón Completar Serie).
+3. `circuit` (grupo de ejercicios)
+    - Campos: `type`, `rounds` (vueltas completas), `restBetweenRounds`, `restBetweenExercises`.
+    - Dentro de `exercises` (del circuito) se aceptan sub-bloques `time` y `sets` con la misma forma descrita arriba.
+
+### Reglas y validaciones recomendadas
+- Todos los valores de tiempo deben ser enteros positivos (usa segundos).
+- Si `repeat` falta en un bloque `time`, la aplicación lo normaliza a `1`.
+- Un circuito requiere al menos un ejercicio interno.
+- Evita duplicar nombres de rutina (`name`) para claridad en la interfaz.
+
+### Pasos para crear o actualizar el JSON manualmente
+1. Haz una copia de seguridad del archivo actual (`data-backup.json`).
+2. Edita `data.json` en VS Code (asegúrate de mantener comas y llaves correctas).
+3. Valida el formato (extensión JSON Linter o comando rápido):
+    - En VS Code mira si aparecen errores de sintaxis en el editor.
+4. Abre la aplicación en el navegador; si quieres forzar recarga limpia, borra el `localStorage`:
+    ```javascript
+    localStorage.removeItem('HIIT_TRAINER_DATA');
+    ```
+    y recarga la página.
+5. Verifica que las nuevas rutinas aparecen en el selector y que los videos cargan desde sus `videoId`.
+6. Usa la función de **Exportar Datos** para guardar el estado modificado después de probar.
+
+### Construcción asistida desde una hoja de cálculo (opcional)
+Si gestionas muchos ejercicios, puedes tener una hoja con columnas: `exerciseId`, `name`, `videoId`, `start`, `end`. Exporta a CSV y usa un pequeño script para transformarlo a JSON (no incluido). Recomendación: conserva IDs estables para que las rutinas previas sigan funcionando.
+
+### Errores comunes
+- Olvidar `"type"` dentro de un bloque de rutina.
+- Usar milisegundos en vez de segundos (los tiempos deben ser simples enteros). 
+- Duplicar `exerciseId` con distinta semántica (mejor crear uno nuevo con sufijo).
+- Dejar un circuito con `exercises: []` (la app lo ignorará o puede fallar la navegación).
+
+### Cheat Sheet rápida
+| Tipo      | Campos clave | Descanso controlado |
+|-----------|--------------|---------------------|
+| time      | work, rest, repeat | Sí (automático) |
+| sets      | sets, restBetweenSets | Sólo descansos entre series |
+| circuit   | rounds, restBetweenRounds, restBetweenExercises | Ambos (interno + entre vueltas) |
+
+### Recomendaciones de mantenimiento
+- Mantén los IDs cortos y descriptivos (`burpee`, `plancha_lateral`).
+- Agrupa rutinas por objetivos: fuerza, core, cardio, mixto.
+- Documenta en comentarios aparte (no añadas claves no usadas; la app descartará formatos inesperados).
+
+### Actualizar datos sin perder cambios locales
+1. Exporta datos actuales desde la interfaz.
+2. Edita `data.json` base según necesidades.
+3. Importa el nuevo archivo y elige fusionar (mantiene lo existente y añade/actualiza) o reemplazar (sobrescribe todo).
+
+Con estas pautas puedes ampliar fácilmente la biblioteca manteniendo consistencia y evitando errores de formato.
+
 ## Próximos pasos sugeridos
 
 - Añadir pruebas automáticas (por ejemplo, con Playwright o Cypress) para validar los flujos clave.

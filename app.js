@@ -127,7 +127,8 @@ window.addEventListener('load', () => {
         return true;
     }
 
-    function goToNextCircuitExercise(options = { skipSets: false }) {
+    // Persist current exercises & routines to localStorage
+    function persistDataLocally() {
         try {
             const snapshot = JSON.stringify({ exercises, routines });
             localStorage.setItem(LOCAL_STORAGE_KEY, snapshot);
@@ -2159,6 +2160,8 @@ window.addEventListener('load', () => {
     const timeFieldsWork = document.getElementById('timeFields_work');
     const timeFieldsRest = document.getElementById('timeFields_rest');
     const setFields = document.getElementById('setFields');
+    const useFullVideoDuration = document.getElementById('useFullVideoDuration');
+    const workTimeInput = document.getElementById('workTimeInput');
 
     function toggleExerciseModeFields() {
         const mode = (exerciseModeInput && exerciseModeInput.value) || 'time';
@@ -2168,6 +2171,98 @@ window.addEventListener('load', () => {
         timeFieldsWork.classList.toggle('hidden', showSets);
         timeFieldsRest.classList.toggle('hidden', showSets);
     }
+
+    // Handle full video duration checkbox
+    if (useFullVideoDuration && workTimeInput) {
+        // Function to get video duration from YouTube API
+        async function getVideoDuration(videoId) {
+            try {
+                const response = await fetch(`https://www.googleapis.com/youtube/v3/videos?id=${videoId}&part=contentDetails&key=AIzaSyDummy`);
+                // Since we don't have API key, we'll use player duration if available
+                // For now, use a fallback approach with iframe API if player exists
+                if (window.YT && window.YT.Player && player && player.getDuration) {
+                    return Math.floor(player.getDuration());
+                }
+                return null;
+            } catch (error) {
+                return null;
+            }
+        }
+
+        async function calculateWorkDuration(exerciseData) {
+            const start = sanitizeDuration(exerciseData.start, 0);
+            const end = sanitizeDuration(exerciseData.end, 0);
+
+            // Case 1: Both start and end are defined
+            if (end > 0 && start >= 0) {
+                return end - start;
+            }
+
+            // For other cases, try to get video duration
+            const videoDuration = await getVideoDuration(exerciseData.videoId);
+            
+            if (videoDuration) {
+                // Case 2: Only start is defined (end = 0)
+                if (start > 0 && end === 0) {
+                    return videoDuration - start;
+                }
+                
+                // Case 3: Only end is defined (start = 0)
+                if (start === 0 && end > 0) {
+                    return end;
+                }
+                
+                // Case 4: Neither start nor end defined
+                if (start === 0 && end === 0) {
+                    return videoDuration;
+                }
+            }
+
+            return null;
+        }
+
+        useFullVideoDuration.addEventListener('change', async () => {
+            if (useFullVideoDuration.checked) {
+                const selectedExerciseId = exerciseSelect.value;
+                if (selectedExerciseId && exercises[selectedExerciseId]) {
+                    const ex = exercises[selectedExerciseId];
+                    const duration = await calculateWorkDuration(ex);
+                    
+                    if (duration && duration > 0) {
+                        workTimeInput.value = duration;
+                        workTimeInput.disabled = true;
+                    } else {
+                        alertMessage('No se pudo calcular la duración del video. Asegúrate de que el video esté cargado o configura los tiempos manualmente.', 'warning');
+                        useFullVideoDuration.checked = false;
+                    }
+                }
+            } else {
+                workTimeInput.disabled = false;
+            }
+        });
+
+        // Update when exercise selection changes
+        exerciseSelect.addEventListener('change', async () => {
+            if (useFullVideoDuration.checked) {
+                const selectedExerciseId = exerciseSelect.value;
+                if (selectedExerciseId && exercises[selectedExerciseId]) {
+                    const ex = exercises[selectedExerciseId];
+                    const duration = await calculateWorkDuration(ex);
+                    
+                    if (duration && duration > 0) {
+                        workTimeInput.value = duration;
+                    } else {
+                        useFullVideoDuration.checked = false;
+                        workTimeInput.disabled = false;
+                    }
+                } else {
+                    useFullVideoDuration.checked = false;
+                    workTimeInput.disabled = false;
+                }
+            }
+        });
+    }
+
     exerciseModeInput && exerciseModeInput.addEventListener('change', toggleExerciseModeFields);
     toggleExerciseModeFields();
 
@@ -2428,6 +2523,8 @@ window.addEventListener('load', () => {
     const circuitTimeFieldsWork = document.getElementById('circuitTimeFields_work');
     const circuitTimeFieldsRest = document.getElementById('circuitTimeFields_rest');
     const circuitSetFields = document.getElementById('circuitSetFields');
+    const circuitUseFullVideoDuration = document.getElementById('circuitUseFullVideoDuration');
+    const circuitWorkTimeInput = document.getElementById('circuitWorkTimeInput');
 
     // Toggle fields for circuit exercise mode
     function toggleCircuitExerciseModeFields() {
@@ -2437,6 +2534,95 @@ window.addEventListener('load', () => {
         if (circuitTimeFieldsWork) circuitTimeFieldsWork.classList.toggle('hidden', showSets);
         if (circuitTimeFieldsRest) circuitTimeFieldsRest.classList.toggle('hidden', showSets);
     }
+
+    // Handle full video duration checkbox for circuit
+    if (circuitUseFullVideoDuration && circuitWorkTimeInput) {
+        // Function to get video duration (reused logic)
+        async function getCircuitVideoDuration(videoId) {
+            try {
+                if (window.YT && window.YT.Player && player && player.getDuration) {
+                    return Math.floor(player.getDuration());
+                }
+                return null;
+            } catch (error) {
+                return null;
+            }
+        }
+
+        async function calculateCircuitWorkDuration(exerciseData) {
+            const start = sanitizeDuration(exerciseData.start, 0);
+            const end = sanitizeDuration(exerciseData.end, 0);
+
+            // Case 1: Both start and end are defined
+            if (end > 0 && start >= 0) {
+                return end - start;
+            }
+
+            // For other cases, try to get video duration
+            const videoDuration = await getCircuitVideoDuration(exerciseData.videoId);
+            
+            if (videoDuration) {
+                // Case 2: Only start is defined (end = 0)
+                if (start > 0 && end === 0) {
+                    return videoDuration - start;
+                }
+                
+                // Case 3: Only end is defined (start = 0)
+                if (start === 0 && end > 0) {
+                    return end;
+                }
+                
+                // Case 4: Neither start nor end defined
+                if (start === 0 && end === 0) {
+                    return videoDuration;
+                }
+            }
+
+            return null;
+        }
+
+        circuitUseFullVideoDuration.addEventListener('change', async () => {
+            if (circuitUseFullVideoDuration.checked) {
+                const selectedExerciseId = circuitExerciseSelect.value;
+                if (selectedExerciseId && exercises[selectedExerciseId]) {
+                    const ex = exercises[selectedExerciseId];
+                    const duration = await calculateCircuitWorkDuration(ex);
+                    
+                    if (duration && duration > 0) {
+                        circuitWorkTimeInput.value = duration;
+                        circuitWorkTimeInput.disabled = true;
+                    } else {
+                        alertMessage('No se pudo calcular la duración del video. Asegúrate de que el video esté cargado o configura los tiempos manualmente.', 'warning');
+                        circuitUseFullVideoDuration.checked = false;
+                    }
+                }
+            } else {
+                circuitWorkTimeInput.disabled = false;
+            }
+        });
+
+        // Update when circuit exercise selection changes
+        circuitExerciseSelect.addEventListener('change', async () => {
+            if (circuitUseFullVideoDuration.checked) {
+                const selectedExerciseId = circuitExerciseSelect.value;
+                if (selectedExerciseId && exercises[selectedExerciseId]) {
+                    const ex = exercises[selectedExerciseId];
+                    const duration = await calculateCircuitWorkDuration(ex);
+                    
+                    if (duration && duration > 0) {
+                        circuitWorkTimeInput.value = duration;
+                    } else {
+                        circuitUseFullVideoDuration.checked = false;
+                        circuitWorkTimeInput.disabled = false;
+                    }
+                } else {
+                    circuitUseFullVideoDuration.checked = false;
+                    circuitWorkTimeInput.disabled = false;
+                }
+            }
+        });
+    }
+
     circuitExerciseModeInput && circuitExerciseModeInput.addEventListener('change', toggleCircuitExerciseModeFields);
     toggleCircuitExerciseModeFields();
 
