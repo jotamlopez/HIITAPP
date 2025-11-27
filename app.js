@@ -2314,6 +2314,9 @@ window.addEventListener('load', () => {
                 circuitRoundsInput.value = circuit.rounds;
                 circuitRestInput.value = circuit.restBetweenRounds;
                 renderCircuitExercises();
+                // Populate circuit exercise selector
+                circuitExerciseSelect.innerHTML = '<option value="">--Seleccionar ejercicio--</option>' + 
+                    Object.keys(exercises).map(id => `<option value="${id}">${exercises[id].name}</option>`).join('');
                 circuitModal.style.display = 'flex';
             }
             return;

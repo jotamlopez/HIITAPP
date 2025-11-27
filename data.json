@@ -6,8 +6,9 @@
     },
     "movilidadArticular": {
       "name": "Movilidad Articular completa",
-      "videoId": "LpRAnGb5TO0",
-      "start": 14
+      "videoId": "vscdubz9O-8",
+      "start": 44,
+      "end": 976
     },
     "movilidadCaderasHombros": {
       "name": "Flexibilidad y Movilidad",
@@ -168,7 +169,9 @@
     },
     "birdDog": {
       "name": "Bird dog - Core antirrotación",
-      "videoId": "-LRjkbEy-qU"
+      "videoId": "W8Fgy71xzx8",
+      "start": 535,
+      "end": 640
     },
     "extensionTriceps": {
       "name": "Extensión de tríceps con mancuerna",
@@ -221,7 +224,7 @@
         {
           "exerciseId": "movilidadArticular",
           "type": "time",
-          "work": 300,
+          "work": 422,
           "rest": 10,
           "repeat": 1
         },
@@ -229,7 +232,6 @@
           "type": "circuit",
           "rounds": 3,
           "restBetweenRounds": 90,
-          "restBetweenExercises": 0,
           "exercises": [
             {
               "exerciseId": "pressPechoSuelo",
@@ -271,54 +273,6 @@
       ]
     },
     {
-      "name": "MARTES AM: Cardio Ligero & Movilidad",
-      "exercises": [
-        {
-          "exerciseId": "movilidadArticular",
-          "type": "time",
-          "work": 180,
-          "rest": 10,
-          "repeat": 1
-        },
-        {
-          "type": "circuit",
-          "rounds": 3,
-          "restBetweenRounds": 60,
-          "restBetweenExercises": 0,
-          "exercises": [
-            {
-              "exerciseId": "marchaIndoor",
-              "type": "time",
-              "work": 120,
-              "rest": 30,
-              "repeat": 1
-            },
-            {
-              "exerciseId": "cuerdaBoxerStep",
-              "type": "time",
-              "work": 60,
-              "rest": 30,
-              "repeat": 1
-            },
-            {
-              "exerciseId": "golpesFrontales",
-              "type": "time",
-              "work": 60,
-              "rest": 30,
-              "repeat": 1
-            }
-          ]
-        },
-        {
-          "exerciseId": "movilidadCaderasHombros",
-          "type": "time",
-          "work": 120,
-          "rest": 0,
-          "repeat": 1
-        }
-      ]
-    },
-    {
       "name": "MARTES PM: Fuerza Pierna Potencia",
       "exercises": [
         {
@@ -332,7 +286,6 @@
           "type": "circuit",
           "rounds": 3,
           "restBetweenRounds": 90,
-          "restBetweenExercises": 0,
           "exercises": [
             {
               "exerciseId": "sentadillaGoblet",
@@ -385,17 +338,9 @@
         },
         {
           "type": "circuit",
-          "rounds": 4,
-          "restBetweenRounds": 60,
-          "restBetweenExercises": 0,
+          "rounds": 3,
+          "restBetweenRounds": 30,
           "exercises": [
-            {
-              "exerciseId": "cuerdaBoxerStep",
-              "type": "time",
-              "work": 45,
-              "rest": 15,
-              "repeat": 1
-            },
             {
               "exerciseId": "golpesFrontales",
               "type": "time",
@@ -411,6 +356,13 @@
               "repeat": 1
             },
             {
+              "exerciseId": "burpeeModificado",
+              "type": "time",
+              "work": 45,
+              "rest": 15,
+              "repeat": 1
+            },
+            {
               "exerciseId": "deadBug",
               "type": "time",
               "work": 45,
@@ -418,18 +370,18 @@
               "repeat": 1
             },
             {
-              "exerciseId": "planchaToqueRodilla",
+              "exerciseId": "planchaFrontal",
               "type": "time",
-              "work": 45,
+              "work": 30,
               "rest": 15,
               "repeat": 1
             }
           ]
         },
         {
-          "exerciseId": "movilidadCaderasHombros",
+          "exerciseId": "estiramientosCompletos",
           "type": "time",
-          "work": 300,
+          "work": 293,
           "rest": 0,
           "repeat": 1
         }
@@ -439,17 +391,16 @@
       "name": "JUEVES PM: Full Body Seguro",
       "exercises": [
         {
-          "exerciseId": "movilidadCaderasHombros",
+          "exerciseId": "movilidadArticular",
           "type": "time",
-          "work": 240,
-          "rest": 10,
+          "work": 893,
+          "rest": 0,
           "repeat": 1
         },
         {
           "type": "circuit",
           "rounds": 4,
           "restBetweenRounds": 90,
-          "restBetweenExercises": 0,
           "exercises": [
             {
               "exerciseId": "burpeeModificado",
@@ -471,20 +422,13 @@
               "work": 40,
               "rest": 20,
               "repeat": 1
-            },
-            {
-              "exerciseId": "deadBug",
-              "type": "time",
-              "work": 40,
-              "rest": 20,
-              "repeat": 1
             }
           ]
         },
         {
-          "exerciseId": "marchaIndoorLigera",
+          "exerciseId": "estiramientosCompletos",
           "type": "time",
-          "work": 300,
+          "work": 293,
           "rest": 0,
           "repeat": 1
         }
@@ -496,7 +440,7 @@
         {
           "exerciseId": "movilidadArticular",
           "type": "time",
-          "work": 180,
+          "work": 893,
           "rest": 0,
           "repeat": 1
         },
@@ -504,27 +448,33 @@
           "type": "circuit",
           "rounds": 3,
           "restBetweenRounds": 60,
-          "restBetweenExercises": 0,
           "exercises": [
-            {
-              "exerciseId": "marchaIndoor",
-              "type": "time",
-              "work": 120,
-              "rest": 30,
-              "repeat": 1
-            },
             {
               "exerciseId": "cuerdaTecnica",
               "type": "time",
-              "work": 60,
-              "rest": 30,
+              "work": 45,
+              "rest": 15,
               "repeat": 1
             },
             {
               "exerciseId": "squatsArribaAbajo",
               "type": "time",
-              "work": 60,
-              "rest": 30,
+              "work": 45,
+              "rest": 15,
+              "repeat": 1
+            },
+            {
+              "exerciseId": "mountainClimber",
+              "type": "time",
+              "work": 45,
+              "rest": 15,
+              "repeat": 1
+            },
+            {
+              "exerciseId": "planchaShoulderTap",
+              "type": "time",
+              "work": 45,
+              "rest": 15,
               "repeat": 1
             }
           ]
@@ -532,7 +482,7 @@
         {
           "exerciseId": "estiramientosCompletos",
           "type": "time",
-          "work": 180,
+          "work": 293,
           "rest": 0,
           "repeat": 1
         }
@@ -542,17 +492,16 @@
       "name": "VIERNES PM: Pump Brazos & Relax",
       "exercises": [
         {
-          "exerciseId": "calentamientoDinamico",
+          "exerciseId": "movilidadArticular",
           "type": "time",
-          "work": 180,
-          "rest": 10,
+          "work": 422,
+          "rest": 0,
           "repeat": 1
         },
         {
           "type": "circuit",
           "rounds": 3,
           "restBetweenRounds": 60,
-          "restBetweenExercises": 0,
           "exercises": [
             {
               "exerciseId": "curlBiceps",
@@ -580,7 +529,26 @@
         {
           "exerciseId": "estiramientosCompletos",
           "type": "time",
-          "work": 600,
+          "work": 293,
+          "rest": 0,
+          "repeat": 1
+        }
+      ]
+    },
+    {
+      "name": "MARTES AM: Movilidad",
+      "exercises": [
+        {
+          "exerciseId": "calentamientoDinamico",
+          "type": "time",
+          "work": 293,
+          "rest": 0,
+          "repeat": 1
+        },
+        {
+          "exerciseId": "movilidadCaderasHombros",
+          "type": "time",
+          "work": 932,
           "rest": 0,
           "repeat": 1
         }
