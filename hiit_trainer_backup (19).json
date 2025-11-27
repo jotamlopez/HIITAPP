@@ -327,7 +327,7 @@
       ]
     },
     {
-      "name": "MIERCOLES PM: Cardio Box & Core",
+      "name": "MIERCOLES PM: Cardio Box (Seguro)",
       "exercises": [
         {
           "exerciseId": "calentamientoDinamico",
@@ -339,41 +339,41 @@
         {
           "type": "circuit",
           "rounds": 3,
-          "restBetweenRounds": 30,
+          "restBetweenRounds": 60,
           "exercises": [
             {
               "exerciseId": "golpesFrontales",
               "type": "time",
-              "work": 45,
-              "rest": 15,
+              "work": 40,
+              "rest": 20,
               "repeat": 1
             },
             {
               "exerciseId": "rodillazos",
               "type": "time",
-              "work": 45,
-              "rest": 15,
+              "work": 40,
+              "rest": 20,
               "repeat": 1
             },
             {
               "exerciseId": "burpeeModificado",
               "type": "time",
-              "work": 45,
-              "rest": 15,
+              "work": 40,
+              "rest": 20,
               "repeat": 1
             },
             {
               "exerciseId": "deadBug",
               "type": "time",
-              "work": 45,
-              "rest": 15,
+              "work": 40,
+              "rest": 20,
               "repeat": 1
             },
             {
               "exerciseId": "planchaFrontal",
               "type": "time",
               "work": 30,
-              "rest": 15,
+              "rest": 30,
               "repeat": 1
             }
           ]
@@ -489,40 +489,47 @@
       ]
     },
     {
-      "name": "VIERNES PM: Pump Brazos & Relax",
+      "name": "VIERNES PM: Brazos y Hombros (Super-Series)",
       "exercises": [
         {
           "exerciseId": "movilidadArticular",
           "type": "time",
-          "work": 422,
+          "work": 300,
           "rest": 0,
           "repeat": 1
         },
         {
           "type": "circuit",
-          "rounds": 3,
-          "restBetweenRounds": 60,
+          "rounds": 4,
+          "restBetweenRounds": 90,
           "exercises": [
             {
-              "exerciseId": "curlBiceps",
+              "exerciseId": "pressHombroMancuernas",
               "type": "sets",
               "sets": 1,
               "reps": 12,
-              "restBetweenSets": 45
-            },
-            {
-              "exerciseId": "extensionTriceps",
-              "type": "sets",
-              "sets": 1,
-              "reps": 12,
-              "restBetweenSets": 45
+              "restBetweenSets": 15
             },
             {
               "exerciseId": "elevacionesLaterales",
               "type": "sets",
               "sets": 1,
               "reps": 15,
-              "restBetweenSets": 45
+              "restBetweenSets": 30
+            },
+            {
+              "exerciseId": "curlBiceps",
+              "type": "sets",
+              "sets": 1,
+              "reps": 12,
+              "restBetweenSets": 0
+            },
+            {
+              "exerciseId": "extensionTriceps",
+              "type": "sets",
+              "sets": 1,
+              "reps": 12,
+              "restBetweenSets": 15
             }
           ]
         },
@@ -549,6 +556,18 @@
           "exerciseId": "movilidadCaderasHombros",
           "type": "time",
           "work": 932,
+          "rest": 0,
+          "repeat": 1
+        }
+      ]
+    },
+    {
+      "name": "DIARIO: Activación Post-Cena (Anti-Grasa)",
+      "exercises": [
+        {
+          "exerciseId": "marchaIndoorLigera",
+          "type": "time",
+          "work": 900,
           "rest": 0,
           "repeat": 1
         }
