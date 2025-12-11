@@ -950,6 +950,8 @@ window.addEventListener('load', () => {
         isInCircuit = false;
         currentCircuitRound = 1;
         currentCircuitExerciseIndex = 0;
+        // Reset global pause state
+        isGlobalPaused = false;
         
         if (player) { player.destroy(); player = null; }
         playerReady = false; pendingPlayerAction = null;
