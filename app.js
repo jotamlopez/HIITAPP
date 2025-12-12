@@ -1,19 +1,74 @@
-window.addEventListener('load', () => {
-    const LOCAL_STORAGE_KEY = 'hiitTrainerData';
-    const LOCAL_STORAGE_MUTE_KEY = 'hiitVideoMuted';
-    let exercises = {}, routines = [];
-    let player, playerReady = false, pendingPlayerAction = null;
+import { TimerManager } from './js/modules/timer-manager.js';
+import { YouTubePlayer } from './js/modules/youtube-player.js';
+import { 
+    persistDataLocally, 
+    loadDataFromLocalStorage, 
+    loadDataFromFile, 
+    exportToJSON, 
+    importFromJSON, 
+    loadMuteSetting, 
+    saveMuteSetting,
+    isValidDataShape,
+    normalizeDataPayload 
+} from './js/modules/data-manager.js';
+import { UIController } from './js/modules/ui-controller.js';
+import { AudioManager } from './js/modules/audio-manager.js';
+import { initKeyboardShortcuts } from './js/modules/keyboard-shortcuts.js';
+import { WorkoutHistory } from './js/modules/workout-history.js';
 
-    const timerDisplay = document.getElementById('timerDisplay'), trainingPanel = document.getElementById('trainingPanel'), timerPhase = document.getElementById('timerPhase'), expandedTimerPhase = document.getElementById('expandedTimerPhase'), currentExerciseTitle = document.getElementById('currentExerciseTitle'), startButton = document.getElementById('startButton'), pauseButton = document.getElementById('pauseButton'), resetExerciseButton = document.getElementById('resetExerciseButton'), resetRoutineButton = document.getElementById('resetRoutineButton'), routineSelect = document.getElementById('routineSelect'), routineModal = document.getElementById('routineModal'), exerciseModal = document.getElementById('exerciseModal'), editRoutineSelect = document.getElementById('editRoutineSelect'), routineNameInput = document.getElementById('routineNameInput'), exerciseSelect = document.getElementById('exerciseSelect'), routineExercisesList = document.getElementById('routineExercisesList'), deleteRoutineBtn = document.getElementById('deleteRoutineBtn'), exerciseLibraryList = document.getElementById('exerciseLibraryList'), exerciseIdInput = document.getElementById('exerciseIdInput'), exerciseNameInput = document.getElementById('exerciseNameInput'), exerciseVideoIdInput = document.getElementById('exerciseVideoIdInput'), videoStartInput = document.getElementById('videoStartInput'), videoEndInput = document.getElementById('videoEndInput'), audioToggle = document.getElementById('audioToggle'), importBtn = document.getElementById('importBtn'), exportBtn = document.getElementById('exportBtn'), importFile = document.getElementById('importFile'), importModal = document.getElementById('importModal'), mergeBtn = document.getElementById('mergeBtn'), replaceBtn = document.getElementById('replaceBtn'), maximizeVideoButton = document.getElementById('maximizeVideoBtn'), appLayout = document.getElementById('appLayout'), videoContainer = document.getElementById('videoContainer'), controlButtonsContainer = document.querySelector('.bottom-controls'), exerciseInfoCurrentName = document.getElementById('exerciseInfoCurrentName'), exerciseInfoCurrentPhase = document.getElementById('exerciseInfoCurrentPhase'), exerciseInfoNextName = document.getElementById('exerciseInfoNextName'), exerciseInfoNextStatus = document.getElementById('exerciseInfoNextStatus'), expandedStatsProgress = document.getElementById('expandedStatsProgress'), expandedStatsProgressBar = document.getElementById('expandedStatsProgressBar'), expandedStatsRemaining = document.getElementById('expandedStatsRemaining'), expandedStatsDetails = document.getElementById('expandedStatsDetails');
-    let currentRoutine = null, currentExerciseIndex = 0, currentSetIndex = 1, currentRepeatIndex = 1, currentCircuitRound = 1, currentCircuitExerciseIndex = 0, isInCircuit = false, timeLeft, timer, timerState = 'stopped', state = 'work', tempExercises = [], tempCircuitExercises = [], countdownSynth, finishSynth, isVideoMuted = true, importedData = null, audioContext = null, countdownGainNode = null, finishGainNode = null, isSidebarHidden = false, isFallbackFullscreen = false, previousSidebarHidden = false, layoutRaf = null, previousTimerStateBeforePause = null, isGlobalPaused = false;
+window.addEventListener('load', () => {
+    // Initialize module instances
+    const timerManager = new TimerManager();
+    const youtubePlayer = new YouTubePlayer();
+    const uiController = new UIController();
+    const audioManager = new AudioManager();
+    const workoutHistory = new WorkoutHistory();
+
+    // Alias for backward compatibility
+    const sanitizeDuration = TimerManager.sanitizeDuration;
+
+    let exercises = {}, routines = [];
+    let player = null, playerReady = false, pendingPlayerAction = null;
+
+    const timerDisplay = document.getElementById('timerDisplay'), trainingPanel = document.getElementById('trainingPanel'), timerPhase = document.getElementById('timerPhase'), expandedTimerPhase = document.getElementById('expandedTimerPhase'), currentExerciseTitle = document.getElementById('currentExerciseTitle'), startButton = document.getElementById('startButton'), pauseButton = document.getElementById('pauseButton'), resetExerciseButton = document.getElementById('resetExerciseButton'), resetRoutineButton = document.getElementById('resetRoutineButton'), routineSelect = document.getElementById('routineSelect'), routineModal = document.getElementById('routineModal'), exerciseModal = document.getElementById('exerciseModal'), editRoutineSelect = document.getElementById('editRoutineSelect'), routineNameInput = document.getElementById('routineNameInput'), exerciseSelect = document.getElementById('exerciseSelect'), routineExercisesList = document.getElementById('routineExercisesList'), deleteRoutineBtn = document.getElementById('deleteRoutineBtn'), exerciseLibraryList = document.getElementById('exerciseLibraryList'), exerciseIdInput = document.getElementById('exerciseIdInput'), exerciseNameInput = document.getElementById('exerciseNameInput'), exerciseVideoIdInput = document.getElementById('exerciseVideoIdInput'), videoStartInput = document.getElementById('videoStartInput'), videoEndInput = document.getElementById('videoEndInput'), audioToggle = document.getElementById('audioToggle'), importBtn = document.getElementById('importBtn'), exportBtn = document.getElementById('exportBtn'), importFile = document.getElementById('importFile'), importModal = document.getElementById('importModal'), mergeBtn = document.getElementById('mergeBtn'), replaceBtn = document.getElementById('replaceBtn'), maximizeVideoButton = document.getElementById('maximizeVideoBtn'), appLayout = document.getElementById('appLayout'), videoContainer = document.getElementById('videoContainer'), controlButtonsContainer = document.querySelector('.bottom-controls'), exerciseInfoCurrentName = document.getElementById('exerciseInfoCurrentName'), exerciseInfoCurrentPhase = document.getElementById('exerciseInfoCurrentPhase'), exerciseInfoNextName = document.getElementById('exerciseInfoNextName'), exerciseInfoNextStatus = document.getElementById('exerciseInfoNextStatus'), expandedStatsProgress = document.getElementById('expandedStatsProgress'), expandedStatsProgressBar = document.getElementById('expandedStatsProgressBar'), expandedStatsRemaining = document.getElementById('expandedStatsRemaining'), expandedStatsDetails = document.getElementById('expandedStatsDetails'), historyModal = document.getElementById('historyModal'), historyButton = document.getElementById('historyButton'), historyFilter = document.getElementById('historyFilter'), historyTableBody = document.getElementById('historyTableBody'), historyStatTotal = document.getElementById('historyStatTotal'), historyStatTime = document.getElementById('historyStatTime'), historyStatFavorite = document.getElementById('historyStatFavorite'), historyEmptyState = document.getElementById('historyEmptyState'), clearHistoryBtn = document.getElementById('clearHistoryBtn');
+    
+    // Use timerManager properties
+    let currentRoutine = null, currentExerciseIndex = 0, currentSetIndex = 1, currentRepeatIndex = 1, currentCircuitRound = 1, currentCircuitExerciseIndex = 0, isInCircuit = false, timeLeft, timer, timerState = 'stopped', state = 'work', tempExercises = [], tempCircuitExercises = [], countdownSynth, finishSynth, isVideoMuted = true, importedData = null, audioContext = null, countdownGainNode = null, finishGainNode = null, isSidebarHidden = false, isFallbackFullscreen = false, previousSidebarHidden = false, layoutRaf = null, previousTimerStateBeforePause = null, isGlobalPaused = false, routineStartTimestamp = null;
+
+    // Sync module state with local variables
+    function syncTimerState() {
+        currentExerciseIndex = timerManager.currentExerciseIndex;
+        currentSetIndex = timerManager.currentSetIndex;
+        currentRepeatIndex = timerManager.currentRepeatIndex;
+        currentCircuitRound = timerManager.currentCircuitRound;
+        currentCircuitExerciseIndex = timerManager.currentCircuitExerciseIndex;
+        isInCircuit = timerManager.isInCircuit;
+        timeLeft = timerManager.timeLeft;
+        timerState = timerManager.timerState;
+        state = timerManager.state;
+        isGlobalPaused = timerManager.isGlobalPaused;
+    }
+
+    function updateTimerState() {
+        timerManager.currentExerciseIndex = currentExerciseIndex;
+        timerManager.currentSetIndex = currentSetIndex;
+        timerManager.currentRepeatIndex = currentRepeatIndex;
+        timerManager.currentCircuitRound = currentCircuitRound;
+        timerManager.currentCircuitExerciseIndex = currentCircuitExerciseIndex;
+        timerManager.isInCircuit = isInCircuit;
+        timerManager.timeLeft = timeLeft;
+        timerManager.timerState = timerState;
+        timerManager.state = state;
+        timerManager.isGlobalPaused = isGlobalPaused;
+    }
 
     async function initializeAppData() {
-        const savedMuteSetting = localStorage.getItem(LOCAL_STORAGE_MUTE_KEY);
-        isVideoMuted = savedMuteSetting !== null ? JSON.parse(savedMuteSetting) : true;
+        isVideoMuted = loadMuteSetting();
+        youtubePlayer.isVideoMuted = isVideoMuted;
         audioToggle.checked = !isVideoMuted;
 
-        const fileData = await loadDataFromFile();
-        const persistedData = loadDataFromLocalStorage();
+        const { data: fileData, errors: fileErrors, warnings: fileWarnings } = await loadDataFromFile();
+        const { data: persistedData, errors: persistedErrors, warnings: persistedWarnings } = loadDataFromLocalStorage();
 
         if (persistedData) {
             exercises = persistedData.exercises;
@@ -27,222 +82,100 @@ window.addEventListener('load', () => {
             routines = [];
         }
 
+        const allWarnings = [...(persistedWarnings || []), ...(fileWarnings || [])];
+        if (allWarnings.length) {
+            uiController.showAlert(`Datos cargados con avisos: ${allWarnings.join(' | ')}`, 'warning');
+        }
+
         populateAllSelects();
         resetWorkout('no_routine');
     }
 
-    async function loadDataFromFile() {
-        // Try multiple sources in order: data.json -> backup file -> null
-        const sources = ['data.json', 'hiit_trainer_backup (13).json'];
-        for (const src of sources) {
-            try {
-                const response = await fetch(src);
-                if (!response.ok) {
-                    continue;
-                }
-                const data = await response.json();
-                if (!isValidDataShape(data)) {
-                    console.warn(`Formato no válido en ${src}`);
-                    continue;
-                }
-                return normalizeDataPayload(data);
-            } catch (e) {
-                // Continue to next source
-                continue;
-            }
-        }
-        console.warn('No fue posible cargar data desde archivos locales. Usa Importar o crea ejercicios/rutinas.');
-        return null;
-    }
-
-    function loadDataFromLocalStorage() {
+    // Preparation settings and countdown wiring
+    function getPreparationSettings() {
         try {
-            const raw = localStorage.getItem(LOCAL_STORAGE_KEY);
-            if (!raw) return null;
-            const parsed = JSON.parse(raw);
-            if (!isValidDataShape(parsed)) {
-                console.warn('Persisted HIIT data had invalid format. Ignoring.');
-                return null;
-            }
-            return normalizeDataPayload(parsed);
-        } catch (error) {
-            console.error('Error reading persisted HIIT data:', error);
-            return null;
+            const enabledRaw = localStorage.getItem('preparationEnabled');
+            const secondsRaw = localStorage.getItem('preparationTime');
+            const enabled = enabledRaw === null ? true : enabledRaw === 'true';
+            const seconds = secondsRaw === null ? 5 : Math.max(0, Math.min(30, parseInt(secondsRaw, 10) || 0));
+            return { enabled, seconds };
+        } catch (e) {
+            return { enabled: true, seconds: 5 };
         }
     }
 
-    function normalizeDataPayload(data) {
-        // Ensure older shape (work/rest) is converted to explicit type 'time'
-        const routines = Array.isArray(data.routines) ? data.routines.map(r => {
-            return {
-                name: r.name,
-                exercises: Array.isArray(r.exercises) ? r.exercises.map(ex => {
-                    if (!ex) return null;
-                    // Handle circuits
-                    if (ex.type === 'circuit') {
-                        return {
-                            type: 'circuit',
-                            rounds: ex.rounds || 3,
-                            restBetweenRounds: ex.restBetweenRounds || 60,
-                            exercises: Array.isArray(ex.exercises) ? ex.exercises.map(cEx => {
-                                if (!cEx) return null;
-                                if (cEx.type === 'sets') {
-                                    return { 
-                                        exerciseId: cEx.exerciseId, 
-                                        type: 'sets', 
-                                        sets: cEx.sets || 3, 
-                                        reps: cEx.reps || 10, 
-                                        restBetweenSets: cEx.restBetweenSets || 60 
-                                    };
-                                }
-                                return { 
-                                    exerciseId: cEx.exerciseId, 
-                                    type: 'time', 
-                                    work: sanitizeDuration(cEx.work), 
-                                    rest: sanitizeDuration(cEx.rest), 
-                                    repeat: Math.max(1, sanitizeDuration(cEx.repeat, 1)) 
-                                };
-                            }).filter(Boolean) : []
-                        };
-                    }
-                    // If object already has 'type' keep it
-                    if (ex.type === 'sets') return { exerciseId: ex.exerciseId, type: 'sets', sets: ex.sets || ex.count || 3, reps: ex.reps || 10, restBetweenSets: ex.restBetweenSets || ex.restBetweenSets || 60 };
-                    if (ex.type === 'time') return { exerciseId: ex.exerciseId, type: 'time', work: sanitizeDuration(ex.work), rest: sanitizeDuration(ex.rest), repeat: Math.max(1, sanitizeDuration(ex.repeat, 1)) };
-                    // Legacy shape: { exerciseId, work, rest }
-                    return { exerciseId: ex.exerciseId, type: 'time', work: sanitizeDuration(ex.work), rest: sanitizeDuration(ex.rest), repeat: Math.max(1, sanitizeDuration(ex.repeat, 1)) };
-                }).filter(Boolean) : []
+    function initPreparationSettingsUI() {
+        const toggle = document.getElementById('preparationToggle');
+        const secondsInput = document.getElementById('preparationSeconds');
+        const { enabled, seconds } = getPreparationSettings();
+        if (toggle) toggle.checked = enabled;
+        if (secondsInput) secondsInput.value = String(seconds);
+        if (toggle) toggle.addEventListener('change', () => {
+            localStorage.setItem('preparationEnabled', String(toggle.checked));
+        });
+        if (secondsInput) secondsInput.addEventListener('change', () => {
+            const val = Math.max(0, Math.min(30, parseInt(secondsInput.value, 10) || 0));
+            secondsInput.value = String(val);
+            localStorage.setItem('preparationTime', String(val));
+        });
+    }
+
+    function startPreparationCountdownSimple(exerciseName, onFinish) {
+        const toggle = document.getElementById('preparationToggle');
+        const secondsInput = document.getElementById('preparationSeconds');
+        const settings = getPreparationSettings();
+        const enabled = toggle ? toggle.checked : settings.enabled;
+        const seconds = secondsInput ? (parseInt(secondsInput.value, 10) || settings.seconds) : settings.seconds;
+        if (!enabled || seconds <= 0) {
+            onFinish && onFinish();
+            return;
+        }
+        const skipBtn = document.getElementById('skipPreparationBtn');
+        uiController.showPreparationOverlay(exerciseName || 'Ejercicio', seconds);
+        let remaining = seconds;
+        uiController.updatePreparationSeconds(remaining);
+        if (audioManager && typeof audioManager.playCountdown === 'function') {
+            audioManager.playCountdown(1);
+        }
+        const intervalId = setInterval(() => {
+            remaining -= 1;
+            uiController.updatePreparationSeconds(Math.max(0, remaining));
+            if (remaining > 0) {
+                if (audioManager && typeof audioManager.playCountdown === 'function') {
+                    audioManager.playCountdown(1);
+                }
+                return;
+            }
+            clearInterval(intervalId);
+            uiController.hidePreparationOverlay();
+            onFinish && onFinish();
+        }, 1000);
+        if (skipBtn) {
+            skipBtn.onclick = () => {
+                clearInterval(intervalId);
+                uiController.hidePreparationOverlay();
+                onFinish && onFinish();
             };
-        }) : [];
-
-        return {
-            exercises: data.exercises || {},
-            routines
-        };
-    }
-
-    function isValidDataShape(candidate) {
-        if (!candidate || typeof candidate !== 'object') return false;
-        if (candidate.exercises && typeof candidate.exercises !== 'object') return false;
-        if (candidate.routines && !Array.isArray(candidate.routines)) return false;
-        return true;
-    }
-
-    // Persist current exercises & routines to localStorage
-    function persistDataLocally() {
-        try {
-            const snapshot = JSON.stringify({ exercises, routines });
-            localStorage.setItem(LOCAL_STORAGE_KEY, snapshot);
-        } catch (error) {
-            console.error('Error persisting HIIT data locally:', error);
-            alertMessage('No se pudo guardar la información en este navegador.', 'warning');
         }
     }
+
+    // Data and audio functions now handled by modules
 
     function saveData(showToast = false) {
-        persistDataLocally();
-        if (showToast) alertMessage('Cambios guardados en este dispositivo. Usa Exportar para guardar una copia.', 'success');
-    }
-    
-    function setupAudio() {
-        if (typeof Tone !== 'undefined') {
-            if (!countdownSynth) {
-                countdownSynth = new Tone.Synth({ oscillator: { type: 'sine' }, envelope: { attack: 0.005, decay: 0.1, sustain: 0.2, release: 0.1 } }).toDestination();
-            }
-            if (!finishSynth) {
-                finishSynth = new Tone.Synth({ oscillator: { type: 'triangle' }, envelope: { attack: 0.01, decay: 0.2, sustain: 0.1, release: 0.2 } }).toDestination();
-            }
-            return;
-        }
-
-        if (!audioContext) {
-            const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-            if (!AudioContextClass) return;
-            audioContext = new AudioContextClass();
-        }
-
-        if (!countdownGainNode && audioContext) {
-            countdownGainNode = audioContext.createGain();
-            countdownGainNode.gain.value = 0.15;
-            countdownGainNode.connect(audioContext.destination);
-        }
-
-        if (!finishGainNode && audioContext) {
-            finishGainNode = audioContext.createGain();
-            finishGainNode.gain.value = 0.2;
-            finishGainNode.connect(audioContext.destination);
-        }
-    }
-
-    function playCountdownCue() {
-        if (countdownSynth) {
-            countdownSynth.triggerAttackRelease('C5', '8n');
-            return;
-        }
-        playFallbackBeep(880, 0.18, countdownGainNode);
-    }
-
-    function playFinishCue() {
-        if (finishSynth) {
-            finishSynth.triggerAttackRelease('G5', '4n');
-            return;
-        }
-        playFallbackBeep(660, 0.3, finishGainNode);
-    }
-
-    function playFallbackBeep(frequency, durationSeconds, gainNode) {
-        if (!audioContext) return;
-        if (audioContext.state === 'suspended') audioContext.resume().catch(() => {});
-        const oscillator = audioContext.createOscillator();
-        oscillator.type = 'sine';
-        oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime);
-        if (gainNode) oscillator.connect(gainNode);
-        else oscillator.connect(audioContext.destination);
-        oscillator.start();
-        oscillator.stop(audioContext.currentTime + durationSeconds);
+        persistDataLocally({ exercises, routines });
+        if (showToast) uiController.showAlert('Cambios guardados en este dispositivo. Usa Exportar para guardar una copia.', 'success');
     }
 
     async function primeAudioEngines() {
-        if (typeof Tone !== 'undefined') {
-            try {
-                if (Tone.context.state !== 'running') await Tone.start();
-                return;
-            } catch (error) {
-                console.warn('No se pudo inicializar el audio de Tone.js', error);
-            }
-        }
-
-        if (audioContext) {
-            try {
-                if (audioContext.state === 'suspended') await audioContext.resume();
-            } catch (error) {
-                console.warn('No se pudo reanudar el contexto de audio', error);
-            }
-        }
-    }
-
-    function sanitizeDuration(value, defaultValue = 0) {
-        const parsed = parseInt(value, 10);
-        if (Number.isNaN(parsed) || parsed < 0) return defaultValue;
-        return parsed;
+        return audioManager.primeAudioEngines();
     }
 
     function setTimerPhaseLabel(text) {
-        if (timerPhase) timerPhase.textContent = text;
-        if (expandedTimerPhase) expandedTimerPhase.textContent = text;
+        uiController.updatePhaseUI(text);
     }
 
     function setStartButtonActive(active) {
-        if (!startButton) return;
-        if (active) {
-            startButton.classList.add('active-timer');
-            startButton.style.opacity = '0.6';
-            startButton.style.pointerEvents = 'none';
-        } else {
-            startButton.classList.remove('active-timer');
-            startButton.style.opacity = '1';
-            startButton.style.pointerEvents = 'auto';
-            startButton.disabled = false; // Mantener para consistencia
-        }
+        uiController.setStartButtonActive(active);
     }
 
     function updateSidebarToggleUI() {
@@ -331,6 +264,96 @@ window.addEventListener('load', () => {
             return `${hours}h ${minutes.toString().padStart(2, '0')}m`;
         }
         return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    }
+
+    function estimateExerciseDuration(ex) {
+        if (!ex) return 0;
+        if (ex.type === 'sets') {
+            const sets = Math.max(1, sanitizeDuration(ex.sets, ex.count || 1));
+            const restBetweenSets = Math.max(0, sanitizeDuration(ex.restBetweenSets, ex.rest || 0));
+            return restBetweenSets * Math.max(0, sets - 1);
+        }
+        const work = sanitizeDuration(ex.work, 30);
+        const rest = sanitizeDuration(ex.rest, 0);
+        const repeat = Math.max(1, sanitizeDuration(ex.repeat, 1));
+        return (work * repeat) + (rest * Math.max(0, repeat - 1));
+    }
+
+    function buildHistoryExercisesFromRoutine(routine) {
+        if (!routine || !Array.isArray(routine.exercises)) return [];
+        const list = [];
+        routine.exercises.forEach((ex) => {
+            if (!ex) return;
+            if (ex.type === 'circuit' && Array.isArray(ex.exercises)) {
+                const rounds = Math.max(1, sanitizeDuration(ex.rounds, 1));
+                ex.exercises.forEach((cEx) => {
+                    if (!cEx) return;
+                    const duration = estimateExerciseDuration(cEx) * rounds;
+                    list.push({ exerciseId: cEx.exerciseId || 'sin-id', duration, completed: true });
+                });
+                return;
+            }
+            list.push({ exerciseId: ex.exerciseId || 'sin-id', duration: estimateExerciseDuration(ex), completed: true });
+        });
+        return list;
+    }
+
+    function renderHistory(filterValue = 'all') {
+        if (!historyModal) return;
+        const history = workoutHistory.getHistory(200);
+
+        const routineNames = Array.from(new Set(history.map(h => h.routineName || 'Rutina')));
+        if (historyFilter) {
+            historyFilter.innerHTML = '<option value="all">Todas</option>';
+            routineNames.forEach(name => {
+                const opt = document.createElement('option');
+                opt.value = name;
+                opt.textContent = name;
+                historyFilter.appendChild(opt);
+            });
+            if (filterValue !== 'all') historyFilter.value = filterValue;
+        }
+
+        const filtered = filterValue === 'all' ? history : history.filter(h => h.routineName === filterValue);
+        const totalWorkouts = filtered.length;
+        const totalDuration = filtered.reduce((sum, h) => sum + (Number(h.totalDuration) || 0), 0);
+
+        if (historyStatTotal) historyStatTotal.textContent = totalWorkouts;
+        if (historyStatTime) historyStatTime.textContent = formatDuration(totalDuration);
+
+        const counts = history.reduce((acc, h) => {
+            const key = h.routineName || 'Rutina';
+            acc[key] = (acc[key] || 0) + 1;
+            return acc;
+        }, {});
+        let favorite = '—';
+        let maxCount = 0;
+        Object.entries(counts).forEach(([name, count]) => {
+            if (count > maxCount) { maxCount = count; favorite = name; }
+        });
+        if (historyStatFavorite) historyStatFavorite.textContent = favorite;
+
+        if (historyTableBody) {
+            historyTableBody.innerHTML = '';
+            filtered.forEach((entry) => {
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-slate-800/60';
+                const completedCount = (entry.exercises || []).filter(e => e.completed).length;
+                const totalCount = (entry.exercises || []).length;
+                tr.innerHTML = `
+                    <td class="px-3 py-2 text-slate-200">${new Date(entry.completedAt).toLocaleString('es-ES')}</td>
+                    <td class="px-3 py-2 text-slate-200">${entry.routineName || 'Rutina'}</td>
+                    <td class="px-3 py-2 text-slate-200">${formatDuration(entry.totalDuration || 0)}</td>
+                    <td class="px-3 py-2 text-slate-200">${completedCount}/${totalCount}</td>
+                    <td class="px-3 py-2 text-slate-200">${Math.round(entry.completionRate || 0)}%</td>
+                `;
+                historyTableBody.appendChild(tr);
+            });
+        }
+
+        if (historyEmptyState) {
+            historyEmptyState.style.display = filtered.length === 0 ? 'block' : 'none';
+        }
     }
 
     function calculateRemainingSeconds() {
@@ -901,51 +924,30 @@ window.addEventListener('load', () => {
     }
 
     function applyFallbackFullscreen(forceState) {
-        if (!trainingPanel) return;
-        const targetState = typeof forceState === 'boolean' ? forceState : !isFallbackFullscreen;
-        if (targetState === isFallbackFullscreen) {
-            updateMaximizeButton(targetState || document.fullscreenElement === trainingPanel);
-            updateExpandedLayoutState();
-            return;
-        }
-        if (targetState) {
-            previousSidebarHidden = isSidebarHidden;
-        }
-        isFallbackFullscreen = targetState;
-        trainingPanel.classList.toggle('training-panel-fullscreen', isFallbackFullscreen);
-        if (isFallbackFullscreen) {
-            setSidebarHidden(true);
-        } else {
-            setSidebarHidden(previousSidebarHidden);
-        }
-        const isFullscreenActive = isFallbackFullscreen || document.fullscreenElement === trainingPanel;
-        if (videoContainer) videoContainer.classList.toggle('full-width', isFullscreenActive);
-        updateMaximizeButton(isFullscreenActive);
+        // Deprecated: using native fullscreen on the video container
+        // Kept as no-op for backward compatibility
         updateExpandedLayoutState();
     }
 
     async function toggleTrainingFullscreen() {
-        if (!trainingPanel) return;
-        const canUseNativeFullscreen = document.fullscreenEnabled && typeof trainingPanel.requestFullscreen === 'function';
-        if (canUseNativeFullscreen) {
-            if (document.fullscreenElement === trainingPanel) {
+        const targetEl = document.getElementById('videoContainer') || trainingPanel;
+        if (!targetEl) return;
+        const canUseNativeFullscreen = document.fullscreenEnabled && typeof targetEl.requestFullscreen === 'function';
+        try {
+            if (document.fullscreenElement) {
                 await document.exitFullscreen();
-            } else {
-                try {
-                    await trainingPanel.requestFullscreen();
-                } catch (error) {
-                    console.warn('No se pudo activar pantalla completa nativa:', error);
-                    applyFallbackFullscreen(true);
-                }
+            } else if (canUseNativeFullscreen) {
+                await targetEl.requestFullscreen();
             }
-        } else {
-            applyFallbackFullscreen();
+        } catch (error) {
+            console.warn('Pantalla completa no disponible:', error);
         }
     }
     function populateAllSelects() { const sortedRoutines = [...routines].sort((a, b) => a.name.localeCompare(b.name)); const sortedExercises = Object.entries(exercises).sort(([, a], [, b]) => a.name.localeCompare(b.name)); routineSelect.innerHTML = '<option value="">-- Carga una rutina --</option>'; editRoutineSelect.innerHTML = '<option value="">-- Crear Nueva Rutina --</option>'; sortedRoutines.forEach(r => { routineSelect.innerHTML += `<option value="${r.name}">${r.name}</option>`; editRoutineSelect.innerHTML += `<option value="${r.name}">${r.name}</option>`; }); exerciseSelect.innerHTML = ''; if(sortedExercises.length > 0) sortedExercises.forEach(([id, ex]) => { exerciseSelect.innerHTML += `<option value="${id}">${ex.name}</option>`; }); exerciseLibraryList.innerHTML = ''; sortedExercises.forEach(([id, ex]) => { exerciseLibraryList.innerHTML += `<li><span>${ex.name}</span><div class="flex gap-2"><button data-id="${id}" class="edit-ex-btn text-indigo-400 hover:text-indigo-300">Editar</button><button data-id="${id}" class="delete-ex-btn text-red-400 hover:text-red-300">Eliminar</button></div></li>`; }); }
     
     function resetWorkout(status = 'no_routine') {
         clearInterval(timer); timerState = 'stopped'; currentExerciseIndex = 0;
+        routineStartTimestamp = null;
         // Reset circuit variables
         isInCircuit = false;
         currentCircuitRound = 1;
@@ -988,48 +990,20 @@ window.addEventListener('load', () => {
         renderLeftPanelDetails();
     }
 
-    window.onYouTubeIframeAPIReady = function() {};
+    // YouTube player initialization now handled by youtube-player module
+    window.onYouTubeIframeAPIReady = function() {
+        // Player initialization is managed by YouTubePlayer class
+    };
 
     function loadVideo(exercise, playOnReady = false) {
-        if (player) { player.destroy(); player = null; }
-        playerReady = false;
-        pendingPlayerAction = (playOnReady && !isGlobalPaused) ? 'play' : null;
-        if (!exercise || !exercise.videoId) {
-            pendingPlayerAction = null;
-            return;
-        }
-        const playerVars = { 'autoplay': 0, 'controls': 0, 'rel': 0, 'showinfo': 0, 'mute': isVideoMuted ? 1 : 0, 'loop': 1, 'playlist': exercise.videoId };
-        if (exercise.start) playerVars.start = exercise.start;
-        if (exercise.end) playerVars.end = exercise.end;
-        player = new YT.Player('player', { 
-            height: '100%', 
-            width: '100%', 
-            videoId: exercise.videoId, 
-            playerVars: playerVars, 
-            events: { 
-                'onReady': (event) => { 
-                    playerReady = true; 
-                    syncPlayerMuteState(); 
-                    if (pendingPlayerAction === 'play' && !isGlobalPaused) { 
-                        // Ensure video starts at correct time
-                        const startTime = sanitizeDuration(exercise.start, 0);
-                        event.target.seekTo(startTime, true);
-                        setTimeout(() => {
-                            event.target.playVideo();
-                        }, 100);
-                        pendingPlayerAction = null; 
-                    } 
-                }, 
-                'onStateChange': (event) => { 
-                    if (event.data === YT.PlayerState.ENDED) { 
-                        player.seekTo(exercise.start || 0); 
-                    }
-                } 
-            } 
-        });
+        // Use YouTubePlayer module
+        youtubePlayer.loadVideo(exercise, playOnReady && !isGlobalPaused);
+        // Sync local player reference
+        player = youtubePlayer.player;
+        playerReady = youtubePlayer.playerReady;
     }
     
-    function updateTimerDisplay() { const m=Math.floor(timeLeft/60).toString().padStart(2,'0'); const s=(timeLeft % 60).toString().padStart(2,'0'); timerDisplay.textContent=`${m}:${s}`; }
+    function updateTimerDisplay() { uiController.updateTimerDisplay(timeLeft); }
     function updatePhaseUI() { if(state==='work'){ setTimerPhaseLabel('¡A TRABAJAR!'); trainingPanel.classList.remove('rest-state'); trainingPanel.classList.add('work-state'); } else { setTimerPhaseLabel('DESCANSO'); trainingPanel.classList.remove('work-state'); trainingPanel.classList.add('rest-state'); } updateExerciseInfo(); }
     
     // Ensure complete-set button visibility updates when phase changes
@@ -1363,67 +1337,32 @@ window.addEventListener('load', () => {
 
     function playCurrentVideo() {
         if (isGlobalPaused) return;
-        if (!player) { pendingPlayerAction = 'play'; return; }
-        if (playerReady && typeof player.playVideo === 'function') {
-            player.playVideo();
-            pendingPlayerAction = null;
-        } else {
-            pendingPlayerAction = 'play';
-        }
+        youtubePlayer.playVideo();
     }
 
     function pauseCurrentVideo() {
-        if (player && typeof player.pauseVideo === 'function') player.pauseVideo();
-        pendingPlayerAction = null;
+        youtubePlayer.pauseVideo();
     }
 
     function resumeCurrentVideo() {
         if (isGlobalPaused) return;
-        if (!player) { pendingPlayerAction = 'play'; return; }
-        if (playerReady && typeof player.playVideo === 'function') {
-            player.playVideo();
-            pendingPlayerAction = null;
-        } else {
-            pendingPlayerAction = 'play';
-        }
+        youtubePlayer.resumeVideo();
     }
 
     function stopCurrentVideo() {
-        if (player && typeof player.pauseVideo === 'function') {
-            // Use pause instead of stop to preserve video state
-            player.pauseVideo();
-        }
-        pendingPlayerAction = null;
+        youtubePlayer.pauseVideo();
     }
 
     function resetVideoToStart() {
-        const ex = currentRoutine?.exercises[currentExerciseIndex];
-        if (!player || !ex) return;
-        const startTime = sanitizeDuration(ex.start, 0);
-        if (playerReady && typeof player.seekTo === 'function') {
-            if (typeof player.pauseVideo === 'function') player.pauseVideo();
-            setTimeout(() => {
-                try { player.seekTo(startTime, true); } catch {}
-                setTimeout(() => { if (!isGlobalPaused && playerReady && typeof player.playVideo === 'function') player.playVideo(); }, 180);
-            }, 50);
-        } else {
-            if (!isGlobalPaused) pendingPlayerAction = 'play';
-        }
+        youtubePlayer.resetToStart(!isGlobalPaused);
     }
 
     function isPlayerCurrentlyPlaying() {
-        if (!player || typeof player.getPlayerState !== 'function' || typeof YT === 'undefined') {
-            return pendingPlayerAction === 'play';
-        }
-        const state = player.getPlayerState();
-        return state === YT.PlayerState.PLAYING || state === YT.PlayerState.BUFFERING;
+        return youtubePlayer.isPlaying();
     }
 
     function syncPlayerMuteState(options = {}) {
-        if (!player || typeof player.mute !== 'function') return;
-        if (isVideoMuted) player.mute();
-        else player.unMute();
-        if (options.resumeIfPlaying && options.wasPlaying && typeof player.playVideo === 'function') player.playVideo();
+        youtubePlayer.syncMuteState(isVideoMuted, options.resumeIfPlaying && options.wasPlaying);
     }
     
     async function startTimer() {
@@ -1443,7 +1382,7 @@ window.addEventListener('load', () => {
                 }
                 if (pauseButton) pauseButton.disabled = false;
                 try {
-                    setupAudio();
+                    audioManager.setupAudio();
                 } catch {}
                 playCurrentVideo();
                 updateExerciseInfo();
@@ -1478,7 +1417,7 @@ window.addEventListener('load', () => {
             // update button states
             setStartButtonActive(true);
             if (pauseButton) pauseButton.disabled = false;
-            setupAudio();
+            audioManager.setupAudio();
             await primeAudioEngines();
             playCurrentVideo();
             timer = setInterval(timerLoop, 1000);
@@ -1488,8 +1427,9 @@ window.addEventListener('load', () => {
         }
 
         if (timerState === 'stopped' && currentRoutine && currentRoutine.exercises.length > 0) {
-            setupAudio();
+            audioManager.setupAudio();
             await primeAudioEngines();
+            if (!routineStartTimestamp) routineStartTimestamp = Date.now();
 
             // Determine effective exercise (handle circuits)
             const topEx = currentRoutine.exercises[currentExerciseIndex];
@@ -1575,7 +1515,7 @@ window.addEventListener('load', () => {
                 const isSetsHydrated = hydratedEx && hydratedEx.type === 'sets';
                 const isSets = isSetsRef || isSetsHydrated;
                 const allowForSets = isSets ? (state === 'rest') : true;
-                if (allowForSets) playCountdownCue();
+                if (allowForSets) audioManager.playCountdown();
             }
         }
 
@@ -1591,7 +1531,7 @@ window.addEventListener('load', () => {
 
         // Play finish cue only if the timer was actively running (avoid repeated beeps when in manual 'sets' mode)
         if (timerState === 'running') {
-            playFinishCue();
+            audioManager.playFinish();
         }
 
         if (state === 'work') {
@@ -1956,7 +1896,20 @@ window.addEventListener('load', () => {
             else finishWorkout();
         }
     }
-    function finishWorkout() { clearInterval(timer); timerState = 'stopped'; alertMessage("¡Rutina completada! ¡Excelente trabajo!"); resetWorkout('no_routine'); }
+    function finishWorkout() {
+        clearInterval(timer);
+        timerState = 'stopped';
+        const durationSeconds = routineStartTimestamp ? Math.max(0, Math.round((Date.now() - routineStartTimestamp) / 1000)) : 0;
+        const exercisesForHistory = buildHistoryExercisesFromRoutine(currentRoutine);
+        try {
+            workoutHistory.saveWorkout(currentRoutine?.name || 'Rutina', exercisesForHistory, durationSeconds, new Date());
+        } catch (e) {
+            console.warn('No se pudo guardar el historial de entrenamiento', e);
+        }
+        routineStartTimestamp = null;
+        alertMessage("¡Rutina completada! ¡Excelente trabajo!");
+        resetWorkout('no_routine');
+    }
 
     startButton.addEventListener('click', startTimer);
     pauseButton.addEventListener('click', pauseTimer);
@@ -2110,21 +2063,9 @@ window.addEventListener('load', () => {
     }
 
     document.addEventListener('fullscreenchange', () => {
-        const isNativeFullscreen = document.fullscreenElement === trainingPanel;
-        if (isNativeFullscreen) {
-            previousSidebarHidden = isSidebarHidden;
-            setSidebarHidden(true);
-            trainingPanel.classList.add('training-panel-fullscreen');
-        } else if (!isFallbackFullscreen) {
-            trainingPanel.classList.remove('training-panel-fullscreen');
-            setSidebarHidden(previousSidebarHidden);
-        }
-        const isFullscreenActive = isNativeFullscreen || isFallbackFullscreen;
-        if (!isNativeFullscreen && !isFallbackFullscreen) {
-            trainingPanel.classList.remove('training-panel-fullscreen');
-        }
-        if (videoContainer) videoContainer.classList.toggle('full-width', isFullscreenActive);
-        updateMaximizeButton(isFullscreenActive);
+        const isNativeFullscreen = Boolean(document.fullscreenElement);
+        updateMaximizeButton(isNativeFullscreen);
+        // No sidebar adjustments; fullscreen is now only the video container
         updateExpandedLayoutState();
     });
 
@@ -2136,7 +2077,8 @@ window.addEventListener('load', () => {
     audioToggle.addEventListener('change', () => {
         const wasPlaying = isPlayerCurrentlyPlaying();
         isVideoMuted = !audioToggle.checked;
-        localStorage.setItem(LOCAL_STORAGE_MUTE_KEY, JSON.stringify(isVideoMuted));
+        youtubePlayer.isVideoMuted = isVideoMuted;
+        saveMuteSetting(isVideoMuted);
         syncPlayerMuteState({ resumeIfPlaying: true, wasPlaying });
         alertMessage(`Audio del video ${isVideoMuted ? 'desactivado' : 'activado'}.`);
     });
@@ -2917,15 +2859,52 @@ window.addEventListener('load', () => {
         reader.onload = (e) => {
             try {
                 const data = JSON.parse(e.target.result);
-                if (isValidDataShape(data)) {
+                const validation = isValidDataShape(data);
+                if (validation.valid) {
                     importedData = normalizeDataPayload(data);
                     importModal.style.display = 'flex';
-                } else { alertMessage('El archivo de importación no es válido.', 'error'); }
+                } else {
+                    const detail = validation.errors.length ? `Errores: ${validation.errors.join(' | ')}` : 'El archivo de importación no es válido.';
+                    alertMessage(detail, 'error');
+                }
             } catch (err) { alertMessage('Error al leer el archivo.', 'error'); }
         };
         reader.readAsText(file);
         importFile.value = '';
     });
+
+    // Workout history modal
+    function closeHistoryModal() {
+        if (historyModal) historyModal.style.display = 'none';
+    }
+
+    if (historyButton && historyModal) {
+        historyButton.addEventListener('click', () => {
+            renderHistory(historyFilter ? historyFilter.value : 'all');
+            historyModal.style.display = 'flex';
+        });
+
+        const closeBtn = historyModal.querySelector('.close-btn');
+        if (closeBtn) closeBtn.addEventListener('click', closeHistoryModal);
+        historyModal.addEventListener('click', (e) => {
+            if (e.target === historyModal) closeHistoryModal();
+        });
+    }
+
+    if (historyFilter) {
+        historyFilter.addEventListener('change', () => {
+            renderHistory(historyFilter.value || 'all');
+        });
+    }
+
+    if (clearHistoryBtn) {
+        clearHistoryBtn.addEventListener('click', () => {
+            if (confirm('¿Seguro que quieres limpiar el historial?')) {
+                workoutHistory.clearHistory();
+                renderHistory(historyFilter ? historyFilter.value : 'all');
+            }
+        });
+    }
     
     replaceBtn.addEventListener('click', async () => {
          if (!importedData) return;
@@ -3043,11 +3022,12 @@ window.addEventListener('load', () => {
         };
     }
 
-    function alertMessage(msg, type = 'success') { const div=document.createElement('div'); let bgColor = 'bg-green-500'; if (type === 'warning') bgColor = 'bg-yellow-500'; if (type === 'error') bgColor = 'bg-red-500'; div.className=`fixed top-5 right-5 ${bgColor} text-white py-2 px-4 rounded-lg shadow-lg z-50`; div.textContent=msg; document.body.appendChild(div); setTimeout(()=>div.remove(), 4000); }
+    function alertMessage(msg, type = 'success') { 
+        uiController.showAlert(msg, type);
+    }
 
     function setTimerDisplayManual() {
-        if (timerDisplay) timerDisplay.textContent = '--:--';
-        if (expandedStatsRemaining) expandedStatsRemaining.textContent = '--:--';
+        uiController.setTimerDisplayManual();
     }
 
     // Called when the user indicates they finished the current set (manual confirmation)
@@ -3132,7 +3112,7 @@ window.addEventListener('load', () => {
                     timerState = 'running';
                     setStartButtonActive(true);
                     if (pauseButton) pauseButton.disabled = false;
-                    setupAudio();
+                    audioManager.setupAudio();
                     primeAudioEngines().then(() => {
                         clearInterval(timer);
                         timer = setInterval(timerLoop, 1000);
@@ -3224,7 +3204,7 @@ window.addEventListener('load', () => {
         timerState = 'running';
         setStartButtonActive(true);
         if (pauseButton) pauseButton.disabled = false;
-        setupAudio();
+        audioManager.setupAudio();
         primeAudioEngines().then(() => {
             playCurrentVideo();
             clearInterval(timer);
@@ -3275,29 +3255,58 @@ window.addEventListener('load', () => {
     const hamburgerBtn = document.getElementById('hamburgerMenuBtn');
     const sidebar = document.getElementById('sidebarMenu');
     const closeSidebarBtn = document.getElementById('closeSidebarBtn');
-    
+
+    // Helpers to keep a single source of truth for the menu state
+    const openSidebar = () => {
+        if (!sidebar) return;
+        sidebar.classList.remove('sidebar-hidden');
+        sidebar.setAttribute('aria-hidden', 'false');
+    };
+
+    const closeSidebar = () => {
+        if (!sidebar) return;
+        sidebar.classList.add('sidebar-hidden');
+        sidebar.setAttribute('aria-hidden', 'true');
+    };
+
     if (hamburgerBtn && sidebar) {
-        hamburgerBtn.addEventListener('click', function(e) {
+        hamburgerBtn.addEventListener('click', (e) => {
             e.stopPropagation();
-            sidebar.classList.toggle('sidebar-hidden');
-            console.log('Hamburger clicked, sidebar hidden:', sidebar.classList.contains('sidebar-hidden'));
+            const isHidden = sidebar.classList.contains('sidebar-hidden');
+            if (isHidden) openSidebar();
+            else closeSidebar();
         });
     }
-    
+
     if (closeSidebarBtn && sidebar) {
-        closeSidebarBtn.addEventListener('click', function(e) {
+        closeSidebarBtn.addEventListener('click', (e) => {
             e.stopPropagation();
-            sidebar.classList.add('sidebar-hidden');
+            closeSidebar();
         });
     }
-    
+
     // Close sidebar when clicking outside
-    document.addEventListener('click', function(e) {
-        if (sidebar && !sidebar.classList.contains('sidebar-hidden')) {
-            if (!sidebar.contains(e.target) && !hamburgerBtn.contains(e.target)) {
-                sidebar.classList.add('sidebar-hidden');
-            }
+    document.addEventListener('click', (e) => {
+        if (!sidebar || sidebar.classList.contains('sidebar-hidden')) return;
+        if (!sidebar.contains(e.target) && !hamburgerBtn.contains(e.target)) {
+            closeSidebar();
         }
+    });
+
+    // Close with Escape for accessibility
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeSidebar();
+    });
+
+    // Keyboard shortcuts
+    initKeyboardShortcuts({
+        startButton,
+        pauseButton,
+        resetExerciseButton,
+        nextExerciseButton,
+        toggleFullscreen: () => toggleTrainingFullscreen(),
+        exitFullscreen: () => { if (document.fullscreenElement) document.exitFullscreen().catch(() => {}); },
+        audioToggle
     });
     
     initializeAppData();

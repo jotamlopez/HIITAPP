@@ -261,6 +261,23 @@
                     </div>
                  </div>
 
+                 <!-- Preparation Toggle -->
+                 <div class="flex items-center justify-between p-3 bg-slate-800/50 rounded-xl border border-slate-700/50 hover:bg-slate-800 transition-colors mt-3">
+                    <label for="preparationToggle" class="text-sm text-gray-300 font-medium flex items-center gap-2">
+                        <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v8m-4-4h8" />
+                        </svg>
+                        Cuenta regresiva de preparación
+                    </label>
+                    <div class="flex items-center gap-3">
+                        <div class="relative inline-block w-10 align-middle select-none">
+                            <input type="checkbox" id="preparationToggle" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer transition-all"/>
+                            <label for="preparationToggle" class="toggle-label block overflow-hidden h-6 rounded-full bg-slate-600 cursor-pointer"></label>
+                        </div>
+                        <input type="number" id="preparationSeconds" min="1" max="20" value="5" class="w-16 p-2 rounded-lg bg-slate-800 border border-slate-700 text-white text-sm" title="Segundos"/>
+                    </div>
+                 </div>
+
                  <div class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3 mt-6">Gestión</div>
                  
                  <button id="manageRoutinesBtn" class="w-full text-left p-3 bg-slate-800/50 text-gray-300 rounded-xl hover:bg-indigo-600/20 hover:text-indigo-300 transition-all flex items-center gap-3 border border-slate-700/50">
@@ -350,7 +367,7 @@
 
                 <!-- Center Video Column -->
                 <div class="center-column">
-                    <div class="video-wrapper-full">
+                    <div class="video-wrapper-full" id="videoContainer">
                         <div id="player"></div>
                         <button id="maximizeVideoBtn" class="btn-maximize" title="Maximizar video">
                             <svg id="expandIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -406,12 +423,60 @@
                 <button id="resetRoutineButton" class="btn-control btn-danger" aria-label="Reset">
                     <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M2 10a8 8 0 1116 0 8 8 0 01-16 0zm7.096 4.25a.75.75 0 101.06-1.06L10.06 10l2.122-2.121a.75.75 0 00-1.06-1.06L9 8.939 6.879 6.818a.75.75 0 10-1.06 1.06L7.939 10l-2.12 2.121a.75.75 0 001.06 1.061L9 11.061l2.096 2.095z" clip-rule="evenodd"></path></svg>
                 </button>
+                <button id="historyButton" class="btn-control btn-secondary" aria-label="Historial" title="Ver historial de entrenamientos">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                </button>
             </div>
 
         </div>
     </div>
 
     <!-- Modals -->
+    <div id="historyModal" class="modal">
+        <div class="modal-content max-w-5xl m-auto p-6 rounded-2xl relative">
+            <span class="close-btn absolute top-4 right-6 text-2xl font-bold cursor-pointer text-gray-500 hover:text-white">&times;</span>
+            <h2 class="text-2xl font-bold mb-4 text-white">Historial de Entrenamientos</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                <div class="bg-slate-800/70 border border-slate-700 rounded-lg p-3">
+                    <p class="text-xs uppercase text-slate-400">Total entrenamientos</p>
+                    <p id="historyStatTotal" class="text-2xl font-bold text-white">0</p>
+                </div>
+                <div class="bg-slate-800/70 border border-slate-700 rounded-lg p-3">
+                    <p class="text-xs uppercase text-slate-400">Tiempo total</p>
+                    <p id="historyStatTime" class="text-2xl font-bold text-white">00:00</p>
+                </div>
+                <div class="bg-slate-800/70 border border-slate-700 rounded-lg p-3">
+                    <p class="text-xs uppercase text-slate-400">Rutina favorita</p>
+                    <p id="historyStatFavorite" class="text-lg font-semibold text-white truncate">—</p>
+                </div>
+                <div class="bg-slate-800/70 border border-slate-700 rounded-lg p-3 flex items-end justify-between gap-2">
+                    <div>
+                        <p class="text-xs uppercase text-slate-400">Filtrar por rutina</p>
+                        <select id="historyFilter" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-white"></select>
+                    </div>
+                    <button id="clearHistoryBtn" class="button button-danger text-sm whitespace-nowrap">Limpiar</button>
+                </div>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="min-w-full text-left text-sm text-slate-200">
+                    <thead class="bg-slate-800/70 text-slate-400 text-xs uppercase">
+                        <tr>
+                            <th class="px-3 py-2">Fecha</th>
+                            <th class="px-3 py-2">Rutina</th>
+                            <th class="px-3 py-2">Duración</th>
+                            <th class="px-3 py-2">Completado</th>
+                            <th class="px-3 py-2">Rate</th>
+                        </tr>
+                    </thead>
+                    <tbody id="historyTableBody" class="divide-y divide-slate-800"></tbody>
+                </table>
+                <div id="historyEmptyState" class="text-center text-slate-400 text-sm py-6" style="display:none;">Aún no hay entrenamientos registrados.</div>
+            </div>
+        </div>
+    </div>
+
     <div id="routineModal" class="modal"><div class="modal-content m-auto p-6 rounded-2xl relative"><span class="close-btn absolute top-4 right-6 text-2xl font-bold cursor-pointer text-gray-500 hover:text-white">&times;</span><h2 class="text-2xl font-bold mb-4 text-white">Editor de Rutinas</h2><select id="editRoutineSelect" class="mb-4 w-full p-2.5 rounded-lg"></select><input type="text" id="routineNameInput" placeholder="Nombre de la Rutina" class="w-full p-2.5 rounded-lg"><h3 class="text-xl font-semibold mt-4 mb-2 text-white">Añadir Ejercicio</h3>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
@@ -551,6 +616,17 @@
 
     <script src="https://www.youtube.com/iframe_api"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.min.js"></script>
-    <script src="app.js"></script>
+    <script type="module" src="app.js"></script>
+
+    <!-- Preparation Overlay -->
+    <div id="preparationOverlay" style="display:none; position: fixed; inset: 0; z-index: 60; background: rgba(2, 6, 23, 0.75); backdrop-filter: blur(6px);">
+        <div style="position:absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align:center;">
+            <div id="prepExerciseName" style="color:#c7d2fe; font-weight:800; font-size:1rem; letter-spacing:0.06em; text-transform:uppercase; margin-bottom:0.5rem;"></div>
+            <div id="prepSeconds" style="font-size:5rem; font-weight:900; color:#ffffff; text-shadow: 0 10px 40px rgba(99,102,241,0.35); animation: pulse 1s infinite;">5</div>
+            <div style="margin-top:1rem;">
+                <button id="skipPreparationBtn" class="button button-secondary">Saltar preparación</button>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

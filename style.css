@@ -1,3 +1,16 @@
+.video-wrapper-full:fullscreen {
+    width: 100vw !important;
+    height: 100vh !important;
+    padding: 0 !important;
+}
+
+.video-wrapper-full:fullscreen #player {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
 /* ===== VARIABLES Y BASE ===== */
 :root {
     --primary: #6366f1;
@@ -433,67 +446,105 @@ select:hover, input:hover {
     height: 1.25rem;
 }
 
-/* ===== SIDEBAR HIDDEN STATE ===== */
-.sidebar-hidden { 
-    max-width: 100% !important;
+/* ===== LAYOUT 3 COLUMNAS ACTUAL ===== */
+.three-column-layout {
+    min-height: calc(100vh - 90px);
 }
 
-.sidebar-hidden #controlPanel { 
-    display: none;
+.center-column {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    background: #000;
+    min-height: 60vh;
 }
 
-.sidebar-hidden #trainingPanel { 
-    width: 100% !important;
-    padding: clamp(1.5rem, 3vw, 3rem) clamp(1.5rem, 4vw, 4rem);
-}
-
-.sidebar-hidden #floatingSidebarButton { 
-    display: inline-flex;
-}
-
-.sidebar-hidden .timer-display { 
-    font-size: clamp(5rem, 14vw, 10rem);
-}
-
-/* ===== EXERCISE INFO PANEL ===== */
-.exercise-info-panel { 
-    display: none;
+.video-wrapper-full {
+    position: relative;
     width: 100%;
-    gap: 1rem;
-    margin: 0;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    height: 0;
+    padding-bottom: 56.25%; /* 16:9 */
+    background: #000;
+    border-radius: 20px;
+    overflow: hidden;
 }
 
-.sidebar-hidden .exercise-info-panel { 
-    display: grid;
-    max-width: 1200px;
+.video-wrapper-full #player {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/* ===== SIDEBAR HIDDEN STATE (nuevo layout) ===== */
+.sidebar-hidden .three-column-layout { 
+    grid-template-columns: 1fr;
+}
+
+.sidebar-hidden .side-column { 
+    display: none;
+}
+
+.sidebar-hidden .center-column { 
+    width: 100%;
+}
+
+.sidebar-hidden .video-wrapper-full { 
+    max-width: min(96vw, 1400px);
     margin: 0 auto;
 }
 
-/* ===== CONTROL BUTTONS ===== */
-.control-buttons { 
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
-    justify-content: center;
+/* ===== FULLSCREEN ===== */
+.training-panel-fullscreen .three-column-layout {
+    grid-template-columns: 1fr;
+    height: calc(100vh - 90px);
 }
 
-.control-buttons .button-icon-only { 
-    flex: 0 0 auto;
+.training-panel-fullscreen .side-column {
+    display: none;
 }
 
-/* ===== SCROLLBAR PERSONALIZADO ===== */
-::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+.training-panel-fullscreen .center-column {
+    width: 100%;
+    height: 100%;
+    min-height: calc(100vh - 90px);
 }
 
-::-webkit-scrollbar-track {
-    background: rgba(15, 23, 42, 0.5);
-    border-radius: 4px;
+.training-panel-fullscreen .video-wrapper-full {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    position: relative;
+    height: 0;
+    padding-bottom: 56.25%;
 }
 
-::-webkit-scrollbar-thumb {
+.training-panel-fullscreen .video-wrapper-full #player {
+    position: absolute;
+    inset: 0;
+}
+
+.training-panel-fullscreen .bottom-controls {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(7, 11, 28, 0.9);
+    border-top: 1px solid rgba(99, 102, 241, 0.25);
+}
+
+@media (max-width: 1280px) {
+    .training-panel-fullscreen .center-column,
+    .sidebar-hidden .center-column {
+        height: auto;
+    }
+
+    .training-panel-fullscreen .video-wrapper-full,
+    .sidebar-hidden .video-wrapper-full {
+        max-width: 100%;
+    }
+}
     background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
     border-radius: 4px;
 }
