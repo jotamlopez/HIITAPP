@@ -1,5 +1,15 @@
 const LOCAL_STORAGE_KEY = 'hiitTrainerData';
 const LOCAL_STORAGE_MUTE_KEY = 'hiitVideoMuted';
+const MAX_IMPORT_FILE_SIZE_BYTES = 2 * 1024 * 1024; // 2 MB
+
+function isLikelyJsonFile(file) {
+    if (!file || typeof file.name !== 'string') return false;
+    const lowerName = file.name.toLowerCase();
+    const hasJsonExtension = lowerName.endsWith('.json');
+    // Browsers may report empty MIME for local files, so extension remains the primary signal.
+    const validMime = !file.type || file.type === 'application/json' || file.type === 'text/json';
+    return hasJsonExtension && validMime;
+}
 
 /**
  * Validates data structure
@@ -221,9 +231,18 @@ export function normalizeDataPayload(data) {
  * @param {Array} routines - Routines array
  * @returns {boolean} True if successful
  */
-export function persistDataLocally(exercises, routines) {
+export function persistDataLocally(arg1, arg2) {
     try {
-        const snapshot = JSON.stringify({ exercises, routines });
+        // Support both persistDataLocally(exercises, routines) and persistDataLocally({ exercises, routines })
+        const payload = (arg2 === undefined && arg1 && typeof arg1 === 'object' && !Array.isArray(arg1) && 'exercises' in arg1 && 'routines' in arg1)
+            ? arg1
+            : { exercises: arg1, routines: arg2 };
+
+        const snapshot = JSON.stringify({
+            exercises: payload.exercises || {},
+            routines: Array.isArray(payload.routines) ? payload.routines : []
+        });
+
         localStorage.setItem(LOCAL_STORAGE_KEY, snapshot);
         return true;
     } catch (error) {
@@ -258,11 +277,11 @@ export function loadDataFromLocalStorage() {
  * @param {Array<string>} sources - Array of file paths to try
  * @returns {Promise<Object|null>} Loaded data or null
  */
-export async function loadDataFromFile(sources = ['data.json', 'hiit_trainer_backup (13).json']) {
+export async function loadDataFromFile(sources = ['hiit_trainer_backup Agosto 2026.json', 'data.json', 'hiit_trainer_backup (13).json']) {
     let lastErrors = [];
     for (const src of sources) {
         try {
-            const response = await fetch(src);
+            const response = await fetch(encodeURI(src));
             if (!response.ok) continue;
             const data = await response.json();
             const validation = isValidDataShape(data);
@@ -304,10 +323,36 @@ export function exportToJSON(exercises, routines, filename = 'hiit_trainer_backu
  */
 export function importFromJSON(file) {
     return new Promise((resolve, reject) => {
+        if (!file) {
+            reject(new Error('No se recibió ningún archivo para importar.'));
+            return;
+        }
+
+        if (!isLikelyJsonFile(file)) {
+            reject(new Error('El archivo debe ser JSON (.json).'));
+            return;
+        }
+
+        if (!Number.isFinite(file.size) || file.size <= 0) {
+            reject(new Error('El archivo está vacío o no se puede leer.'));
+            return;
+        }
+
+        if (file.size > MAX_IMPORT_FILE_SIZE_BYTES) {
+            reject(new Error('El archivo supera el tamaño máximo permitido de 2 MB.'));
+            return;
+        }
+
         const reader = new FileReader();
         reader.onload = (e) => {
             try {
-                const data = JSON.parse(e.target.result);
+                const raw = e?.target?.result;
+                if (typeof raw !== 'string') {
+                    reject(new Error('No se pudo leer el contenido del archivo como texto.'));
+                    return;
+                }
+
+                const data = JSON.parse(raw);
                 const validation = isValidDataShape(data);
                 if (validation.valid) {
                     resolve(normalizeDataPayload(data));

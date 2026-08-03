@@ -159,6 +159,38 @@ Con estas pautas puedes ampliar fácilmente la biblioteca manteniendo consistenc
 - Separar la lógica de temporizador, datos y UI en módulos para facilitar el mantenimiento.
 - Convertir la app en PWA para permitir uso sin conexión y guardado en pantalla de inicio.
 
+## Seguridad mínima para GitHub Pages
+
+Esta app no necesita login para funcionar, porque no maneja cuentas y guarda los datos en `localStorage` del navegador.
+
+Checklist aplicado en el proyecto:
+
+- **CSP en HTML**: limita scripts, estilos, iframes y conexiones a orígenes permitidos para reducir superficie XSS.
+- **Referrer Policy**: usa `strict-origin-when-cross-origin` para no exponer rutas completas al salir del sitio.
+- **Permissions Policy**: deshabilita APIs sensibles del navegador no usadas (cámara, micrófono, geolocalización, etc.).
+- **Importación JSON endurecida**: solo acepta `.json`, valida MIME cuando existe, bloquea archivos vacíos y limita tamaño a 2 MB.
+
+Notas importantes:
+
+- No incluyas secretos (tokens, claves privadas) en archivos frontend.
+- Si en el futuro quieres sincronizar historial entre dispositivos, sí necesitarás backend y autenticación.
+
+## Despliegue automático con GitHub Actions
+
+Este repositorio ya incluye un workflow para publicar automáticamente en GitHub Pages cuando haces push a la rama `main` o `master`.
+
+Archivo del workflow:
+
+- `.github/workflows/deploy-pages.yml`
+
+Pasos en GitHub (una sola vez):
+
+1. Sube el repositorio a GitHub.
+2. Ve a **Settings > Pages**.
+3. En **Source**, selecciona **GitHub Actions**.
+4. Haz push a `main` (o ejecuta el workflow manualmente desde **Actions**).
+5. GitHub publicará tu app en la URL de Pages del repositorio.
+
 ## Licencia
 
 Este proyecto es de libre uso dentro de tu organización. Ajusta o distribuye según tus necesidades.

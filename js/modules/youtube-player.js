@@ -7,6 +7,7 @@ export class YouTubePlayer {
         this.playerReady = false;
         this.pendingPlayerAction = null;
         this.isVideoMuted = true;
+        this.currentExercise = null;
     }
 
     /**
@@ -17,54 +18,165 @@ export class YouTubePlayer {
      * @returns {void}
      */
     loadVideo(exercise, playOnReady = false, isGlobalPaused = false) {
-        if (this.player) {
-            this.player.destroy();
-            this.player = null;
-        }
-        this.playerReady = false;
-        this.pendingPlayerAction = (playOnReady && !isGlobalPaused) ? 'play' : null;
-
+        console.log('DEBUG youtube-player.loadVideo:', { 
+            videoId: exercise?.videoId, 
+            playOnReady, 
+            isGlobalPaused,
+            playerExists: !!this.player,
+            playerReady: this.playerReady
+        });
+        
         if (!exercise || !exercise.videoId) {
+            console.error('DEBUG: No exercise or videoId provided to youtube-player');
             this.pendingPlayerAction = null;
             return;
         }
+
+        // Check if we need to recreate player due to same video with different times
+        const needsRecreate = this.player && this.playerReady && 
+                              this.currentExercise && 
+                              this.currentExercise.videoId === exercise.videoId &&
+                              (this.currentExercise.start !== exercise.start || 
+                               this.currentExercise.end !== exercise.end);
+        
+        if (needsRecreate) {
+            console.log('DEBUG: Same video with different times detected, recreating player');
+            try {
+                this.player.destroy();
+            } catch (e) {}
+            this.player = null;
+            this.playerReady = false;
+        }
+
+        // Store the exercise data for later use
+        this.currentExercise = exercise;
+        this.pendingPlayerAction = (playOnReady && !isGlobalPaused) ? 'play' : null;
+
+        // If player already exists and is ready, just load the new video
+        if (this.player && this.playerReady) {
+            try {
+                const startTime = exercise.start || 0;
+                const endTime = exercise.end || null;
+                
+                console.log('DEBUG: Reusing existing player, loading video:', exercise.videoId, 'start:', startTime, 'end:', endTime);
+                
+                // Build video options
+                const videoOptions = {
+                    videoId: exercise.videoId,
+                    startSeconds: startTime,
+                };
+                if (endTime) {
+                    videoOptions.endSeconds = endTime;
+                }
+
+                // Use loadVideoById to load and potentially play
+                if (playOnReady && !isGlobalPaused) {
+                    console.log('DEBUG: Loading video with auto-play');
+                    this.player.loadVideoById(videoOptions);
+                    // Force seek after a small delay to ensure start time is respected
+                    setTimeout(() => {
+                        if (this.player && typeof this.player.seekTo === 'function') {
+                            this.player.seekTo(startTime, true);
+                        }
+                    }, 300);
+                } else {
+                    console.log('DEBUG: Cueing video without auto-play');
+                    this.player.cueVideoById(videoOptions);
+                    // Force seek after a small delay
+                    setTimeout(() => {
+                        if (this.player && typeof this.player.seekTo === 'function') {
+                            this.player.seekTo(startTime, true);
+                        }
+                    }, 300);
+                }
+                
+                // Sync mute state after a brief delay
+                setTimeout(() => this.syncMuteState(), 200);
+                return;
+            } catch (e) {
+                console.error('Error loading video in existing player:', e);
+                // If there's an error, destroy and recreate
+                try {
+                    this.player.destroy();
+                } catch (e2) {}
+                this.player = null;
+                this.playerReady = false;
+            }
+        }
+
+        // Create new player if it doesn't exist
+        console.log('DEBUG: Creating new YouTube player');
+        
+        // Ensure player container exists
+        let playerContainer = document.getElementById('player');
+        if (!playerContainer) {
+            console.log('DEBUG: Player container not found, creating...');
+            const videoContainer = document.getElementById('videoContainer');
+            if (videoContainer) {
+                videoContainer.innerHTML = '<div id="player"></div>';
+                playerContainer = document.getElementById('player');
+                console.log('DEBUG: Player container created');
+            } else {
+                console.error('DEBUG: Video container not found!');
+                return;
+            }
+        }
+        
+        this.playerReady = false;
 
         const playerVars = {
             autoplay: 0,
             controls: 0,
             rel: 0,
             showinfo: 0,
-            mute: this.isVideoMuted ? 1 : 0,
-            loop: 1,
-            playlist: exercise.videoId
+            mute: this.isVideoMuted ? 1 : 0
         };
 
         if (exercise.start) playerVars.start = exercise.start;
         if (exercise.end) playerVars.end = exercise.end;
 
-        this.player = new YT.Player('player', {
-            height: '100%',
-            width: '100%',
-            videoId: exercise.videoId,
-            playerVars: playerVars,
-            events: {
-                onReady: (event) => {
-                    this.playerReady = true;
-                    this.syncMuteState();
-                    if (this.pendingPlayerAction === 'play' && !isGlobalPaused) {
-                        const startTime = exercise.start || 0;
-                        event.target.seekTo(startTime, true);
-                        setTimeout(() => event.target.playVideo(), 100);
-                        this.pendingPlayerAction = null;
-                    }
-                },
-                onStateChange: (event) => {
-                    if (event.data === YT.PlayerState.ENDED) {
-                        this.player.seekTo(exercise.start || 0);
+        try {
+            console.log('DEBUG: Calling new YT.Player with videoId:', exercise.videoId);
+            this.player = new YT.Player('player', {
+                height: '100%',
+                width: '100%',
+                videoId: exercise.videoId,
+                playerVars: playerVars,
+                events: {
+                    onReady: (event) => {
+                        console.log('DEBUG: YouTube Player onReady event fired');
+                        this.playerReady = true;
+                        this.syncMuteState();
+                        if (this.pendingPlayerAction === 'play' && !isGlobalPaused) {
+                            const startTime = exercise.start || 0;
+                            event.target.seekTo(startTime, true);
+                            setTimeout(() => {
+                                try {
+                                    event.target.playVideo();
+                                    console.log('DEBUG: Video auto-playing after onReady');
+                                } catch (e) {
+                                    console.error('Error auto-playing:', e);
+                                }
+                            }, 150);
+                            this.pendingPlayerAction = null;
+                        }
+                    },
+                    onStateChange: (event) => {
+                        console.log('DEBUG: Player state changed:', event.data);
+                        if (event.data === YT.PlayerState.ENDED) {
+                            const startTime = this.currentExercise?.start || 0;
+                            this.player.seekTo(startTime);
+                        }
+                    },
+                    onError: (event) => {
+                        console.error('YouTube player error:', event.data);
                     }
                 }
-            }
-        });
+            });
+            console.log('DEBUG: YT.Player instance created');
+        } catch (e) {
+            console.error('Error creating YouTube player:', e);
+        }
     }
 
     /**
@@ -78,7 +190,19 @@ export class YouTubePlayer {
             return;
         }
         if (this.playerReady && typeof this.player.playVideo === 'function') {
-            this.player.playVideo();
+            // Always seek to start time if exercise has one defined
+            const startTime = this.currentExercise?.start || 0;
+            if (typeof this.player.seekTo === 'function') {
+                try {
+                    this.player.seekTo(startTime, true);
+                    console.log('DEBUG: Seeking to start time:', startTime);
+                } catch (e) {
+                    console.error('Error seeking to start time:', e);
+                }
+            }
+            setTimeout(() => {
+                this.player.playVideo();
+            }, 100);
             this.pendingPlayerAction = null;
         } else {
             this.pendingPlayerAction = 'play';

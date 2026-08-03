@@ -1,0 +1,597 @@
+{
+  "exercises": {
+    "calentamientoDinamico": {
+      "name": "Calentamiento dinámico 5 min cardio",
+      "videoId": "8DyncYCOgsU"
+    },
+    "movilidadArticular": {
+      "name": "Movilidad Articular completa",
+      "videoId": "vscdubz9O-8",
+      "start": 44,
+      "end": 976
+    },
+    "movilidadCaderasHombros": {
+      "name": "Flexibilidad y Movilidad",
+      "videoId": "NBpsqBQceSU"
+    },
+    "sentadillaGoblet": {
+      "name": "Sentadilla Goblet",
+      "videoId": "AgD7XRyH05o"
+    },
+    "pressPechoSuelo": {
+      "name": "Press de pecho con mancuernas suelo",
+      "videoId": "y9XAsTx3XxQ",
+      "end": 60
+    },
+    "remoMancuernaUnBrazo": {
+      "name": "Remo con mancuerna a un brazo",
+      "videoId": "roCP6wCXPqo"
+    },
+    "hipThrustElevado": {
+      "name": "Hip thrust elevado con mancuerna",
+      "videoId": "8RcEpMQ93Y8"
+    },
+    "planchaFrontal": {
+      "name": "Plancha frontal corta duración",
+      "videoId": "RmknClCdiCU"
+    },
+    "deadBug": {
+      "name": "Dead bug - Core antiextensión",
+      "videoId": "KDcYkjfzLv8"
+    },
+    "curlBiceps": {
+      "name": "Curl de bíceps con mancuernas",
+      "videoId": "ajJWRrU5Fxo"
+    },
+    "estiramientosCompletos": {
+      "name": "Estiramientos postentreno completos",
+      "videoId": "DVrpAs5ZbSE"
+    },
+    "cuerdaBoxerStep": {
+      "name": "Cuerda saltar - Boxer step",
+      "videoId": "kDOGb9C5kp0"
+    },
+    "rodillasCruzadas": {
+      "name": "Rodillas cruzadas high knees alternadas",
+      "videoId": "W8Fgy71xzx8",
+      "start": 60,
+      "end": 105
+    },
+    "golpesFrontales": {
+      "name": "Golpes frontales lado a lado",
+      "videoId": "W8Fgy71xzx8",
+      "start": 120,
+      "end": 165
+    },
+    "rodillazos": {
+      "name": "Rodillazos knee strikes",
+      "videoId": "W8Fgy71xzx8",
+      "start": 180,
+      "end": 225
+    },
+    "burpeeModificado": {
+      "name": "Burpee sin salto step back",
+      "videoId": "W8Fgy71xzx8",
+      "start": 240,
+      "end": 285
+    },
+    "squatRodillasCruzadas": {
+      "name": "Squat rodillas cruzadas",
+      "videoId": "W8Fgy71xzx8",
+      "start": 300,
+      "end": 345
+    },
+    "pushUpToqueHombro": {
+      "name": "Push-up toque de hombro",
+      "videoId": "W8Fgy71xzx8",
+      "start": 360,
+      "end": 405
+    },
+    "squatsArribaAbajo": {
+      "name": "Squats arriba y abajo",
+      "videoId": "W8Fgy71xzx8",
+      "start": 420,
+      "end": 465
+    },
+    "planchaToqueRodilla": {
+      "name": "Plancha con toque de rodilla",
+      "videoId": "A6FVvWmDdeY"
+    },
+    "squatLadoALado": {
+      "name": "Squat lado a lado",
+      "videoId": "JEu3HxYrGSc"
+    },
+    "absGolpesVerticales": {
+      "name": "Abs golpes verticales crunch punch",
+      "videoId": "eLnRrm5sVvk"
+    },
+    "golpesFrontalesCruzados": {
+      "name": "Golpes frontales - Rodillas cruzadas",
+      "videoId": "W8Fgy71xzx8",
+      "start": 660,
+      "end": 705
+    },
+    "desplanteTrasero": {
+      "name": "Desplante trasero - Rodillazo",
+      "videoId": "W8Fgy71xzx8",
+      "start": 720,
+      "end": 765
+    },
+    "mountainClimber": {
+      "name": "Mountain climber escalador",
+      "videoId": "W8Fgy71xzx8",
+      "start": 954,
+      "end": 1001
+    },
+    "elevacionCadera": {
+      "name": "Elevación de cadera hip raise",
+      "videoId": "W8Fgy71xzx8",
+      "start": 840,
+      "end": 885
+    },
+    "jumpingJacks": {
+      "name": "Jumping jacks versión controlada",
+      "videoId": "W8Fgy71xzx8",
+      "start": 1070,
+      "end": 1121
+    },
+    "marchaIndoor": {
+      "name": "Marcha indoor Walking at home",
+      "videoId": "UkJhynyuU2c"
+    },
+    "marchaIndoorLigera": {
+      "name": "Marcha indoor ligera posprandial",
+      "videoId": "UkJhynyuU2c",
+      "start": 0,
+      "end": 600
+    },
+    "zancadasMancuernas": {
+      "name": "Zancadas con mancuernas",
+      "videoId": "6SfmtrsF8wQ",
+      "start": 30
+    },
+    "pressHombroMancuernas": {
+      "name": "Press de hombro con mancuernas",
+      "videoId": "mbIhJZ2Sbcc"
+    },
+    "remoInclinadoBilateral": {
+      "name": "Remo inclinado bilateral",
+      "videoId": "mYTwBXykfyc"
+    },
+    "puenteGluteos": {
+      "name": "Puente de glúteos con mancuerna",
+      "videoId": "7X5zdMn2tW0",
+      "start": 50
+    },
+    "planchaLateral": {
+      "name": "Plancha lateral",
+      "videoId": "Iwa3as2Dm9E"
+    },
+    "birdDog": {
+      "name": "Bird dog - Core antirrotación",
+      "videoId": "W8Fgy71xzx8",
+      "start": 535,
+      "end": 640
+    },
+    "extensionTriceps": {
+      "name": "Extensión de tríceps con mancuerna",
+      "videoId": "dxLlYmNOr-E"
+    },
+    "marchaIndoorModerada": {
+      "name": "Marcha indoor moderada continua",
+      "videoId": "kSoCdUlBvM"
+    },
+    "cuerdaTecnica": {
+      "name": "Cuerda técnica boxer skip",
+      "videoId": "UDhuaNieats"
+    },
+    "planchaShoulderTap": {
+      "name": "Plancha con shoulder taps",
+      "videoId": "8F-SW8XTbE8"
+    },
+    "sentadillaBulgara": {
+      "name": "Sentadilla búlgara split squat",
+      "videoId": "K-6DG1hcHzU",
+      "start": 5,
+      "end": 24
+    },
+    "elevacionesLaterales": {
+      "name": "Elevaciones laterales con mancuernas",
+      "videoId": "jM8p44gwFPw",
+      "start": 423,
+      "end": 449
+    },
+    "rdlMancuernas": {
+      "name": "Peso Muerto Rumano RDL con Mancuernas",
+      "videoId": "x7W2BOKWWKs"
+    },
+    "zancadaInversa": {
+      "name": "Zancada Inversa Reverse Lunge",
+      "videoId": "LDERgD7Jqho",
+      "start": 4
+    },
+    "elevacionesTalones": {
+      "name": "Elevaciones de talones",
+      "videoId": "kIaSk_4znvk",
+      "start": 238,
+      "end": 267
+    },
+    "activacionarticular": {
+      "name": "Activación Articular",
+      "videoId": "LpRAnGb5TO0",
+      "start": 14
+    },
+    "elevacionesPosteriores": {
+      "name": "Elevaciones posteriores hombro con mancuernas",
+      "videoId": "Jhzr4SYgXVM"
+    },
+    "pressInclinado": {
+      "name": "Press Inclinado con Mancuernas",
+      "videoId": "ULxNmcGpzA0",
+      "start": 65,
+      "end": 196
+    },
+    "remoTresPuntos": {
+      "name": "Remo con mancuerna a 3 puntos",
+      "videoId": "P-Jf5a-_kQQ",
+      "start": 10,
+      "end": 52
+    },
+    "circulosBrazosProno": {
+      "name": "Círculos de brazos en prono",
+      "videoId": "wud3idMnESY",
+      "start": 6,
+      "end": 24
+    },
+    "isquiosDeslizantes": {
+      "name": "Curl de isquios deslizante",
+      "videoId": "QWw-iY-ef6c",
+      "start": 3
+    },
+    "reverseCrunch": {
+      "name": "Crunch Inverso - Abdominales",
+      "videoId": "Rh2XQ9TOuH8"
+    },
+    "dipsBanco": {
+      "name": "Fondos en banco - Tríceps",
+      "videoId": "0326dy_-CzM"
+    },
+    "facepullcongomaelastica": {
+      "name": "Face Pull con goma elastica",
+      "videoId": "w06tVYSLH20"
+    },
+    "patadadeglteo": {
+      "name": "Patada de glúteo",
+      "videoId": "TkWHRgk-maQ"
+    },
+    "extensindecudricepspiernas": {
+      "name": "Extensión de cuádriceps (piernas)",
+      "videoId": "qw64QV9zCpc",
+      "start": 66
+    },
+    "curldeisquiotibiales": {
+      "name": "Curl de isquiotibiales",
+      "videoId": "_aq_WK_wRWo",
+      "start": 66
+    }
+  },
+  "routines": [
+    {
+      "name": "LUNES: Upper 1 (Pecho/Hombro/Espalda/Tríceps)",
+      "exercises": [
+        {
+          "exerciseId": "activacionarticular",
+          "type": "time",
+          "work": 422,
+          "rest": 10,
+          "repeat": 1
+        },
+        {
+          "type": "circuit",
+          "rounds": 1,
+          "restBetweenRounds": 60,
+          "exercises": [
+            {
+              "exerciseId": "pressPechoSuelo",
+              "type": "sets",
+              "sets": 4,
+              "reps": 12,
+              "restBetweenSets": 90
+            },
+            {
+              "exerciseId": "remoInclinadoBilateral",
+              "type": "sets",
+              "sets": 4,
+              "reps": 12,
+              "restBetweenSets": 90
+            },
+            {
+              "exerciseId": "facepullcongomaelastica",
+              "type": "sets",
+              "sets": 3,
+              "reps": 15,
+              "restBetweenSets": 60
+            },
+            {
+              "exerciseId": "pressHombroMancuernas",
+              "type": "sets",
+              "sets": 3,
+              "reps": 12,
+              "restBetweenSets": 90
+            },
+            {
+              "exerciseId": "extensionTriceps",
+              "type": "sets",
+              "sets": 3,
+              "reps": 12,
+              "restBetweenSets": 60
+            }
+          ]
+        },
+        {
+          "exerciseId": "estiramientosCompletos",
+          "type": "time",
+          "work": 330,
+          "rest": 10,
+          "repeat": 1
+        }
+      ]
+    },
+    {
+      "name": "MARTES: Lower 1 (Cuádriceps Enfocado)",
+      "exercises": [
+        {
+          "exerciseId": "calentamientoDinamico",
+          "type": "time",
+          "work": 300,
+          "rest": 10,
+          "repeat": 1
+        },
+        {
+          "type": "circuit",
+          "rounds": 1,
+          "restBetweenRounds": 60,
+          "exercises": [
+            {
+              "exerciseId": "sentadillaBulgara",
+              "type": "sets",
+              "sets": 3,
+              "reps": 10,
+              "restBetweenSets": 90
+            },
+            {
+              "exerciseId": "patadadeglteo",
+              "type": "sets",
+              "sets": 4,
+              "reps": 12,
+              "restBetweenSets": 60
+            },
+            {
+              "exerciseId": "rdlMancuernas",
+              "type": "sets",
+              "sets": 3,
+              "reps": 12,
+              "restBetweenSets": 90
+            },
+            {
+              "exerciseId": "elevacionesTalones",
+              "type": "sets",
+              "sets": 3,
+              "reps": 12,
+              "restBetweenSets": 45
+            },
+            {
+              "exerciseId": "deadBug",
+              "type": "sets",
+              "sets": 3,
+              "reps": 10,
+              "restBetweenSets": 60
+            }
+          ]
+        },
+        {
+          "exerciseId": "estiramientosCompletos",
+          "type": "time",
+          "work": 330,
+          "rest": 10,
+          "repeat": 1
+        }
+      ]
+    },
+    {
+      "name": "MIERCOLES: HIIT Cardio Box (Favorita)",
+      "exercises": [
+        {
+          "exerciseId": "calentamientoDinamico",
+          "type": "time",
+          "work": 300,
+          "rest": 10,
+          "repeat": 1
+        },
+        {
+          "type": "circuit",
+          "rounds": 3,
+          "restBetweenRounds": 60,
+          "exercises": [
+            {
+              "exerciseId": "golpesFrontales",
+              "type": "time",
+              "work": 40,
+              "rest": 20,
+              "repeat": 1
+            },
+            {
+              "exerciseId": "rodillazos",
+              "type": "time",
+              "work": 40,
+              "rest": 20,
+              "repeat": 1
+            },
+            {
+              "exerciseId": "burpeeModificado",
+              "type": "time",
+              "work": 40,
+              "rest": 20,
+              "repeat": 1
+            },
+            {
+              "exerciseId": "jumpingJacks",
+              "type": "time",
+              "work": 40,
+              "rest": 20,
+              "repeat": 1
+            }
+          ]
+        },
+        {
+          "exerciseId": "planchaFrontal",
+          "type": "time",
+          "work": 30,
+          "rest": 10,
+          "repeat": 1
+        },
+        {
+          "exerciseId": "estiramientosCompletos",
+          "type": "time",
+          "work": 330,
+          "rest": 10,
+          "repeat": 1
+        }
+      ]
+    },
+    {
+      "name": "JUEVES: Upper 2 (Inclinado/Espalda/Hipertrofia)",
+      "exercises": [
+        {
+          "exerciseId": "activacionarticular",
+          "type": "time",
+          "work": 420,
+          "rest": 10,
+          "repeat": 1
+        },
+        {
+          "type": "circuit",
+          "rounds": 1,
+          "restBetweenRounds": 60,
+          "exercises": [
+            {
+              "exerciseId": "pressInclinado",
+              "type": "sets",
+              "sets": 4,
+              "reps": 12,
+              "restBetweenSets": 90
+            },
+            {
+              "exerciseId": "remoTresPuntos",
+              "type": "sets",
+              "sets": 4,
+              "reps": 12,
+              "restBetweenSets": 90
+            },
+            {
+              "exerciseId": "elevacionesLaterales",
+              "type": "sets",
+              "sets": 4,
+              "reps": 12,
+              "restBetweenSets": 90
+            },
+            {
+              "exerciseId": "curlBiceps",
+              "type": "sets",
+              "sets": 3,
+              "reps": 12,
+              "restBetweenSets": 90
+            },
+            {
+              "exerciseId": "extensionTriceps",
+              "type": "sets",
+              "sets": 3,
+              "reps": 12,
+              "restBetweenSets": 90
+            }
+          ]
+        },
+        {
+          "exerciseId": "estiramientosCompletos",
+          "type": "time",
+          "work": 330,
+          "rest": 10,
+          "repeat": 1
+        }
+      ]
+    },
+    {
+      "name": "VIERNES: Lower 2 (Glúteo/Isquios/Finisher)",
+      "exercises": [
+        {
+          "exerciseId": "calentamientoDinamico",
+          "type": "time",
+          "work": 300,
+          "rest": 10,
+          "repeat": 1
+        },
+        {
+          "type": "circuit",
+          "rounds": 1,
+          "restBetweenRounds": 60,
+          "exercises": [
+            {
+              "exerciseId": "sentadillaGoblet",
+              "type": "sets",
+              "sets": 3,
+              "reps": 12,
+              "restBetweenSets": 90
+            },
+            {
+              "exerciseId": "hipThrustElevado",
+              "type": "sets",
+              "sets": 3,
+              "reps": 12,
+              "restBetweenSets": 90
+            },
+            {
+              "exerciseId": "curldeisquiotibiales",
+              "type": "sets",
+              "sets": 3,
+              "reps": 12,
+              "restBetweenSets": 90
+            },
+            {
+              "exerciseId": "extensindecudricepspiernas",
+              "type": "sets",
+              "sets": 3,
+              "reps": 15,
+              "restBetweenSets": 90
+            },
+            {
+              "exerciseId": "reverseCrunch",
+              "type": "sets",
+              "sets": 3,
+              "reps": 15,
+              "restBetweenSets": 60
+            }
+          ]
+        },
+        {
+          "exerciseId": "estiramientosCompletos",
+          "type": "time",
+          "work": 330,
+          "rest": 10,
+          "repeat": 1
+        }
+      ]
+    },
+    {
+      "name": "DIARIO: Activación Post-Cena Anti-Grasa",
+      "exercises": [
+        {
+          "exerciseId": "marchaIndoorLigera",
+          "type": "time",
+          "work": 900,
+          "rest": 10,
+          "repeat": 1
+        }
+      ]
+    }
+  ]
+}

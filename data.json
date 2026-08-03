@@ -243,42 +243,41 @@
           "type": "circuit",
           "rounds": 3,
           "restBetweenRounds": 90,
-          "restBetweenExercises": 45,
           "exercises": [
             {
-              "type": "sets",
               "exerciseId": "pressPechoSuelo",
+              "type": "sets",
               "sets": 1,
               "reps": 12,
-              "restBetweenSets": 0
+              "restBetweenSets": 60
             },
             {
-              "type": "sets",
               "exerciseId": "pressHombroMancuernas",
+              "type": "sets",
               "sets": 1,
               "reps": 10,
-              "restBetweenSets": 0
+              "restBetweenSets": 60
             },
             {
-              "type": "sets",
               "exerciseId": "extensionTriceps",
+              "type": "sets",
               "sets": 1,
               "reps": 12,
-              "restBetweenSets": 0
+              "restBetweenSets": 60
             },
             {
-              "type": "sets",
               "exerciseId": "deadBug",
+              "type": "sets",
               "sets": 1,
               "reps": 12,
-              "restBetweenSets": 0
+              "restBetweenSets": 60
             }
           ]
         },
         {
-          "type": "time",
           "exerciseId": "estiramientosCompletos",
-          "work": 180,
+          "type": "time",
+          "work": 330,
           "rest": 0,
           "repeat": 1
         }
@@ -291,14 +290,14 @@
           "exerciseId": "calentamientoDinamico",
           "type": "time",
           "work": 293,
-          "rest": 0,
+          "rest": 10,
           "repeat": 1
         },
         {
           "exerciseId": "movilidadCaderasHombros",
           "type": "time",
           "work": 932,
-          "rest": 0,
+          "rest": 10,
           "repeat": 1
         }
       ]
@@ -317,42 +316,41 @@
           "type": "circuit",
           "rounds": 3,
           "restBetweenRounds": 90,
-          "restBetweenExercises": 45,
           "exercises": [
             {
-              "type": "sets",
               "exerciseId": "sentadillaGoblet",
+              "type": "sets",
               "sets": 1,
               "reps": 12,
-              "restBetweenSets": 0
+              "restBetweenSets": 60
             },
             {
-              "type": "sets",
               "exerciseId": "rdlMancuernas",
+              "type": "sets",
               "sets": 1,
               "reps": 12,
-              "restBetweenSets": 0
+              "restBetweenSets": 60
             },
             {
-              "type": "sets",
               "exerciseId": "zancadaInversa",
+              "type": "sets",
               "sets": 1,
               "reps": 10,
-              "restBetweenSets": 0
+              "restBetweenSets": 60
             },
             {
-              "type": "sets",
               "exerciseId": "puenteGluteos",
+              "type": "sets",
               "sets": 1,
               "reps": 15,
-              "restBetweenSets": 0
+              "restBetweenSets": 60
             }
           ]
         },
         {
-          "type": "time",
           "exerciseId": "estiramientosCompletos",
-          "work": 240,
+          "type": "time",
+          "work": 330,
           "rest": 0,
           "repeat": 1
         }
@@ -372,32 +370,31 @@
           "type": "circuit",
           "rounds": 3,
           "restBetweenRounds": 60,
-          "restBetweenExercises": 15,
           "exercises": [
             {
-              "type": "time",
               "exerciseId": "golpesFrontales",
+              "type": "time",
               "work": 40,
               "rest": 20,
               "repeat": 1
             },
             {
-              "type": "time",
               "exerciseId": "rodillazos",
+              "type": "time",
               "work": 40,
               "rest": 20,
               "repeat": 1
             },
             {
-              "type": "time",
               "exerciseId": "burpeeModificado",
+              "type": "time",
               "work": 40,
               "rest": 20,
               "repeat": 1
             },
             {
-              "type": "time",
               "exerciseId": "jumpingJacks",
+              "type": "time",
               "work": 40,
               "rest": 20,
               "repeat": 1
@@ -405,17 +402,17 @@
           ]
         },
         {
-          "type": "time",
           "exerciseId": "planchaFrontal",
+          "type": "time",
           "work": 30,
-          "rest": 0,
+          "rest": 10,
           "repeat": 1
         },
         {
-          "type": "time",
           "exerciseId": "estiramientosCompletos",
-          "work": 180,
-          "rest": 0,
+          "type": "time",
+          "work": 330,
+          "rest": 10,
           "repeat": 1
         }
       ]
@@ -434,43 +431,42 @@
           "type": "circuit",
           "rounds": 3,
           "restBetweenRounds": 90,
-          "restBetweenExercises": 45,
           "exercises": [
             {
-              "type": "sets",
               "exerciseId": "remoInclinadoBilateral",
+              "type": "sets",
               "sets": 1,
               "reps": 12,
-              "restBetweenSets": 0
+              "restBetweenSets": 60
             },
             {
-              "type": "sets",
               "exerciseId": "hipThrustElevado",
+              "type": "sets",
               "sets": 1,
               "reps": 15,
-              "restBetweenSets": 0
+              "restBetweenSets": 60
             },
             {
-              "type": "sets",
               "exerciseId": "curlBiceps",
+              "type": "sets",
               "sets": 1,
               "reps": 12,
-              "restBetweenSets": 0
+              "restBetweenSets": 60
             },
             {
-              "type": "sets",
               "exerciseId": "birdDog",
+              "type": "sets",
               "sets": 1,
               "reps": 12,
-              "restBetweenSets": 0
+              "restBetweenSets": 60
             }
           ]
         },
         {
-          "type": "time",
           "exerciseId": "estiramientosCompletos",
+          "type": "time",
           "work": 180,
-          "rest": 0,
+          "rest": 10,
           "repeat": 1
         }
       ]
@@ -482,39 +478,38 @@
           "exerciseId": "movilidadArticular",
           "type": "time",
           "work": 480,
-          "rest": 0,
+          "rest": 10,
           "repeat": 1
         },
         {
           "type": "circuit",
           "rounds": 3,
           "restBetweenRounds": 60,
-          "restBetweenExercises": 15,
           "exercises": [
             {
-              "type": "time",
               "exerciseId": "cuerdaTecnica",
+              "type": "time",
               "work": 45,
               "rest": 15,
               "repeat": 1
             },
             {
-              "type": "time",
               "exerciseId": "squatsArribaAbajo",
+              "type": "time",
               "work": 45,
               "rest": 15,
               "repeat": 1
             },
             {
-              "type": "time",
               "exerciseId": "mountainClimber",
+              "type": "time",
               "work": 45,
               "rest": 15,
               "repeat": 1
             },
             {
-              "type": "time",
               "exerciseId": "planchaShoulderTap",
+              "type": "time",
               "work": 45,
               "rest": 15,
               "repeat": 1
@@ -522,9 +517,9 @@
           ]
         },
         {
-          "type": "time",
           "exerciseId": "estiramientosCompletos",
-          "work": 180,
+          "type": "time",
+          "work": 330,
           "rest": 0,
           "repeat": 1
         }
@@ -544,43 +539,49 @@
           "type": "circuit",
           "rounds": 3,
           "restBetweenRounds": 90,
-          "restBetweenExercises": 45,
           "exercises": [
             {
-              "type": "sets",
-              "exerciseId": "elevacionesPosteriores",
-              "sets": 1,
-              "reps": 15,
-              "restBetweenSets": 0
-            },
-            {
-              "type": "sets",
               "exerciseId": "sentadillaBulgara",
+              "type": "sets",
               "sets": 1,
               "reps": 12,
-              "restBetweenSets": 0
+              "restBetweenSets": 60
             },
             {
-              "type": "sets",
               "exerciseId": "elevacionesTalones",
+              "type": "sets",
               "sets": 1,
               "reps": 18,
-              "restBetweenSets": 0
-            },
-            {
-              "type": "sets",
-              "exerciseId": "planchaLateral",
-              "sets": 1,
-              "reps": 20,
-              "restBetweenSets": 0
+              "restBetweenSets": 60
             }
           ]
         },
         {
-          "type": "time",
+          "type": "circuit",
+          "rounds": 3,
+          "restBetweenRounds": 60,
+          "exercises": [
+            {
+              "exerciseId": "elevacionesPosteriores",
+              "type": "sets",
+              "sets": 1,
+              "reps": 12,
+              "restBetweenSets": 60
+            },
+            {
+              "exerciseId": "planchaLateral",
+              "type": "time",
+              "work": 40,
+              "rest": 20,
+              "repeat": 2
+            }
+          ]
+        },
+        {
           "exerciseId": "estiramientosCompletos",
-          "work": 180,
-          "rest": 0,
+          "type": "time",
+          "work": 330,
+          "rest": 10,
           "repeat": 1
         }
       ]
@@ -592,7 +593,7 @@
           "exerciseId": "marchaIndoorLigera",
           "type": "time",
           "work": 900,
-          "rest": 0,
+          "rest": 10,
           "repeat": 1
         }
       ]

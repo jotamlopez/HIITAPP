@@ -24,6 +24,10 @@ window.addEventListener('load', () => {
     const audioManager = new AudioManager();
     const workoutHistory = new WorkoutHistory();
 
+    if (window.location.protocol === 'file:') {
+        uiController.showAlert('La app se abrio como archivo local (file://). Para cargar datos y usar todas las funciones, abre con un servidor local o en GitHub Pages.', 'warning');
+    }
+
     // Alias for backward compatibility
     const sanitizeDuration = TimerManager.sanitizeDuration;
 
@@ -76,7 +80,8 @@ window.addEventListener('load', () => {
         } else if (fileData) {
             exercises = fileData.exercises;
             routines = fileData.routines;
-            persistDataLocally();
+            // Persist the seeded data so subsequent reloads keep user changes over file defaults
+            persistDataLocally(exercises, routines);
         } else {
             exercises = {};
             routines = [];
@@ -86,6 +91,9 @@ window.addEventListener('load', () => {
         if (allWarnings.length) {
             uiController.showAlert(`Datos cargados con avisos: ${allWarnings.join(' | ')}`, 'warning');
         }
+
+        // Initialize preparation countdown UI (toggle and seconds input)
+        initPreparationSettingsUI();
 
         populateAllSelects();
         resetWorkout('no_routine');
@@ -102,6 +110,17 @@ window.addEventListener('load', () => {
         } catch (e) {
             return { enabled: true, seconds: 5 };
         }
+    }
+
+    // Live view of preparation settings (respects current UI state even mid-ejercicio)
+    function getPreparationSettingsLive() {
+        const base = getPreparationSettings();
+        const toggle = document.getElementById('preparationToggle');
+        const secondsInput = document.getElementById('preparationSeconds');
+        const enabled = toggle ? toggle.checked : base.enabled;
+        const rawSeconds = secondsInput ? parseInt(secondsInput.value, 10) : base.seconds;
+        const seconds = Math.max(0, Math.min(30, Number.isFinite(rawSeconds) ? rawSeconds : base.seconds));
+        return { enabled, seconds };
     }
 
     function initPreparationSettingsUI() {
@@ -121,11 +140,7 @@ window.addEventListener('load', () => {
     }
 
     function startPreparationCountdownSimple(exerciseName, onFinish) {
-        const toggle = document.getElementById('preparationToggle');
-        const secondsInput = document.getElementById('preparationSeconds');
-        const settings = getPreparationSettings();
-        const enabled = toggle ? toggle.checked : settings.enabled;
-        const seconds = secondsInput ? (parseInt(secondsInput.value, 10) || settings.seconds) : settings.seconds;
+        const { enabled, seconds } = getPreparationSettingsLive();
         if (!enabled || seconds <= 0) {
             onFinish && onFinish();
             return;
@@ -134,21 +149,25 @@ window.addEventListener('load', () => {
         uiController.showPreparationOverlay(exerciseName || 'Ejercicio', seconds);
         let remaining = seconds;
         uiController.updatePreparationSeconds(remaining);
-        if (audioManager && typeof audioManager.playCountdown === 'function') {
+        // Play sound only if enabled and within last 3 seconds of prep
+        if (remaining <= 3 && audioManager && typeof audioManager.playCountdown === 'function') {
             audioManager.playCountdown(1);
         }
         const intervalId = setInterval(() => {
             remaining -= 1;
             uiController.updatePreparationSeconds(Math.max(0, remaining));
-            if (remaining > 0) {
+            // Play sound only during last 3 seconds (3, 2, 1)
+            if (remaining >= 1 && remaining <= 3) {
                 if (audioManager && typeof audioManager.playCountdown === 'function') {
                     audioManager.playCountdown(1);
                 }
+            }
+            if (remaining <= 0) {
+                clearInterval(intervalId);
+                uiController.hidePreparationOverlay();
+                onFinish && onFinish();
                 return;
             }
-            clearInterval(intervalId);
-            uiController.hidePreparationOverlay();
-            onFinish && onFinish();
         }, 1000);
         if (skipBtn) {
             skipBtn.onclick = () => {
@@ -162,7 +181,7 @@ window.addEventListener('load', () => {
     // Data and audio functions now handled by modules
 
     function saveData(showToast = false) {
-        persistDataLocally({ exercises, routines });
+        persistDataLocally(exercises, routines);
         if (showToast) uiController.showAlert('Cambios guardados en este dispositivo. Usa Exportar para guardar una copia.', 'success');
     }
 
@@ -955,8 +974,10 @@ window.addEventListener('load', () => {
         // Reset global pause state
         isGlobalPaused = false;
         
-        if (player) { player.destroy(); player = null; }
-        playerReady = false; pendingPlayerAction = null;
+        // Don't destroy player anymore, just reuse it
+        // if (player) { player.destroy(); player = null; }
+        playerReady = youtubePlayer.playerReady;
+        pendingPlayerAction = null;
         const firstExercise = currentRoutine ? currentRoutine.exercises[0] : null;
         if (firstExercise) {
             // Reset set index at start of routine
@@ -997,10 +1018,57 @@ window.addEventListener('load', () => {
 
     function loadVideo(exercise, playOnReady = false) {
         // Use YouTubePlayer module
-        youtubePlayer.loadVideo(exercise, playOnReady && !isGlobalPaused);
+        console.log('DEBUG loadVideo called:', { 
+            exercise, 
+            hasExerciseId: !!exercise?.exerciseId, 
+            playOnReady, 
+            isInCircuit 
+        });
+        
+        if (!exercise) {
+            console.warn('DEBUG: No exercise provided to loadVideo');
+            return;
+        }
+        
+        let videoExercise = null;
+        
+        // If exercise has exerciseId, look it up in the exercises library
+        if (exercise.exerciseId) {
+            const exerciseDetails = exercises[exercise.exerciseId];
+            if (exerciseDetails) {
+                videoExercise = {
+                    ...exerciseDetails,
+                    name: exerciseDetails.name,
+                    videoId: exerciseDetails.videoId,
+                    start: exerciseDetails.start,
+                    end: exerciseDetails.end
+                };
+                console.log('DEBUG: Found exercise in library:', exercise.exerciseId);
+            } else {
+                console.error('DEBUG: Exercise not found in library:', exercise.exerciseId);
+                return;
+            }
+        } else if (exercise.videoId) {
+            // Exercise already has video data
+            videoExercise = exercise;
+            console.log('DEBUG: Using exercise with direct videoId');
+        } else {
+            console.error('DEBUG: Exercise has no exerciseId or videoId');
+            return;
+        }
+        
+        console.log('DEBUG: Loading video:', { 
+            videoId: videoExercise.videoId, 
+            name: videoExercise.name,
+            start: videoExercise.start,
+            end: videoExercise.end
+        });
+        
+        youtubePlayer.loadVideo(videoExercise, playOnReady && !isGlobalPaused);
         // Sync local player reference
         player = youtubePlayer.player;
         playerReady = youtubePlayer.playerReady;
+        console.log('DEBUG loadVideo completed:', { playerReady, playerExists: !!player });
     }
     
     function updateTimerDisplay() { uiController.updateTimerDisplay(timeLeft); }
@@ -1012,11 +1080,13 @@ window.addEventListener('load', () => {
     function resetPhaseUI() { trainingPanel.classList.remove('work-state','rest-state'); setTimerPhaseLabel('Prepárate'); updateExerciseInfo(); }
     
     function loadExercise(playOnLoad) {
+        console.log('DEBUG loadExercise:', { currentExerciseIndex, exerciseType: currentRoutine?.exercises[currentExerciseIndex]?.type, playOnLoad });
         const ex = currentRoutine.exercises[currentExerciseIndex];
         if (!ex) { finishWorkout(); return; }
         
         // Handle circuits
         if (ex.type === 'circuit') {
+            console.log('DEBUG: Entrando a circuito', { rounds: ex.rounds, exercisesCount: ex.exercises?.length });
             isInCircuit = true;
             currentCircuitRound = 1;
             currentCircuitExerciseIndex = 0;
@@ -1043,6 +1113,7 @@ window.addEventListener('load', () => {
             
             currentExerciseTitle.textContent = `🔁 CIRCUITO ${currentCircuitRound}/${ex.rounds} - ${firstCircuitExercise.name}`;
             updateTimerDisplay();
+            console.log('DEBUG: Cargando video del circuito', { exerciseName: firstCircuitExercise.name, playOnLoad });
             loadVideo(firstCircuitExercise, playOnLoad);
             updatePhaseUI();
             updateCompleteSetButtonVisibility();
@@ -1337,7 +1408,7 @@ window.addEventListener('load', () => {
 
     function playCurrentVideo() {
         if (isGlobalPaused) return;
-        youtubePlayer.playVideo();
+        youtubePlayer.playVideo(isGlobalPaused);
     }
 
     function pauseCurrentVideo() {
@@ -1346,7 +1417,7 @@ window.addEventListener('load', () => {
 
     function resumeCurrentVideo() {
         if (isGlobalPaused) return;
-        youtubePlayer.resumeVideo();
+        youtubePlayer.resumeVideo(isGlobalPaused);
     }
 
     function stopCurrentVideo() {
@@ -1366,31 +1437,7 @@ window.addEventListener('load', () => {
     }
     
     async function startTimer() {
-        // Si es un ejercicio por series en fase de trabajo, permitir Play (solo video) sin iniciar el temporizador
-        if (currentRoutine && Array.isArray(currentRoutine.exercises)) {
-            const topEx = currentRoutine.exercises[currentExerciseIndex];
-            let effectiveEx = topEx;
-            if (isInCircuit && topEx && topEx.type === 'circuit') {
-                effectiveEx = (topEx.exercises || [])[currentCircuitExerciseIndex] || null;
-            }
-            if (effectiveEx && effectiveEx.type === 'sets' && state === 'work') {
-                // Reproducir video, actualizar estados de botones; no iniciar intervalo
-                timerState = 'running';
-                if (startButton) {
-                    startButton.classList.add('active-timer');
-                    startButton.style.opacity = '0.6';
-                }
-                if (pauseButton) pauseButton.disabled = false;
-                try {
-                    audioManager.setupAudio();
-                } catch {}
-                playCurrentVideo();
-                updateExerciseInfo();
-                renderLeftPanelDetails();
-                return;
-            }
-        }
-
+        // Check if we're resuming from pause FIRST, regardless of exercise type
         if (timerState === 'paused') {
             // Si estamos en un ejercicio por series en fase de trabajo, reanudar solo el video, sin temporizador
             if (currentRoutine && Array.isArray(currentRoutine.exercises)) {
@@ -1406,6 +1453,8 @@ window.addEventListener('load', () => {
                         startButton.style.opacity = '0.6';
                     }
                     if (pauseButton) pauseButton.disabled = false;
+                    audioManager.setupAudio();
+                    await primeAudioEngines();
                     playCurrentVideo();
                     updateExerciseInfo();
                     renderLeftPanelDetails();
@@ -1424,6 +1473,32 @@ window.addEventListener('load', () => {
             updateExerciseInfo();
             renderLeftPanelDetails();
             return;
+        }
+
+        // Si es un ejercicio por series en fase de trabajo, permitir Play (solo video) sin iniciar el temporizador
+        if (currentRoutine && Array.isArray(currentRoutine.exercises)) {
+            const topEx = currentRoutine.exercises[currentExerciseIndex];
+            let effectiveEx = topEx;
+            if (isInCircuit && topEx && topEx.type === 'circuit') {
+                effectiveEx = (topEx.exercises || [])[currentCircuitExerciseIndex] || null;
+            }
+            if (effectiveEx && effectiveEx.type === 'sets' && state === 'work') {
+                // Reproducir video, actualizar estados de botones; no iniciar intervalo
+                timerState = 'running';
+                if (startButton) {
+                    startButton.classList.add('active-timer');
+                    startButton.style.opacity = '0.6';
+                }
+                if (pauseButton) pauseButton.disabled = false;
+                try {
+                    audioManager.setupAudio();
+                    await primeAudioEngines();
+                } catch {}
+                playCurrentVideo();
+                updateExerciseInfo();
+                renderLeftPanelDetails();
+                return;
+            }
         }
 
         if (timerState === 'stopped' && currentRoutine && currentRoutine.exercises.length > 0) {
@@ -1471,13 +1546,15 @@ window.addEventListener('load', () => {
         }
     }
 
-    function pauseTimer() {
+    async function pauseTimer() {
         if (timerState === 'paused') {
             // Resume
             isGlobalPaused = false;
             const restore = previousTimerStateBeforePause || 'stopped';
             if (restore === 'running') {
                 timerState = 'running';
+                audioManager.setupAudio();
+                await primeAudioEngines();
                 timer = setInterval(timerLoop, 1000);
             } else {
                 timerState = 'stopped';
@@ -1500,7 +1577,11 @@ window.addEventListener('load', () => {
     }
 
     function timerLoop() {
-        if (timeLeft <= 4 && timeLeft >= 1) {
+        // Get countdown configuration (live, so mid-session changes apply)
+        const { enabled: countdownEnabled, seconds: countdownSeconds } = getPreparationSettingsLive();
+
+        // Play countdown beeps only if preparation countdown is enabled and within the configured time window
+        if (countdownEnabled && countdownSeconds > 0 && timeLeft >= 1 && timeLeft <= countdownSeconds) {
             // Only play warning beep when timer is running. For 'sets' exercises allow beep
             // only during timed rests (not during manual work).
             if (timerState === 'running') {
@@ -1638,6 +1719,7 @@ window.addEventListener('load', () => {
                                 clearInterval(timer); timer = null; timerState = 'stopped';
                             } else {
                                 timeLeft = sanitizeDuration(firstEx.work);
+                                // El timer ya está corriendo, solo continuamos
                             }
                             
                             currentExerciseTitle.textContent = `🔁 CIRCUITO ${currentCircuitRound}/${circuit.rounds} - ${firstEx.name}`;
@@ -1664,6 +1746,8 @@ window.addEventListener('load', () => {
                         } else {
                             // keep interval running and auto-continue
                             loadExercise(true);
+                            // Start timer for time-based exercises
+                            startTimer();
                         }
                     } else {
                         finishWorkout();
@@ -1742,6 +1826,7 @@ window.addEventListener('load', () => {
                         clearInterval(timer); timer = null; timerState = 'stopped';
                     } else {
                         timeLeft = sanitizeDuration(firstEx.work);
+                        // El timer ya está corriendo desde el descanso, solo continuamos
                     }
                     currentExerciseTitle.textContent = `🔁 CIRCUITO ${currentCircuitRound}/${circuit.rounds} - ${firstEx.name}`;
                     updateTimerDisplay();
@@ -1773,9 +1858,20 @@ window.addEventListener('load', () => {
                             currentSetIndex = 1; timeLeft = 0; setTimerDisplayManual();
                             if (startButton) startButton.disabled = false; if (pauseButton) pauseButton.disabled = false;
                             clearInterval(timer); timer = null; timerState = 'stopped';
-                        } else { timeLeft = sanitizeDuration(nextCircuitEx.work); }
+                        } else { 
+                            timeLeft = sanitizeDuration(nextCircuitEx.work);
+                            // Keep timer running for time-based exercise
+                        }
                         currentExerciseTitle.textContent = `🔁 CIRCUITO ${currentCircuitRound}/${circuit.rounds} - ${nextCircuitEx.name}`;
-                        updateTimerDisplay(); loadVideo(nextCircuitEx, true); updatePhaseUI(); updateCompleteSetButtonVisibility(); try { renderLeftPanelDetails(); } catch (e) {}
+                        updateTimerDisplay();
+                        loadVideo(nextCircuitEx, true);
+                        updatePhaseUI();
+                        updateCompleteSetButtonVisibility();
+                        try { renderLeftPanelDetails(); } catch (e) {}
+                        // Si cambiamos de 'sets' a un ejercicio con tiempo, reiniciar el temporizador
+                        if (nextCircuitEx.type !== 'sets') {
+                            startTimer();
+                        }
                         return;
                     }
                     // Fin de vuelta tras sets
@@ -1791,27 +1887,74 @@ window.addEventListener('load', () => {
                             updatePhaseUI(); updateTimerDisplay(); try { renderLeftPanelDetails(); } catch (e) {} return;
                         } else {
                             const firstEx = circuit.exercises[0]; state = 'work'; currentRepeatIndex = 1;
-                            if (firstEx.type === 'sets') { currentSetIndex = 1; timeLeft = 0; setTimerDisplayManual(); if (startButton) startButton.disabled = false; if (pauseButton) pauseButton.disabled = false; } else { timeLeft = sanitizeDuration(firstEx.work); }
-                            if (firstEx.type === 'sets') { clearInterval(timer); timer = null; timerState = 'stopped'; }
-                            currentExerciseTitle.textContent = `🔁 CIRCUITO ${currentCircuitRound}/${circuit.rounds} - ${firstEx.name}`; updateTimerDisplay(); loadVideo(firstEx, true); updatePhaseUI(); updateCompleteSetButtonVisibility(); try { renderLeftPanelDetails(); } catch (e) {}
+                            if (firstEx.type === 'sets') { 
+                                currentSetIndex = 1; timeLeft = 0; setTimerDisplayManual(); 
+                                if (startButton) startButton.disabled = false; 
+                                if (pauseButton) pauseButton.disabled = false;
+                                clearInterval(timer); timer = null; timerState = 'stopped';
+                            } else { 
+                                timeLeft = sanitizeDuration(firstEx.work);
+                                // El timer ya está corriendo desde el descanso, solo continuamos
+                            }
+                            currentExerciseTitle.textContent = `🔁 CIRCUITO ${currentCircuitRound}/${circuit.rounds} - ${firstEx.name}`; 
+                            updateTimerDisplay();
+                            loadVideo(firstEx, true);
+                            updatePhaseUI();
+                            updateCompleteSetButtonVisibility(); 
+                            try { renderLeftPanelDetails(); } catch (e) {}
                             return;
                         }
                     }
-                    isInCircuit = false; currentCircuitRound = 1; currentCircuitExerciseIndex = 0; currentExerciseIndex++; if (currentExerciseIndex < currentRoutine.exercises.length) { loadExercise(true); } else { finishWorkout(); } return;
+                    isInCircuit = false; currentCircuitRound = 1; currentCircuitExerciseIndex = 0; currentExerciseIndex++; 
+                    if (currentExerciseIndex < currentRoutine.exercises.length) { 
+                        const nextEx = currentRoutine.exercises[currentExerciseIndex];
+                        loadExercise(true); 
+                        // Start timer for time-based exercises
+                        if (nextEx && nextEx.type !== 'sets') {
+                            startTimer();
+                        }
+                    } else { finishWorkout(); } 
+                    return;
                 }
 
                 // 3. Descanso de ejercicio time (entre repeticiones o antes de avanzar)
                 if (circuitEx.type === 'time') {
                     const repeatCount = Math.max(1, sanitizeDuration(circuitEx.repeat, 1));
                     if (currentRepeatIndex < repeatCount) {
-                        currentRepeatIndex++; state = 'work'; timeLeft = sanitizeDuration(circuitEx.work); resetVideoToStart(); updatePhaseUI(); updateTimerDisplay(); try { renderLeftPanelDetails(); } catch (e) {} return;
+                        currentRepeatIndex++; 
+                        state = 'work'; 
+                        timeLeft = sanitizeDuration(circuitEx.work); 
+                        resetVideoToStart(); 
+                        updatePhaseUI(); 
+                        updateTimerDisplay(); 
+                        // El timer ya está corriendo desde el descanso, solo continuamos
+                        try { renderLeftPanelDetails(); } catch (e) {} 
+                        return;
                     }
                     currentRepeatIndex = 1; currentCircuitExerciseIndex++;
                     if (currentCircuitExerciseIndex < circuit.exercises.length) {
-                        const nextCircuitEx = circuit.exercises[currentCircuitExerciseIndex]; state = 'work';
-                        if (nextCircuitEx.type === 'sets') { currentSetIndex = 1; timeLeft = 0; setTimerDisplayManual(); if (startButton) startButton.disabled = false; if (pauseButton) pauseButton.disabled = false; } else { timeLeft = sanitizeDuration(nextCircuitEx.work); }
-                        if (nextCircuitEx.type === 'sets') { clearInterval(timer); timer = null; timerState = 'stopped'; }
-                        currentExerciseTitle.textContent = `🔁 CIRCUITO ${currentCircuitRound}/${circuit.rounds} - ${nextCircuitEx.name}`; updateTimerDisplay(); loadVideo(nextCircuitEx, true); updatePhaseUI(); updateCompleteSetButtonVisibility(); try { renderLeftPanelDetails(); } catch (e) {} return;
+                        const nextCircuitEx = circuit.exercises[currentCircuitExerciseIndex]; 
+                        state = 'work';
+                        if (nextCircuitEx.type === 'sets') { 
+                            currentSetIndex = 1; 
+                            timeLeft = 0; 
+                            setTimerDisplayManual(); 
+                            if (startButton) startButton.disabled = false; 
+                            if (pauseButton) pauseButton.disabled = false;
+                            clearInterval(timer); 
+                            timer = null; 
+                            timerState = 'stopped'; 
+                        } else { 
+                            timeLeft = sanitizeDuration(nextCircuitEx.work); 
+                            // El timer ya está corriendo desde el descanso, solo continuamos
+                        }
+                        currentExerciseTitle.textContent = `🔁 CIRCUITO ${currentCircuitRound}/${circuit.rounds} - ${nextCircuitEx.name}`; 
+                        updateTimerDisplay(); 
+                        loadVideo(nextCircuitEx, true); 
+                        updatePhaseUI(); 
+                        updateCompleteSetButtonVisibility(); 
+                        try { renderLeftPanelDetails(); } catch (e) {}
+                        return;
                     }
                     // Fin de vuelta tras ejercicio time
                     currentCircuitExerciseIndex = 0; currentCircuitRound++;
@@ -1825,8 +1968,31 @@ window.addEventListener('load', () => {
                             clearInterval(timer); timer = setInterval(timerLoop, 1000);
                             updatePhaseUI(); updateTimerDisplay(); try { renderLeftPanelDetails(); } catch (e) {} return;
                         }
-                        else { const firstEx = circuit.exercises[0]; state = 'work'; currentRepeatIndex = 1; if (firstEx.type === 'sets') { currentSetIndex = 1; timeLeft = 0; setTimerDisplayManual(); if (startButton) startButton.disabled = false; if (pauseButton) pauseButton.disabled = false; } else { timeLeft = sanitizeDuration(firstEx.work); } currentExerciseTitle.textContent = `🔁 CIRCUITO ${currentCircuitRound}/${circuit.rounds} - ${firstEx.name}`; updateTimerDisplay(); loadVideo(firstEx, true); updatePhaseUI(); updateCompleteSetButtonVisibility(); try { renderLeftPanelDetails(); } catch (e) {} return; }
-                        if (firstEx.type === 'sets') { clearInterval(timer); timer = null; timerState = 'stopped'; }
+                        else { 
+                            const firstEx = circuit.exercises[0]; 
+                            state = 'work'; 
+                            currentRepeatIndex = 1; 
+                            if (firstEx.type === 'sets') { 
+                                currentSetIndex = 1; 
+                                timeLeft = 0; 
+                                setTimerDisplayManual(); 
+                                if (startButton) startButton.disabled = false; 
+                                if (pauseButton) pauseButton.disabled = false;
+                                clearInterval(timer); 
+                                timer = null; 
+                                timerState = 'stopped';
+                            } else { 
+                                timeLeft = sanitizeDuration(firstEx.work); 
+                                // El timer ya está corriendo desde el descanso, solo continuamos
+                            } 
+                            currentExerciseTitle.textContent = `🔁 CIRCUITO ${currentCircuitRound}/${circuit.rounds} - ${firstEx.name}`; 
+                            updateTimerDisplay(); 
+                            loadVideo(firstEx, true); 
+                            updatePhaseUI(); 
+                            updateCompleteSetButtonVisibility(); 
+                            try { renderLeftPanelDetails(); } catch (e) {}
+                            return; 
+                        }
                     }
                     // Salir del circuito tras última ronda
                     isInCircuit = false; currentCircuitRound = 1; currentCircuitExerciseIndex = 0; currentExerciseIndex++;
@@ -1837,6 +2003,8 @@ window.addEventListener('load', () => {
                             loadExercise(false);
                         } else {
                             loadExercise(true);
+                            // Start timer for time-based exercises
+                            startTimer();
                         }
                     } else { finishWorkout(); }
                     return;
@@ -1866,7 +2034,12 @@ window.addEventListener('load', () => {
                 currentSetIndex = 1;
                 if (currentExerciseIndex < currentRoutine.exercises.length - 1) {
                     currentExerciseIndex++;
+                    const nextEx = currentRoutine.exercises[currentExerciseIndex];
                     loadExercise(true);
+                    // Start timer for time-based exercises
+                    if (nextEx && nextEx.type !== 'sets') {
+                        startTimer();
+                    }
                     return;
                 }
                 // last exercise finished
@@ -1892,15 +2065,24 @@ window.addEventListener('load', () => {
                 currentRepeatIndex = 1;
             }
             currentExerciseIndex++;
-            if (currentExerciseIndex < currentRoutine.exercises.length) loadExercise(true);
+            if (currentExerciseIndex < currentRoutine.exercises.length) {
+                const nextEx = currentRoutine.exercises[currentExerciseIndex];
+                loadExercise(true);
+                // Start timer for time-based exercises
+                if (nextEx && nextEx.type !== 'sets') {
+                    startTimer();
+                }
+            }
             else finishWorkout();
         }
     }
     function finishWorkout() {
+        console.log('DEBUG: finishWorkout() llamado');
         clearInterval(timer);
         timerState = 'stopped';
         const durationSeconds = routineStartTimestamp ? Math.max(0, Math.round((Date.now() - routineStartTimestamp) / 1000)) : 0;
         const exercisesForHistory = buildHistoryExercisesFromRoutine(currentRoutine);
+        console.log('DEBUG: Guardando historial - Rutina:', currentRoutine?.name, 'Duración:', durationSeconds, 'Ejercicios:', exercisesForHistory);
         try {
             workoutHistory.saveWorkout(currentRoutine?.name || 'Rutina', exercisesForHistory, durationSeconds, new Date());
         } catch (e) {
@@ -2002,7 +2184,7 @@ window.addEventListener('load', () => {
         // Handle circuit navigation
         if (isInCircuit) {
             // Skip series when navigating by arrows
-            goToNextCircuitExercise({ skipSets: true });
+            goToNextCircuitExercise();
             return;
         }
         
@@ -2260,7 +2442,9 @@ window.addEventListener('load', () => {
                 renderCircuitExercises();
                 // Populate circuit exercise selector
                 circuitExerciseSelect.innerHTML = '<option value="">--Seleccionar ejercicio--</option>' + 
-                    Object.keys(exercises).map(id => `<option value="${id}">${exercises[id].name}</option>`).join('');
+                    Object.keys(exercises)
+                        .sort((a, b) => exercises[a].name.localeCompare(exercises[b].name))
+                        .map(id => `<option value="${id}">${exercises[id].name}</option>`).join('');
                 circuitModal.style.display = 'flex';
             }
             return;
@@ -2582,7 +2766,9 @@ window.addEventListener('load', () => {
         renderCircuitExercises();
         // Populate circuit exercise selector
         circuitExerciseSelect.innerHTML = '<option value="">--Seleccionar ejercicio--</option>' + 
-            Object.keys(exercises).map(id => `<option value="${id}">${exercises[id].name}</option>`).join('');
+            Object.keys(exercises)
+                .sort((a, b) => exercises[a].name.localeCompare(exercises[b].name))
+                .map(id => `<option value="${id}">${exercises[id].name}</option>`).join('');
         circuitModal.style.display = 'flex';
     });
 
@@ -3083,6 +3269,7 @@ window.addEventListener('load', () => {
                     if (startButton) startButton.disabled = false;
                     if (pauseButton) pauseButton.disabled = true;
                 } else {
+                    // Time-based exercise: set up and auto-start timer
                     timeLeft = sanitizeDuration(nextCircuitEx.work);
                     if (startButton) startButton.disabled = false;
                     if (pauseButton) pauseButton.disabled = true;
@@ -3094,6 +3281,11 @@ window.addEventListener('load', () => {
                 updatePhaseUI();
                 updateCompleteSetButtonVisibility();
                 renderLeftPanelDetails();
+                
+                // Auto-start timer for time-based exercises
+                if (nextCircuitEx.type !== 'sets') {
+                    startTimer();
+                }
                 return;
             }
             
@@ -3135,6 +3327,7 @@ window.addEventListener('load', () => {
                         if (startButton) startButton.disabled = false;
                         if (pauseButton) pauseButton.disabled = true;
                     } else {
+                        // Time-based exercise: set up and auto-start
                         timeLeft = sanitizeDuration(firstEx.work);
                         if (startButton) startButton.disabled = false;
                         if (pauseButton) pauseButton.disabled = true;
@@ -3146,6 +3339,11 @@ window.addEventListener('load', () => {
                     updatePhaseUI();
                     updateCompleteSetButtonVisibility();
                     renderLeftPanelDetails();
+                    
+                    // Auto-start timer for time-based exercises
+                    if (firstEx.type !== 'sets') {
+                        startTimer();
+                    }
                     return;
                 }
             }
@@ -3156,7 +3354,12 @@ window.addEventListener('load', () => {
             currentCircuitExerciseIndex = 0;
             currentExerciseIndex++;
             if (currentExerciseIndex < currentRoutine.exercises.length) {
+                const nextEx = currentRoutine.exercises[currentExerciseIndex];
                 loadExercise(true);
+                // Start timer for time-based exercises
+                if (nextEx && nextEx.type !== 'sets') {
+                    startTimer();
+                }
             } else {
                 finishWorkout();
             }

@@ -1,4 +1,5 @@
 const HISTORY_KEY = 'hiitTrainerHistory';
+const HISTORY_FILE = 'hiit_history.json';
 
 function safeParse(json, fallback = []) {
     try {
@@ -16,16 +17,54 @@ export class WorkoutHistory {
 
     loadHistory() {
         const raw = localStorage.getItem(this.storageKey);
-        return safeParse(raw, []);
+        const history = safeParse(raw, []);
+        // If localStorage is empty, try loading from file
+        if (history.length === 0) {
+            this.loadHistoryFromFile();
+        }
+        return history;
     }
 
     saveHistory(list) {
         try {
             localStorage.setItem(this.storageKey, JSON.stringify(list));
+            // Also try to save to file for persistence
+            this.saveHistoryToFile(list);
             return true;
         } catch (e) {
             console.error('No se pudo guardar el historial', e);
             return false;
+        }
+    }
+
+    async loadHistoryFromFile() {
+        try {
+            const response = await fetch(HISTORY_FILE);
+            if (response.ok) {
+                const data = await response.json();
+                if (Array.isArray(data)) {
+                    localStorage.setItem(this.storageKey, JSON.stringify(data));
+                    return data;
+                }
+            }
+        } catch (e) {
+            console.debug('No se pudo cargar el historial desde archivo', e);
+        }
+        return [];
+    }
+
+    saveHistoryToFile(list) {
+        try {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(list, null, 2));
+            const downloadAnchorNode = document.createElement('a');
+            downloadAnchorNode.setAttribute("href", dataStr);
+            downloadAnchorNode.setAttribute("download", HISTORY_FILE);
+            downloadAnchorNode.style.display = 'none';
+            document.body.appendChild(downloadAnchorNode);
+            downloadAnchorNode.click();
+            downloadAnchorNode.remove();
+        } catch (e) {
+            console.debug('No se pudo guardar el historial en archivo', e);
         }
     }
 
@@ -52,7 +91,14 @@ export class WorkoutHistory {
         history.unshift(entry);
         // Keep last 200 entries to avoid unbounded growth
         const trimmed = history.slice(0, 200);
-        this.saveHistory(trimmed);
+        const saved = this.saveHistory(trimmed);
+        
+        if (saved) {
+            console.log('✓ Historial guardado correctamente:', entry);
+        } else {
+            console.error('✗ Error al guardar el historial');
+        }
+        
         return entry;
     }
 
