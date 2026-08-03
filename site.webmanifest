@@ -1,0 +1,17 @@
+{
+  "name": "HIIT Trainer",
+  "short_name": "HIIT",
+  "description": "Constructor y temporizador de rutinas HIIT",
+  "start_url": "/HIITAPP/",
+  "scope": "/HIITAPP/",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

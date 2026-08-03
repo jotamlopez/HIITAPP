@@ -1,1 +1,6 @@
 .DS_Store
+hiit_history.json
+nuevo.json
+
+# Logs temporales
+*.log
